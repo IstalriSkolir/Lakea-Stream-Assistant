@@ -135,18 +135,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 string curScene = client.GetCurrentProgramScene();
                 Console.WriteLine("OBS: Setting Source Enabled '" + active + "' -> '" + source + "' in '" + curScene + "'");
-                var sceneSources = client.GetSceneItemList(curScene);
-                //bool found = searchForSource(curScene);
-                //foreach(var scenesource in sceneSources)
-                //{
-                //    if(scenesource.SourceName == source)
-                //    {
-                //        found = true;
-                //        break;
-                //    }
-                //}
+                string scene = searchForSource(curScene, source);
                 int sourceID = resources.GetSourceId(source);
-                //client.SetSceneItemEnabled(curScene, sourceID, active);
+                client.SetSceneItemEnabled(scene, sourceID, active);
             }
             catch (Exception ex)
             {
@@ -154,9 +145,25 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        private bool searchForSource(SceneItemDetails scene)
+        private static string searchForSource(string scene, string source)
         {
-            return false;
+            var sources = client.GetSceneItemList(scene);
+            foreach (var item in sources)
+            {
+                if(item.SourceName == source)
+                {
+                    return scene;
+                }
+                else if(item.SourceType == SceneItemSourceType.OBS_SOURCE_TYPE_SCENE)
+                {
+                    string newScene = searchForSource(item.SourceName, source);
+                    if(newScene != string.Empty)
+                    {
+                        return newScene;
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }
