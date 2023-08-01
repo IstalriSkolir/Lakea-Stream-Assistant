@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <OBS>
+    <IP>localhost</IP>
+    <Port>{Port}</Port>
+    <Password>{Password}</Password>
+  </OBS>
+  <Twitch>
+    <StreamingChannel>
+      <Username>MateriesCoil</Username>
+      <ID>{Channel ID}</ID>
+      <AuthKey>{Auth Key}</AuthKey>
+    </StreamingChannel>
+    <BotChannel>
+
+    </BotChannel>
+  </Twitch>
+  <Events>
+    <Event>
+      <EventDetails>
+        <Name>Moustached Wolf</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>{Redeem ID}</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Moustache - Image</Object>
+        <Duration>300</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Tea Time!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>{Redeem ID}</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Tea - Image</Object>
+        <Duration>1200</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Throw a Dagger!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>{Redeem ID}</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Dagger Throw - Media Source</Object>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+  </Events>
+</Config>
