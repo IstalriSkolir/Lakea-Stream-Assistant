@@ -12,7 +12,9 @@
       <AuthKey>{Auth Key}</AuthKey>
     </StreamingChannel>
     <BotChannel>
-
+      <UserName>lakeamoonlight</UserName>
+      <UserToken>{User Token}</UserToken>
+      <ChannelConnection>materiescoil</ChannelConnection>
     </BotChannel>
   </Twitch>
   <Events>

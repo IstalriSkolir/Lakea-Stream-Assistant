@@ -5,6 +5,7 @@ xml file and regenerating this structure from the editted xml. To regenerate str
 in the xml file before returning here and selecting Edit -> Paste Special -> Paste XML As Classes
 
 */
+
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -123,7 +124,7 @@ public partial class ConfigTwitch
 
     private ConfigTwitchStreamingChannel streamingChannelField;
 
-    private object botChannelField;
+    private ConfigTwitchBotChannel botChannelField;
 
     /// <remarks/>
     public ConfigTwitchStreamingChannel StreamingChannel
@@ -139,7 +140,7 @@ public partial class ConfigTwitch
     }
 
     /// <remarks/>
-    public object BotChannel
+    public ConfigTwitchBotChannel BotChannel
     {
         get
         {
@@ -159,22 +160,22 @@ public partial class ConfigTwitch
 public partial class ConfigTwitchStreamingChannel
 {
 
-    private string usernameField;
+    private string userNameField;
 
     private uint idField;
 
     private string authKeyField;
 
     /// <remarks/>
-    public string Username
+    public string UserName
     {
         get
         {
-            return this.usernameField;
+            return this.userNameField;
         }
         set
         {
-            this.usernameField = value;
+            this.userNameField = value;
         }
     }
 
@@ -201,6 +202,59 @@ public partial class ConfigTwitchStreamingChannel
         set
         {
             this.authKeyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class ConfigTwitchBotChannel
+{
+
+    private string userNameField;
+
+    private string userTokenField;
+
+    private string channelConnectionField;
+
+    /// <remarks/>
+    public string UserName
+    {
+        get
+        {
+            return this.userNameField;
+        }
+        set
+        {
+            this.userNameField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string UserToken
+    {
+        get
+        {
+            return this.userTokenField;
+        }
+        set
+        {
+            this.userTokenField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string ChannelConnection
+    {
+        get
+        {
+            return this.channelConnectionField;
+        }
+        set
+        {
+            this.channelConnectionField = value;
         }
     }
 }
@@ -326,8 +380,6 @@ public partial class ConfigEventEventTarget
 
     private ushort durationField;
 
-    private bool durationFieldSpecified;
-
     /// <remarks/>
     public string Target
     {
@@ -377,20 +429,6 @@ public partial class ConfigEventEventTarget
         set
         {
             this.durationField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlIgnoreAttribute()]
-    public bool DurationSpecified
-    {
-        get
-        {
-            return this.durationFieldSpecified;
-        }
-        set
-        {
-            this.durationFieldSpecified = value;
         }
     }
 }
