@@ -9,7 +9,7 @@ namespace Lakea_Stream_Assistant
         //Point of Entry
         static void Main(string[] args)
         {
-            Console.WriteLine("Twitcher Initiliasing...");
+            Console.WriteLine("Lakea is waking up...");
             Config config = new LoadConfig().LoadConfigFromFile();
             HandleEvents eventHandler = new HandleEvents(config.Events);
             OBS.Init(config);
@@ -18,10 +18,11 @@ namespace Lakea_Stream_Assistant
                 Thread.Sleep(100);
             }
             Twitch.Init(config, eventHandler);
-            while (!Twitch.Initiliased)
+            while (Twitch.ServicesConnected.Item1 < Twitch.ServicesConnected.Item2)
             {
                 Thread.Sleep(100);
             }
+            Console.WriteLine("Lakea: All set and ready to go!");
 
             //Pauses main thread to prevent application terminating
             Console.ReadLine();

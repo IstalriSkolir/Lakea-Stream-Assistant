@@ -7,7 +7,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
     {
         public Config LoadConfigFromFile()
         {
-            Console.WriteLine("Loading Configuration File...");
+            Console.WriteLine("Lakea: Loading Configuration File...");
             Config config = new Config();
             XmlSerializer serializer = new XmlSerializer(config.GetType());
             TextReader reader = new StreamReader(Environment.CurrentDirectory + "\\Config.xml");
