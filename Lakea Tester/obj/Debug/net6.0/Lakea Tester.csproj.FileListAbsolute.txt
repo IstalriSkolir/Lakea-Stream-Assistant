@@ -1,0 +1,129 @@
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\CoverletSourceRootsMapping
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\testhost.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.deps.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.runtimeconfig.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.exe
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\testhost.exe
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.PlatformAbstractions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.AdapterUtilities.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Config.xml
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.deps.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.runtimeconfig.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.pdb
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.CoreUtilities.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.CommunicationUtilities.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.CrossPlatEngine.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.Utilities.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Common.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\NuGet.Frameworks.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\obs-websocket-dotnet.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.Enums.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.Interfaces.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.Models.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Helix.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Helix.Models.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Client.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Client.Enums.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Client.Models.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Communication.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.EventSub.Core.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.EventSub.Websockets.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.PubSub.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Websocket.Client.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\cs\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\cs\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\de\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\de\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\es\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\es\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\fr\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\fr\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\it\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\it\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ja\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ja\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ko\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ko\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pl\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pl\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pt-BR\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pt-BR\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tr\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tr\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CoreUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\cs\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\cs\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\cs\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\de\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\de\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\de\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\es\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\es\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\es\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\fr\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\fr\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\fr\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\it\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\it\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\it\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ja\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ja\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ja\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ko\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ko\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ko\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pl\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pl\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pl\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pt-BR\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pt-BR\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\pt-BR\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ru\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ru\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\ru\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tr\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tr\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tr\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Reactive.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.pdb
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Reactive.xml
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.csproj.AssemblyReference.cache
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.GeneratedMSBuildEditorConfig.editorconfig
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.AssemblyInfoInputs.cache
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.AssemblyInfo.cs
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.csproj.CoreCompileInputs.cache
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.csproj.CopyComplete
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\refint\Lakea Tester.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.pdb
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.genruntimeconfig.cache
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\ref\Lakea Tester.dll
