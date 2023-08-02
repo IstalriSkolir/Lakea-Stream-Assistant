@@ -1,5 +1,6 @@
 ﻿namespace Lakea_Stream_Assistant.Models.OBS
 {
+    //This class stores scene and source information for the OBS Singleton to refer back to
     public class OBSResources
     {
         private IDictionary<string, int> sourceIDs = new Dictionary<string, int>();

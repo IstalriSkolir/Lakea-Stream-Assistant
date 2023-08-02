@@ -23,6 +23,7 @@
     public enum EventGoal
     {
         Enable_OBS_Source,
-        Disable_OBS_Source
+        Disable_OBS_Source,
+        Change_OBS_Scene
     }
 }

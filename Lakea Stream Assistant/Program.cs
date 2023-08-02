@@ -6,6 +6,7 @@ namespace Lakea_Stream_Assistant
 {
     class Program
     {
+        //Point of Entry
         static void Main(string[] args)
         {
             Console.WriteLine("Twitcher Initiliasing...");
@@ -22,10 +23,7 @@ namespace Lakea_Stream_Assistant
                 Thread.Sleep(100);
             }
 
-            //OBS.SetSourceEnabled("Start Scene", "Starting Soon - Text (GDI+)", true);
-            //Console.WriteLine("Current Scene: " + OBS.GetCurrentScene());
-            //OBS.ChangeScene("Halo");
-            //Console.WriteLine("Current Scene: " + OBS.GetCurrentScene());
+            //Pauses main thread to prevent application terminating
             Console.ReadLine();
         }
     }

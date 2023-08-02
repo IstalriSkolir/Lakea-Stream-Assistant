@@ -6,10 +6,12 @@ namespace Lakea_Stream_Assistant.Models.Events
     public class HandleEvents
     {
         private TwitchFunctions twitch;
+        private EventOutputs outputs;
 
         public HandleEvents(ConfigEvent[] events)
         {
-            twitch = new TwitchFunctions(events);
+            outputs = new EventOutputs();
+            twitch = new TwitchFunctions(events, outputs);
         }
 
         public void NewEvent(Event eve)

@@ -4,6 +4,7 @@ using Lakea_Stream_Assistant.Models.OBS;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
+    //Singleton that connects to OBS and manages calls via the OBS Web Socket library
     public sealed class OBS
     {
         public static bool Initiliased = false;
@@ -15,6 +16,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Initiliase
 
+        //Initialises the connected with the passed in configuration data
         public static void Init(Config newConfig)
         {
             try
@@ -33,6 +35,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Once connected, sets the keep alive token to avoid disconnected and calls for resources to be collected
         private static void onConnect(object sender, EventArgs e)
         {
             Console.WriteLine("OBS: Connected");
@@ -53,6 +56,7 @@ namespace Lakea_Stream_Assistant.Singletons
             Initiliased = true;
         }
 
+        //Once connected, gether source and scene information that can be referred back to later in the 'resources' object
         private static void getResources()
         {
             try
@@ -90,6 +94,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #endregion
 
+        //Returns the current active scene
         public static string GetCurrentScene()
         {
             try
@@ -103,6 +108,7 @@ namespace Lakea_Stream_Assistant.Singletons
             return string.Empty;
         }
 
+        //Changes the scene to the passed in scene
         public static void ChangeScene(string scene)
         {
             try
@@ -116,6 +122,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Disables or enables a source with a scene arguement passed in
         public static void SetSourceEnabled(string scene, string source, bool active)
         {
             try
@@ -129,6 +136,8 @@ namespace Lakea_Stream_Assistant.Singletons
                 Console.WriteLine("OBS: Failed to Set Source Enabled -> " + ex.Message);
             }
         }
+
+        //Disables or enables a source by searching for it in the active scene and any nested scenes
         public static void SetSourceEnabled(string source, bool active)
         {
             try
@@ -145,6 +154,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Will search any nested scenes in a scene for a source
         private static string searchForSource(string scene, string source)
         {
             var sources = client.GetSceneItemList(scene);

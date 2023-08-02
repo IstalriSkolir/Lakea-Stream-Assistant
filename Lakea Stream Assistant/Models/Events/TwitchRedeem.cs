@@ -4,6 +4,7 @@ using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.Models.Events
 {
+    //Inherits from TwitchEvent, is the class for storing Channel redeem event data
     public class TwitchRedeem : TwitchEvent
     {
         private OnChannelPointsRewardRedeemedArgs args;

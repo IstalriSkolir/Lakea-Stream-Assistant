@@ -1,4 +1,10 @@
-﻿
+﻿/*
+
+Code below has been generated from Config.xml, it should not be manually editted. Any changes is data structure should be done by editting the
+xml file and regenerating this structure from the editted xml. To regenerate structure, select all the code below and delete it. Then select all
+in the xml file before returning here and selecting Edit -> Paste Special -> Paste XML As Classes
+
+*/
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -320,6 +326,8 @@ public partial class ConfigEventEventTarget
 
     private ushort durationField;
 
+    private bool durationFieldSpecified;
+
     /// <remarks/>
     public string Target
     {
@@ -369,6 +377,20 @@ public partial class ConfigEventEventTarget
         set
         {
             this.durationField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool DurationSpecified
+    {
+        get
+        {
+            return this.durationFieldSpecified;
+        }
+        set
+        {
+            this.durationFieldSpecified = value;
         }
     }
 }

@@ -4,12 +4,16 @@ using Lakea_Stream_Assistant.Models.Events.EventLists;
 
 namespace Lakea_Stream_Assistant.Models.Twitch
 {
+    // Functions for handle Twitch Events
     public class TwitchFunctions
     {
+        private EventOutputs outputs;
         private IDictionary<string, TwitchEventItem> redeems = new Dictionary<string, TwitchEventItem>();
 
-        public TwitchFunctions(ConfigEvent[] events)
+        //Contructor stores list of Twitch events to check against when it receives a new event
+        public TwitchFunctions(ConfigEvent[] events, EventOutputs outputs)
         {
+            this.outputs = outputs;
             foreach (ConfigEvent eve in events)
             {
                 if ("Twitch".Equals(eve.EventDetails.Source))
@@ -27,8 +31,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             }
         }
 
-        #region Check Events
-
+        //When a channel redeem event is triggered, checks dictionary for event before triggering the events effect
         public void NewRedeem(TwitchRedeem eve)
         {
             if (redeems.ContainsKey(eve.Args.RewardRedeemed.Redemption.Reward.Id))
@@ -41,10 +44,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             }
         }
 
-        #endregion
-
-        #region Process Events
-
+        //Checks events target app/platform
         private void processTwitchEvent(TwitchEventItem item)
         {
             switch (item.EventTarget)
@@ -59,44 +59,21 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             }
         }
 
-        #region Base Camp
-
-        #endregion
-
-        #region OBS
-
+        //Checks events OBS target and calls relevent function in 'outputs' object
         private void eventTargetOBS(TwitchEventItem item)
         {
-            bool active = false; ;
             switch (item.EventGoal)
             {
                 case EventGoal.Disable_OBS_Source:
-                    active = false;
-                    //setEnableOBSSource(item, false);
+                    outputs.SetActiveOBSSource(item.Object, item.Duration, false);
                     break;
                 case EventGoal.Enable_OBS_Source:
-                    active = true;
-                    //setEnableOBSSource(item, true);
+                    outputs.SetActiveOBSSource(item.Object, item.Duration, true);
+                    break;
+                case EventGoal.Change_OBS_Scene:
+                    outputs.ChangeOBSScene(item.Object);
                     break;
             }
-            setEnableOBSSource(item, active);
-            if (item.Duration > 0)
-            {
-                Task.Delay(item.Duration * 1000).ContinueWith(t => setEnableOBSSource(item, !active));
-            }
         }
-
-        private void setEnableOBSSource(TwitchEventItem item, bool active)
-        {
-            Singletons.OBS.SetSourceEnabled(item.Object, active);
-        }
-
-        #endregion
-
-        #region Twitch
-
-        #endregion
-
-        #endregion
     }
 }

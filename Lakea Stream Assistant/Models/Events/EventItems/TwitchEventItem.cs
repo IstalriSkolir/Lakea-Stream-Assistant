@@ -2,6 +2,7 @@
 
 namespace Lakea_Stream_Assistant.Models.Events.EventLists
 {
+    //Inherits from TwitchEvent, stores event information for what to do when a Twitch Event is triggered
     public class TwitchEventItem : TwitchEvent
     {
         private readonly EventTarget target;
@@ -13,15 +14,6 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
 
         public TwitchEventItem(ConfigEvent eve)
         {
-            switch (eve.EventDetails.Source)
-            {
-                case "Twitch":
-                    this.source = EventSource.Twitch;
-                    break;
-                default:
-                    Console.WriteLine("Error Parsing Event '" + eve.EventDetails.Name + "' -> Unrecognised Event Source: " + eve.EventDetails.Source);
-                    break;
-            }
             switch (eve.EventDetails.Type)
             {
                 case "Redeem":
@@ -48,10 +40,14 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
                 case "Deactivate_Source":
                     this.goal = EventGoal.Disable_OBS_Source;
                     break;
+                case "Change_Scene":
+                    this.goal = EventGoal.Change_OBS_Scene;
+                    break;
                 default:
                     Console.WriteLine("Error Parsing Event '" + eve.EventDetails.Name + "' -> Unrecognised Event Goal: " + eve.EventTarget.Goal);
                     break;
             }
+            this.source = EventSource.Twitch;
             this.name = eve.EventDetails.Name;
             this.id = eve.EventDetails.ID;
             this.obj = eve.EventTarget.Object;

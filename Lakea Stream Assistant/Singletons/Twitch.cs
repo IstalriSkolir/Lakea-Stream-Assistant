@@ -14,6 +14,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static string channelID;
         private static string channelAuthKey;
 
+        //Initiliases the Singleton by connecting to Twitch with the settings in the config object
         public static void Init(Config config, HandleEvents newEventsObj)
         {
             try
@@ -39,6 +40,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Once connected, send auth key to verify connection
         private static void onPubSubServiceConnected(object sender, EventArgs e)
         {
             try
@@ -54,6 +56,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Listen for if connection and auth key were succesful
         private static void onListenResponse(object sender, OnListenResponseArgs e)
         {
             if (!e.Successful)
@@ -69,6 +72,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Called on a channel redeem event, passes event info the eventHandler
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
             Console.WriteLine("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);

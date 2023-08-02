@@ -2,6 +2,7 @@
 
 namespace Lakea_Stream_Assistant.Models.Events
 {
+    //Top level class for event objects, all event objects inherit from this abstract class
     public abstract class Event
     {
         private protected EventSource source;
