@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <OBS>
+    <IP>localhost</IP>
+    <Port>4455</Port>
+    <Password>N0FbTW94Biy8vwLT</Password>
+  </OBS>
+  <Twitch>
+    <StreamingChannel>
+      <UserName>MateriesCoil</UserName>
+      <ID>756882056</ID>
+      <AuthKey>h6pcld5s6tt6tfbr075xzi3io2dvuj</AuthKey>
+    </StreamingChannel>
+    <BotChannel>
+      <UserName>lakeamoonlight</UserName>
+      <UserToken>oauth:qn2gb3pelda8cauvdd7umo77oceiao</UserToken>
+      <ChannelConnection>materiescoil</ChannelConnection>
+    </BotChannel>
+  </Twitch>
+  <Events>
+    <Event>
+      <EventDetails>
+        <Name>Moustached Wolf</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>eb5cc05c-b9c6-488f-a0b9-e7b384b70ed7</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Moustache - Image</Object>
+        <Duration>300</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Tea Time!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>d8ec14bd-a45a-44e9-b905-d17ff32fafcb</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Tea - Image</Object>
+        <Duration>1200</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Throw a Dagger!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>dd288ff5-2795-4a85-986a-eed84bcaaaab</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Dagger Throw - Media Source</Object>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Catch me!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>7b99606a-d8ea-433a-a340-217e8ed023c2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Net - Media Source</Object>
+        <Duration>30</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Ban Tea!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>36ad7d6c-1f34-4cd8-9716-76a2f3ee9fe3</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Object>Ban Tea - Media Source</Object>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+  </Events>
+</Config>
