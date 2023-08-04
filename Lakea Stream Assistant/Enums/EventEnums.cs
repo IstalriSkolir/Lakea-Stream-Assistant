@@ -3,6 +3,7 @@
     public enum EventSource
     {
         Base_Camp,
+        Lakea,
         Twitch
     }
 
@@ -11,6 +12,11 @@
         Bits,
         Follow,
         Redeem
+    }
+
+    public enum LakeaEventType
+    {
+        Callback
     }
 
     public enum EventTarget
@@ -24,6 +30,9 @@
     {
         Enable_OBS_Source,
         Disable_OBS_Source,
-        Change_OBS_Scene
+        Enable_Random_OBS_Source,
+        Disable_Random_OBS_Source,
+        Change_OBS_Scene,
+        Send_Twitch_Chat_Message
     }
 }

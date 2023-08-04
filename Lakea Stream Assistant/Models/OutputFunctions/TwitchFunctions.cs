@@ -1,10 +1,12 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
+using Lakea_Stream_Assistant.Models.OutputFunctions;
 
 namespace Lakea_Stream_Assistant.Models.Twitch
 {
-    // Functions for handle Twitch Events
+    // Functions for handling Twitch Events
     public class TwitchFunctions
     {
         private EventOutputs outputs;
@@ -16,11 +18,11 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             this.outputs = outputs;
             foreach (ConfigEvent eve in events)
             {
-                if ("Twitch".Equals(eve.EventDetails.Source))
+                if ("twitch".Equals(eve.EventDetails.Source.ToLower()))
                 {
-                    switch (eve.EventDetails.Type)
+                    switch (eve.EventDetails.Type.ToLower())
                     {
-                        case "Redeem":
+                        case "redeem":
                             redeems.Add(eve.EventDetails.ID, new TwitchEventItem(eve));
                             break;
                         default:
@@ -34,13 +36,20 @@ namespace Lakea_Stream_Assistant.Models.Twitch
         //When a channel redeem event is triggered, checks dictionary for event before triggering the events effect
         public void NewRedeem(TwitchRedeem eve)
         {
-            if (redeems.ContainsKey(eve.Args.RewardRedeemed.Redemption.Reward.Id))
+            try
             {
-                processTwitchEvent(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id]);
+                if (redeems.ContainsKey(eve.Args.RewardRedeemed.Redemption.Reward.Id))
+                {
+                    processTwitchEvent(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id]);
+                }
+                else
+                {
+                    Console.WriteLine("Lakea: Unrecognised Channel Redeem -> " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
+                }
             }
-            else
+            catch(Exception e)
             {
-                Console.WriteLine("Unrecognised Channel Redeem: " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
+                Console.WriteLine("Lakea: Twitch Redeem Error -> " + e.Message);
             }
         }
 
@@ -55,6 +64,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                     eventTargetOBS(item);
                     break;
                 case EventTarget.Twitch:
+                    eventTargetTwitch(item);
                     break;
             }
         }
@@ -65,13 +75,30 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             switch (item.EventGoal)
             {
                 case EventGoal.Disable_OBS_Source:
-                    outputs.SetActiveOBSSource(item.Object, item.Duration, false);
+                    outputs.SetActiveOBSSource(item.Args[0], item.Duration, false, item.Callback);
                     break;
                 case EventGoal.Enable_OBS_Source:
-                    outputs.SetActiveOBSSource(item.Object, item.Duration, true);
+                    outputs.SetActiveOBSSource(item.Args[0], item.Duration, true, item.Callback);
+                    break;
+                case EventGoal.Enable_Random_OBS_Source:
+                    outputs.SetRandomActiveOBSSource(item.Args, item.Duration, true, item.Callback);
+                    break;
+                case EventGoal.Disable_Random_OBS_Source:
+                    outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                     break;
                 case EventGoal.Change_OBS_Scene:
-                    outputs.ChangeOBSScene(item.Object);
+                    outputs.ChangeOBSScene(item.Args[0], item.Callback);
+                    break;
+            }
+        }
+
+        //Checks events Twitch target and calls relevant function in 'outputs' object
+        private void eventTargetTwitch(TwitchEventItem item)
+        {
+            switch (item.EventGoal)
+            {
+                case EventGoal.Send_Twitch_Chat_Message:
+                    outputs.SendTwitchChatMessage(item.Args[0], item.Callback);
                     break;
             }
         }

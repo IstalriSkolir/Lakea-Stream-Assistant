@@ -1,10 +1,10 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 
-namespace Lakea_Stream_Assistant.Models.Events.EventLists
+namespace Lakea_Stream_Assistant.Models.Events.EventItems
 {
-    //Inherits from TwitchEvent, stores event information for what to do when a Twitch Event is triggered
-    public class TwitchEventItem : TwitchEvent
+    //Inherits from LakeaEvent, stores event information for what to do when a Lakea Event is triggered
+    public class LakeaEventItem : LakeaEvent
     {
         private readonly EventTarget target;
         private readonly EventGoal goal;
@@ -14,17 +14,8 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
         private readonly int duration;
         private readonly string callback;
 
-        public TwitchEventItem(ConfigEvent eve)
+        public LakeaEventItem(ConfigEvent eve)
         {
-            switch (eve.EventDetails.Type.ToLower())
-            {
-                case "redeem":
-                    this.eventType = TwitchEventType.Redeem;
-                    break;
-                default:
-                    Console.WriteLine("Error Parsing Event '" + eve.EventDetails.Name + "' -> Unrecognised Event Type: " + eve.EventDetails.Type);
-                    break;
-            }
             switch (eve.EventTarget.Target.ToLower())
             {
                 case "obs":
@@ -64,7 +55,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
                     Console.WriteLine("Error Parsing Event '" + eve.EventDetails.Name + "' -> Unrecognised Event Goal: " + eve.EventTarget.Goal);
                     break;
             }
-            this.source = EventSource.Twitch;
+            this.source = EventSource.Lakea;
             this.name = eve.EventDetails.Name;
             this.id = eve.EventDetails.ID;
             this.args = eve.EventTarget.Args;
@@ -72,8 +63,20 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
             this.callback = eve.EventTarget.Callback;
         }
 
+        public LakeaEventItem(LakeaEventItem item, string[] args)
+        {
+            this.source = item.Source;
+            this.target = item.target;
+            this.goal = item.goal;
+            this.name = item.name;
+            this.id = item.id;
+            this.duration = item.duration;
+            this.callback = item.callback;
+            this.args = args;
+        }
+
         public override EventSource Source { get { return source; } }
-        public override TwitchEventType EventType { get { return eventType; } }
+        public override LakeaEventType EventType { get { return eventType; } }
         public EventTarget EventTarget { get { return target; } }
         public EventGoal EventGoal { get { return goal; } }
         public string Name { get { return name; } }

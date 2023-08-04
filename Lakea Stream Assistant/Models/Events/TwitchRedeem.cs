@@ -1,5 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.Models.Events
