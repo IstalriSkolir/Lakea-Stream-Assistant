@@ -38,9 +38,16 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
             {
                 if (callbacks.ContainsKey(eve.CallbackID))
                 {
-                    string[] args = eve.GetCallbackArguments(callbacks[eve.CallbackID]);
-                    LakeaEventItem item = new LakeaEventItem(callbacks[eve.CallbackID], args);
-                    processLakeaEvent(item);
+                    if (callbacks[eve.CallbackID].UsePreviousArguments)
+                    {
+                        string[] args = eve.GetCallbackArguments(callbacks[eve.CallbackID]);
+                        LakeaEventItem item = new LakeaEventItem(callbacks[eve.CallbackID], args);
+                        processLakeaEvent(item);
+                    }
+                    else
+                    {
+                        processLakeaEvent(callbacks[eve.CallbackID]);
+                    }
                 }
                 else
                 {

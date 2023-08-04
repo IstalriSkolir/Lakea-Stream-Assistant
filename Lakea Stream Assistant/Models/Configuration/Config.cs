@@ -377,6 +377,10 @@ public partial class ConfigEventEventTarget
 
     private string[] argsField;
 
+    private bool usePreviousArgumentsField;
+
+    private bool usePreviousArgumentsFieldSpecified;
+
     private string callbackField;
 
     private ushort durationField;
@@ -418,6 +422,33 @@ public partial class ConfigEventEventTarget
         set
         {
             this.argsField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool UsePreviousArguments
+    {
+        get
+        {
+            return this.usePreviousArgumentsField;
+        }
+        set
+        {
+            this.usePreviousArgumentsField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool UsePreviousArgumentsSpecified
+    {
+        get
+        {
+            return this.usePreviousArgumentsFieldSpecified;
+        }
+        set
+        {
+            this.usePreviousArgumentsFieldSpecified = value;
         }
     }
 

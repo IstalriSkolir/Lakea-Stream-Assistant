@@ -13,6 +13,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventItems
         private readonly string[] args;
         private readonly int duration;
         private readonly string callback;
+        private readonly bool usePreviousArguments;
 
         public LakeaEventItem(ConfigEvent eve)
         {
@@ -61,6 +62,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventItems
             this.args = eve.EventTarget.Args;
             this.duration = eve.EventTarget.Duration;
             this.callback = eve.EventTarget.Callback;
+            this.usePreviousArguments = eve.EventTarget.UsePreviousArguments;
         }
 
         public LakeaEventItem(LakeaEventItem item, string[] args)
@@ -84,5 +86,6 @@ namespace Lakea_Stream_Assistant.Models.Events.EventItems
         public string[] Args { get { return args; } }
         public int Duration { get { return duration; } }
         public string Callback { get { return callback; } }
+        public bool UsePreviousArguments { get {  return usePreviousArguments; } }
     }
 }
