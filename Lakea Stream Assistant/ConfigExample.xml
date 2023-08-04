@@ -3,32 +3,37 @@
   <OBS>
     <IP>localhost</IP>
     <Port>{Port}</Port>
-    <Password>{Password}</Password>
+    <Password>{OBS_Password}</Password>
   </OBS>
   <Twitch>
     <StreamingChannel>
-      <Username>MateriesCoil</Username>
-      <ID>{Channel ID}</ID>
-      <AuthKey>{Auth Key}</AuthKey>
+      <UserName>MateriesCoil</UserName>
+      <ID>{Channel_ID}</ID>
+      <AuthKey>{Channel_Auth_key}</AuthKey>
     </StreamingChannel>
     <BotChannel>
       <UserName>lakeamoonlight</UserName>
-      <UserToken>{User Token}</UserToken>
+      <UserToken>{User_Token}</UserToken>
       <ChannelConnection>materiescoil</ChannelConnection>
     </BotChannel>
   </Twitch>
   <Events>
+
+    <!--Twitch Channel Redeems-->
+
     <Event>
       <EventDetails>
         <Name>Moustached Wolf</Name>
         <Source>Twitch</Source>
         <Type>Redeem</Type>
-        <ID>{Redeem ID}</ID>
+        <ID>eb5cc05c-b9c6-488f-a0b9-e7b384b70ed7</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
         <Goal>Activate_Source</Goal>
-        <Object>Moustache - Image</Object>
+        <Args>
+          <Arg>Moustache - Image</Arg>
+        </Args>
         <Duration>300</Duration>
       </EventTarget>
     </Event>
@@ -37,12 +42,14 @@
         <Name>Tea Time!</Name>
         <Source>Twitch</Source>
         <Type>Redeem</Type>
-        <ID>{Redeem ID}</ID>
+        <ID>d8ec14bd-a45a-44e9-b905-d17ff32fafcb</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
         <Goal>Activate_Source</Goal>
-        <Object>Tea - Image</Object>
+        <Args>
+          <Arg>Tea - Image</Arg>
+        </Args>
         <Duration>1200</Duration>
       </EventTarget>
     </Event>
@@ -51,13 +58,87 @@
         <Name>Throw a Dagger!</Name>
         <Source>Twitch</Source>
         <Type>Redeem</Type>
-        <ID>{Redeem ID}</ID>
+        <ID>dd288ff5-2795-4a85-986a-eed84bcaaaab</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
         <Goal>Activate_Source</Goal>
-        <Object>Dagger Throw - Media Source</Object>
+        <Args>
+          <Arg>Dagger Throw - Media Source</Arg>
+        </Args>
         <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Catch me!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>7b99606a-d8ea-433a-a340-217e8ed023c2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Args>
+          <Arg>Net - Media Source</Arg>
+        </Args>
+        <Duration>30</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Ban Tea!</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>36ad7d6c-1f34-4cd8-9716-76a2f3ee9fe3</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Activate_Source</Goal>
+        <Args>
+          <Arg>Ban Tea - Media Source</Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Display Random Art</Name>
+        <Source>Twitch</Source>
+        <Type>Redeem</Type>
+        <ID>ba3ab3b7-5802-4d1b-a79a-2f6f8653f387</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>Enable_Random_Source</Goal>
+        <Args>
+          <Arg>Art 1 - Image</Arg>
+          <Arg>Art 2 - Image</Arg>
+          <Arg>Art 3 - Image</Arg>
+        </Args>
+        <Callback>Callback_ID_1</Callback>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Lakea Callback Events-->
+
+    <Event>
+      <EventDetails>
+        <Name>Art Message Callback</Name>
+        <Source>Lakea</Source>
+        <Type>Callback</Type>
+        <ID>Callback_ID_1</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Send_Chat_Message</Goal>
+        <Args>
+          <Arg>Art Message 1</Arg>
+          <Arg>Art Message 2</Arg>
+          <Arg>Art Message 3</Arg>
+        </Args>
+        <Duration>0</Duration>
       </EventTarget>
     </Event>
   </Events>

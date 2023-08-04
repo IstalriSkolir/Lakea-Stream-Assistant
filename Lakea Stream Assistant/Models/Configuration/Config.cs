@@ -5,7 +5,6 @@ xml file and regenerating this structure from the editted xml. To regenerate str
 in the xml file before returning here and selecting Edit -> Paste Special -> Paste XML As Classes
 
 */
-
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -376,7 +375,13 @@ public partial class ConfigEventEventTarget
 
     private string goalField;
 
-    private string objectField;
+    private string[] argsField;
+
+    private bool usePreviousArgumentsField;
+
+    private bool usePreviousArgumentsFieldSpecified;
+
+    private string callbackField;
 
     private ushort durationField;
 
@@ -407,15 +412,56 @@ public partial class ConfigEventEventTarget
     }
 
     /// <remarks/>
-    public string Object
+    [System.Xml.Serialization.XmlArrayItemAttribute("Arg", IsNullable = false)]
+    public string[] Args
     {
         get
         {
-            return this.objectField;
+            return this.argsField;
         }
         set
         {
-            this.objectField = value;
+            this.argsField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool UsePreviousArguments
+    {
+        get
+        {
+            return this.usePreviousArgumentsField;
+        }
+        set
+        {
+            this.usePreviousArgumentsField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlIgnoreAttribute()]
+    public bool UsePreviousArgumentsSpecified
+    {
+        get
+        {
+            return this.usePreviousArgumentsFieldSpecified;
+        }
+        set
+        {
+            this.usePreviousArgumentsFieldSpecified = value;
+        }
+    }
+
+    /// <remarks/>
+    public string Callback
+    {
+        get
+        {
+            return this.callbackField;
+        }
+        set
+        {
+            this.callbackField = value;
         }
     }
 

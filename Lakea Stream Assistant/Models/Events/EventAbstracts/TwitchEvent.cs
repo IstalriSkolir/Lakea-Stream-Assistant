@@ -1,6 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 
-namespace Lakea_Stream_Assistant.Models.Events
+namespace Lakea_Stream_Assistant.Models.Events.EventAbstracts
 {
     //Inherits from Event class, all specific Twitch events inherit from this class
     public abstract class TwitchEvent : Event
