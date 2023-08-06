@@ -39,6 +39,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
             source = prepareString(source);
             switch (source)
             {
+                case "null": return EventTarget.Null;
                 case "basecamp": return EventTarget.Base_Camp;
                 case "twitch": return EventTarget.Twitch;
                 case "obs": return EventTarget.OBS;
@@ -52,6 +53,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
             source = prepareString(source);
             switch (source)
             {
+                case "null": return EventGoal.Null;
                 case "obsenablesource": return EventGoal.OBS_Enable_Source;
                 case "obsdisablesource": return EventGoal.OBS_Disable_Source;
                 case "obsenablerandomsource": return EventGoal.OBS_Enable_Random_Source;

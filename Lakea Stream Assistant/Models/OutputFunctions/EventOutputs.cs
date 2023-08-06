@@ -95,6 +95,12 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
 
         #endregion
 
+        //For null events that don't require any actions
+        public void NullEvent(string message)
+        {
+            Console.WriteLine("Lakea: " + message);
+        }
+
         //Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(IDictionary<string, string> args, string callback)
         {

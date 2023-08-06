@@ -18,6 +18,9 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         {
             switch (item.EventGoal)
             {
+                case EventGoal.Null:
+                    outputs.NullEvent("Null Event -> " + item.Name);
+                    break;
                 case EventGoal.OBS_Disable_Source:
                     outputs.SetActiveOBSSource(item.Args[0], item.Duration, false, item.Callback);
                     break;

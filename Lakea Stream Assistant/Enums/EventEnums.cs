@@ -17,6 +17,7 @@
 
     public enum EventTarget
     {
+        Null,
         Base_Camp,
         Twitch,
         OBS
@@ -24,6 +25,7 @@
 
     public enum EventGoal
     {
+        Null,
         OBS_Enable_Source,
         OBS_Disable_Source,
         OBS_Enable_Random_Source,
