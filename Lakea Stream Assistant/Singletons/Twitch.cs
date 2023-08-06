@@ -8,6 +8,7 @@ using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Client.Events;
 using Lakea_Stream_Assistant.Models.OutputFunctions;
+using TwitchLib.Api.Core.Internal;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -39,33 +40,14 @@ namespace Lakea_Stream_Assistant.Singletons
                 botUsername = config.Twitch.BotChannel.UserName;
                 botAuthKey = config.Twitch.BotChannel.UserToken;
                 botChannelToJoin = config.Twitch.BotChannel.ChannelConnection;
-                initiliasePubSub();
                 initiliaseClient();
+                initiliasePubSub();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: Failed to Connect -> " + ex.Message);
                 Console.ReadLine();
                 Environment.Exit(1);
-            }
-        }
-
-        //Initiliase Twitch's PubSub connection
-        private static void initiliasePubSub()
-        {
-            try
-            {
-                Console.WriteLine("Twitch: PubSub Connecting...");
-                pubSub = new TwitchPubSub();
-                pubSub.OnPubSubServiceConnected += onPubSubServiceConnected;
-                pubSub.OnListenResponse += onPubSubListenResponse;
-                pubSub.OnChannelPointsRewardRedeemed += onChannelPointsRedeemed;
-                pubSub.ListenToChannelPoints(channelID);
-                pubSub.Connect();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Twitch: PubSub Failed to Connect -> " + ex.Message);
             }
         }
 
@@ -90,6 +72,29 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: Client Failed to Connect -> " + ex.Message);
+            }
+        }
+
+        //Initiliase Twitch's PubSub connection
+        private static void initiliasePubSub()
+        {
+            try
+            {
+                Console.WriteLine("Twitch: PubSub Connecting...");
+                pubSub = new TwitchPubSub();
+                pubSub.OnPubSubServiceConnected += onPubSubServiceConnected;
+                pubSub.OnListenResponse += onPubSubListenResponse;
+                pubSub.OnFollow += onChannelFollow;
+                pubSub.OnBitsReceivedV2 += onChannelBitsV2;
+                pubSub.OnChannelPointsRewardRedeemed += onChannelPointsRedeemed;
+                pubSub.ListenToFollows(channelID);
+                pubSub.ListenToBitsEventsV2(channelID);
+                pubSub.ListenToChannelPoints(channelID);
+                pubSub.Connect();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Twitch: PubSub Failed to Connect -> " + ex.Message);
             }
         }
 
@@ -148,7 +153,21 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Called on a channel redeem event, passes event info the eventHandler
+        //Called on a follow event, passes event info to the eventHandler
+        private static void onChannelFollow(object sender, OnFollowArgs e)
+        {
+            Console.WriteLine("Twitch: Follow -> " + e.DisplayName);
+            eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
+        }
+
+        //Called on a bits event, passes event info to the eventHandler
+        private static void onChannelBitsV2(object sender, OnBitsReceivedV2Args e)
+        {
+            Console.WriteLine("Twitch: Bits -> " + e.BitsUsed);
+            eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
+        }
+
+        //Called on a channel redeem event, passes event info to the eventHandler
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
             Console.WriteLine("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);

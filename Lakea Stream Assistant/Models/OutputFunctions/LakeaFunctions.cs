@@ -1,29 +1,34 @@
-﻿using Lakea_Stream_Assistant.Models.Events;
+﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Models.Configuration;
+using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
-
 namespace Lakea_Stream_Assistant.Models.OutputFunctions
 {
     // Functions for handling Lakea Events
     public class LakeaFunctions
     {
         private EventProcesser processer;
-        private IDictionary<string, EventItem> callbacks = new Dictionary<string, EventItem>();
+        private IDictionary<string, EventItem> callbacks;
 
-        //Contructor stores list of Lakea events to check against when it receives a new event
+        //Contructor stores list of events to check against when it receives a new event
         public LakeaFunctions(ConfigEvent[] events, EventProcesser processer) 
         {
             this.processer = processer;
+            this.callbacks = new Dictionary<string, EventItem>();
+            EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in  events)
             {
-                if ("lakea".Equals(eve.EventDetails.Source.ToLower()))
+                EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
+                if (source == Enums.EventSource.Lakea)
                 {
-                    switch (eve.EventDetails.Type.ToLower())
+                    EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
+                    switch (type)
                     {
-                        case "lakea_callback":
+                        case EventType.Lakea_Callback:
                             callbacks.Add(eve.EventDetails.ID, new EventItem(eve));
                             break;
                         default:
-                            Console.WriteLine("Error Parsing Event '" + eve.EventDetails.Name + "' -> Unrecognised Event Type: " + eve.EventDetails.Type);
+                            Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
                             break;
                     }
                 }

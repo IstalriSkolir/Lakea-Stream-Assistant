@@ -18,19 +18,92 @@
     </BotChannel>
   </Twitch>
   <Events>
-    
-  <!--Twitch Channel Redeems-->    
+
+    <!--Twitch Channel Follows & Subscriptions-->
+
+    <Event>
+      <EventDetails>
+        <Name>Twitch Follow</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Follow</Type>
+        <ID>Twitch_Follow_ID_1</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>Tea - Image</Arg>
+        </Args>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Twitch Channel Bit-->
+
+    <Event>
+      <EventDetails>
+        <Name>Twitch Bits 1</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Bits</Type>
+        <ID>Twitch_Bits_ID_1</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>Art 1 - Image</Arg>
+          <Arg>1</Arg>
+        </Args>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Twitch Bits 2</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Bits</Type>
+        <ID>Twitch_Bits_ID_2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>Art 2 - Image</Arg>
+          <Arg>3</Arg>
+        </Args>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Twitch Bits 3</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Bits</Type>
+        <ID>Twitch_Bits_ID_3</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>Art 3 - Image</Arg>
+          <Arg>5</Arg>
+        </Args>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Twitch Channel Redeems-->    
     
     <Event>
       <EventDetails>
         <Name>Moustached Wolf</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>eb5cc05c-b9c6-488f-a0b9-e7b384b70ed7</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Source</Goal>
+        <Goal>OBS_Enable_Source</Goal>
         <Args>
           <Arg>Moustache - Image</Arg>
         </Args>
@@ -41,12 +114,12 @@
       <EventDetails>
         <Name>Tea Time!</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>d8ec14bd-a45a-44e9-b905-d17ff32fafcb</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Source</Goal>
+        <Goal>OBS_Enable_Source</Goal>
         <Args>
           <Arg>Tea - Image</Arg>
         </Args>
@@ -57,12 +130,12 @@
       <EventDetails>
         <Name>Throw a Dagger!</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>dd288ff5-2795-4a85-986a-eed84bcaaaab</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Source</Goal>
+        <Goal>OBS_Enable_Source</Goal>
         <Args>
           <Arg>Dagger Throw - Media Source</Arg>
         </Args>
@@ -73,12 +146,12 @@
       <EventDetails>
         <Name>Catch me!</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>7b99606a-d8ea-433a-a340-217e8ed023c2</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Source</Goal>
+        <Goal>OBS_Enable_Source</Goal>
         <Args>
           <Arg>Net - Media Source</Arg>
         </Args>
@@ -89,12 +162,12 @@
       <EventDetails>
         <Name>Ban Tea!</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>36ad7d6c-1f34-4cd8-9716-76a2f3ee9fe3</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Source</Goal>
+        <Goal>OBS_Enable_Source</Goal>
         <Args>
           <Arg>Ban Tea - Media Source</Arg>
         </Args>
@@ -105,18 +178,46 @@
       <EventDetails>
         <Name>Display Random Art</Name>
         <Source>Twitch</Source>
-        <Type>Redeem</Type>
+        <Type>Twitch_Redeem</Type>
         <ID>ba3ab3b7-5802-4d1b-a79a-2f6f8653f387</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
-        <Goal>Enable_Random_Source</Goal>
+        <Goal>OBS_Enable_Random_Source</Goal>
         <Args>
           <Arg>Art 1 - Image</Arg>
           <Arg>Art 2 - Image</Arg>
           <Arg>Art 3 - Image</Arg>
         </Args>
         <Callback>Callback_ID_1</Callback>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Hema Tip!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>bc2ad326-57f6-4b89-b268-e3ae00432fc2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>5</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Survival Tip!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>f0862801-c126-4652-b636-1f86d09bd13c</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
         <Duration>5</Duration>
       </EventTarget>
     </Event>
@@ -127,37 +228,18 @@
       <EventDetails>
         <Name>Art Message Callback</Name>
         <Source>Lakea</Source>
-        <Type>Callback</Type>
+        <Type>Lakea_Callback</Type>
         <ID>Callback_ID_1</ID>
       </EventDetails>
       <EventTarget>
         <Target>Twitch</Target>
-        <Goal>Send_Chat_Message</Goal>
+        <Goal>Twitch_Send_Chat_Message</Goal>
         <Args>
           <Arg>Art Message 1</Arg>
           <Arg>Art Message 2</Arg>
           <Arg>Art Message 3</Arg>
         </Args>
         <UsePreviousArguments>true</UsePreviousArguments>
-        <Callback>Callback_ID_2</Callback>
-        <Duration>0</Duration>
-      </EventTarget>
-    </Event>
-    <Event>
-      <EventDetails>
-        <Name>Art Message Callback 2</Name>
-        <Source>Lakea</Source>
-        <Type>Callback</Type>
-        <ID>Callback_ID_2</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>Twitch</Target>
-        <Goal>Send_Chat_Message</Goal>
-        <Args>
-          <Arg>Art Message 4</Arg>
-        </Args>
-        <UsePreviousArguments>false</UsePreviousArguments>
-        <Callback>Callback_ID_2</Callback>
         <Duration>0</Duration>
       </EventTarget>
     </Event>

@@ -30,8 +30,10 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                     lakea.NewCallback((LakeaCallback)eve);
                     break;
                 case EventType.Twitch_Bits:
+                    twitch.NewBits((TwitchBits)eve);
                     break;
                 case EventType.Twitch_Follow:
+                    twitch.NewFollow((TwitchFollow)eve);
                     break;
                 case EventType.Twitch_Redeem:
                     twitch.NewRedeem((TwitchRedeem)eve);
