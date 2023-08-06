@@ -6,7 +6,9 @@ namespace Lakea_Stream_Assistant.Models.Events.EventAbstracts
     public abstract class Event
     {
         private protected EventSource source;
+        private protected EventType type;
 
         public abstract EventSource Source { get; }
+        public abstract EventType Type { get; }
     }
 }

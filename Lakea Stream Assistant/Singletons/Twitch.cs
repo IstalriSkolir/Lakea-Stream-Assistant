@@ -7,6 +7,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Client.Events;
+using Lakea_Stream_Assistant.Models.OutputFunctions;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -14,7 +15,7 @@ namespace Lakea_Stream_Assistant.Singletons
     {
         //public static bool Initiliased = false;
         public static Tuple<int, int> ServicesConnected = Tuple.Create(0, 2);
-        private static HandleEvents eventHandler;
+        private static EventInput eventHandler;
         private static TwitchPubSub pubSub;
         private static TwitchClient client;
         private static string channelUsername;
@@ -27,7 +28,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initiliases the Singleton by connecting to Twitch with the settings in the config object
-        public static void Init(Config config, HandleEvents newEventsObj)
+        public static void Init(Config config, EventInput newEventsObj)
         {
             try
             {
@@ -151,7 +152,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
             Console.WriteLine("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
-            eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, TwitchEventType.Redeem, e));
+            eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
         }
 
         #endregion

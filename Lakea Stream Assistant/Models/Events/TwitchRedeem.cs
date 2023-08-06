@@ -5,19 +5,19 @@ using TwitchLib.PubSub.Events;
 namespace Lakea_Stream_Assistant.Models.Events
 {
     //Inherits from TwitchEvent, is the class for storing Channel redeem event data
-    public class TwitchRedeem : TwitchEvent
+    public class TwitchRedeem : Event
     {
         private OnChannelPointsRewardRedeemedArgs args;
 
-        public TwitchRedeem(EventSource newSource, TwitchEventType newTwitchEvent, OnChannelPointsRewardRedeemedArgs newArgs)
+        public TwitchRedeem(EventSource source, EventType type, OnChannelPointsRewardRedeemedArgs args)
         {
-            this.source = newSource;
-            this.eventType = newTwitchEvent;
-            this.args = newArgs;
+            this.source = source;
+            this.type = type;
+            this.args = args;
         }
 
         public override EventSource Source { get { return source; } }
-        public override TwitchEventType EventType { get { return eventType; } }
+        public override EventType Type { get { return type; } }
         public OnChannelPointsRewardRedeemedArgs Args { get { return args; } }
     }
 }
