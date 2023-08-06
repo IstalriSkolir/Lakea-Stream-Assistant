@@ -29,6 +29,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                 case "twitchfollow": return EventType.Twitch_Follow;
                 case "twitchredeem": return EventType.Twitch_Redeem;
                 case "lakeacallback": return EventType.Lakea_Callback;
+                case "lakeatimer": return EventType.Lakea_Timer;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventType'");
             }
         }

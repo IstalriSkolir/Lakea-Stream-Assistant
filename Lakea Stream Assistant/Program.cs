@@ -1,4 +1,6 @@
-﻿using Lakea_Stream_Assistant.Models.Configuration;
+﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Models.Configuration;
+using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.OutputFunctions;
 using Lakea_Stream_Assistant.Singletons;
 
@@ -22,6 +24,7 @@ namespace Lakea_Stream_Assistant
             {
                 Thread.Sleep(100);
             }
+            eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer));
             Console.WriteLine("Lakea: All set and ready to go!");
 
             //Pauses main thread to prevent application terminating

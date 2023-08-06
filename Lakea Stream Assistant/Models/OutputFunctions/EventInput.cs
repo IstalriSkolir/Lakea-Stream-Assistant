@@ -26,6 +26,9 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         {
             switch (eve.Type)
             {
+                case EventType.Lakea_Timer:
+                    lakea.NewTimerStart();
+                    break;
                 case EventType.Lakea_Callback:
                     lakea.NewCallback((LakeaCallback)eve);
                     break;
