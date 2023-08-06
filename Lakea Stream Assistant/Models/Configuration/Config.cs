@@ -375,7 +375,7 @@ public partial class ConfigEventEventTarget
 
     private string goalField;
 
-    private string[] argsField;
+    private ConfigEventEventTargetArg[] argsField;
 
     private bool usePreviousArgumentsField;
 
@@ -413,7 +413,7 @@ public partial class ConfigEventEventTarget
 
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("Arg", IsNullable = false)]
-    public string[] Args
+    public ConfigEventEventTargetArg[] Args
     {
         get
         {
@@ -475,6 +475,44 @@ public partial class ConfigEventEventTarget
         set
         {
             this.durationField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class ConfigEventEventTargetArg
+{
+
+    private string keyField;
+
+    private string valueField;
+
+    /// <remarks/>
+    public string Key
+    {
+        get
+        {
+            return this.keyField;
+        }
+        set
+        {
+            this.keyField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string Value
+    {
+        get
+        {
+            return this.valueField;
+        }
+        set
+        {
+            this.valueField = value;
         }
     }
 }

@@ -22,10 +22,10 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                     outputs.NullEvent("Null Event -> " + item.Name);
                     break;
                 case EventGoal.OBS_Disable_Source:
-                    outputs.SetActiveOBSSource(item.Args[0], item.Duration, false, item.Callback);
+                    outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                     break;
                 case EventGoal.OBS_Enable_Source:
-                    outputs.SetActiveOBSSource(item.Args[0], item.Duration, true, item.Callback);
+                    outputs.SetActiveOBSSource(item.Args, item.Duration, true, item.Callback);
                     break;
                 case EventGoal.OBS_Enable_Random_Source:
                     outputs.SetRandomActiveOBSSource(item.Args, item.Duration, true, item.Callback);
@@ -34,10 +34,10 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                     outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                     break;
                 case EventGoal.OBS_Change_Scene:
-                    outputs.ChangeOBSScene(item.Args[0], item.Callback);
+                    outputs.ChangeOBSScene(item.Args, item.Callback);
                     break;
                 case EventGoal.Twitch_Send_Chat_Message:
-                    outputs.SendTwitchChatMessage(item.Args[0], item.Callback);
+                    outputs.SendTwitchChatMessage(item.Args, item.Callback);
                     break;
             }
         }

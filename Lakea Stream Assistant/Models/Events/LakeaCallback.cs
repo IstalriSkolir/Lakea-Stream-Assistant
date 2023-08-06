@@ -21,9 +21,19 @@ namespace Lakea_Stream_Assistant.Models.Events
         public string CallbackID { get { return callbackID; } }
         public IDictionary<string, string> Args { get { return args; } }
 
-        public string[] GetCallbackArguments(EventItem item)
+        public IDictionary<string, string> GetCallbackArguments(EventItem item)
         {
-            string[] newArgs = new string[0];
+
+            //foreach (var arg in args)
+            //{
+            //    if (item.Args.ContainsKey(arg.Key))
+            //    {
+            //        item.Args.Remove(arg.Key);
+            //    }
+            //    item.Args.Add(arg.Key, arg.Value);
+            //}
+            //return item.Args;
+            IDictionary<string, string> newArgs = new Dictionary<string, string>();
             switch (item.EventGoal)
             {
                 case EventGoal.Twitch_Send_Chat_Message:
@@ -33,10 +43,12 @@ namespace Lakea_Stream_Assistant.Models.Events
             return newArgs;
         }
 
-        private string[] callbackArgsForTwitchChatMessage(EventItem item)
+        private IDictionary<string, string> callbackArgsForTwitchChatMessage(EventItem item)
         {
-            int index = Int32.Parse(args["sourceNumber"]);
-            return new string[] { item.Args[index] };
+            IDictionary<string, string> newArgs = new Dictionary<string, string>();
+            string key = "Message" + args["sourceNumber"];
+            newArgs.Add("Message", item.Args[key]);
+            return newArgs;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             List<Tuple<int, string>> bitsOrder = new List<Tuple<int, string>>();
             foreach(var eve in bits)
             {
-                int bitAmount = Int32.Parse(eve.Value.Args[1]);
+                int bitAmount = Int32.Parse(eve.Value.Args["BitsAmount"]);
                 string id = eve.Value.ID;
                 Tuple<int, string> tuple = Tuple.Create(bitAmount, id);
                 bitsOrder.Add(tuple);

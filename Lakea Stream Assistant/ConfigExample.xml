@@ -32,7 +32,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Tea - Image</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Tea - Image</Value>
+          </Arg>
         </Args>
         <Duration>5</Duration>
       </EventTarget>
@@ -51,8 +54,14 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Art 1 - Image</Arg>
-          <Arg>1</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Art 1 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>BitsAmount</Key>
+            <Value>1</Value>
+          </Arg>
         </Args>
         <Duration>5</Duration>
       </EventTarget>
@@ -68,8 +77,14 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Art 2 - Image</Arg>
-          <Arg>5</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Art 2 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>BitsAmount</Key>
+            <Value>5</Value>
+          </Arg>
         </Args>
         <Duration>5</Duration>
       </EventTarget>
@@ -85,8 +100,14 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Art 3 - Image</Arg>
-          <Arg>3</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Art 3 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>BitsAmount</Key>
+            <Value>3</Value>
+          </Arg>
         </Args>
         <Duration>5</Duration>
       </EventTarget>
@@ -105,7 +126,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Moustache - Image</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Moustache - Image</Value>
+          </Arg>
         </Args>
         <Duration>300</Duration>
       </EventTarget>
@@ -121,7 +145,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Tea - Image</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Tea - Image</Value>
+          </Arg>
         </Args>
         <Duration>1200</Duration>
       </EventTarget>
@@ -137,7 +164,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Dagger Throw - Media Source</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Dagger Throw - Media Source</Value>
+          </Arg>
         </Args>
         <Duration>10</Duration>
       </EventTarget>
@@ -153,7 +183,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Net - Media Source</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Net - Media Source</Value>
+          </Arg>
         </Args>
         <Duration>30</Duration>
       </EventTarget>
@@ -169,7 +202,10 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Source</Goal>
         <Args>
-          <Arg>Ban Tea - Media Source</Arg>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Ban Tea - Media Source</Value>
+          </Arg>
         </Args>
         <Duration>0</Duration>
       </EventTarget>
@@ -185,9 +221,18 @@
         <Target>OBS</Target>
         <Goal>OBS_Enable_Random_Source</Goal>
         <Args>
-          <Arg>Art 1 - Image</Arg>
-          <Arg>Art 2 - Image</Arg>
-          <Arg>Art 3 - Image</Arg>
+          <Arg>
+            <Key>Source1</Key>
+            <Value>Art 1 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source2</Key>
+            <Value>Art 2 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source3</Key>
+            <Value>Art 3 - Image</Value>
+          </Arg>
         </Args>
         <Callback>Callback_ID_1</Callback>
         <Duration>5</Duration>
@@ -235,31 +280,26 @@
         <Target>Twitch</Target>
         <Goal>Twitch_Send_Chat_Message</Goal>
         <Args>
-          <Arg>Message</Arg>
-          <Arg>3</Arg>
-          <Arg>5</Arg>
-          <Arg>5</Arg>
-          <Arg>false</Arg>
-        </Args>
-        <Duration>0</Duration>
-      </EventTarget>
-    </Event>
-    <Event>
-      <EventDetails>
-        <Name>Lakea Timer 2</Name>
-        <Source>Lakea</Source>
-        <Type>Lakea_Timer</Type>
-        <ID>Lakea_Timer_ID_2</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>Twitch</Target>
-        <Goal>Twitch_Send_Chat_Message</Goal>
-        <Args>
-          <Arg>Message 2</Arg>
-          <Arg>0</Arg>
-          <Arg>10</Arg>
-          <Arg>10</Arg>
-          <Arg>false</Arg>
+          <Arg>
+            <Key>Message</Key>
+            <Value>This is a message!</Value>
+          </Arg>
+          <Arg>
+            <Key>Start_Delay</Key>
+            <Value>30000</Value>
+          </Arg>
+          <Arg>
+            <Key>Timer_Delay</Key>
+            <Value>50000</Value>
+          </Arg>
+          <Arg>
+            <Key>Timer_Value</Key>
+            <Value>50000</Value>
+          </Arg>
+          <Arg>
+            <Key>First_Fire</Key>
+            <Value>false</Value>
+          </Arg>
         </Args>
         <Duration>0</Duration>
       </EventTarget>
@@ -278,9 +318,18 @@
         <Target>Twitch</Target>
         <Goal>Twitch_Send_Chat_Message</Goal>
         <Args>
-          <Arg>Art Message 1</Arg>
-          <Arg>Art Message 2</Arg>
-          <Arg>Art Message 3</Arg>
+          <Arg>
+            <Key>Message1</Key>
+            <Value>Art Message 1</Value>
+          </Arg>
+          <Arg>
+            <Key>Message2</Key>
+            <Value>Art Message 2</Value>
+          </Arg>
+          <Arg>
+            <Key>Message3</Key>
+            <Value>Art Message 3</Value>
+          </Arg>
         </Args>
         <UsePreviousArguments>true</UsePreviousArguments>
         <Duration>0</Duration>

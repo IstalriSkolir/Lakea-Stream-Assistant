@@ -398,3 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 /Lakea Stream Assistant/Config.xml
+*.dll
+*.pdb
