@@ -53,7 +53,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                     Console.WriteLine("Lakea: Callback -> " + callbacks[eve.CallbackID].Name);
                     if (callbacks[eve.CallbackID].UsePreviousArguments)
                     {
-                        string[] args = eve.GetCallbackArguments(callbacks[eve.CallbackID]);
+                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.CallbackID]);
                         EventItem item = new EventItem(callbacks[eve.CallbackID], args);
                         processer.ProcessEvent(item);
                     }
@@ -99,34 +99,34 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         {
             foreach(var eve in timers)
             {
-                if (eve.Value.Args[4] == "false")
+                if (eve.Value.Args["First_Fire"] == "false")
                 {
-                    int timeLeft = Int32.Parse(eve.Value.Args[1]);
+                    int timeLeft = Int32.Parse(eve.Value.Args["Timer_Value"]);
                     timeLeft--;
                     if(timeLeft <= 0)
                     {
                         Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
                         processer.ProcessEvent(timers[eve.Value.ID]);
-                        eve.Value.Args[4] = "true";
+                        eve.Value.Args["First_Fire"] = "true";
                     }
                     else
                     {
-                        eve.Value.Args[1] = timeLeft.ToString();
+                        eve.Value.Args["Timer_Value"] = timeLeft.ToString();
                     }
                 }
                 else
                 {
-                    int timeleft = Int32.Parse(eve.Value.Args[3]);
+                    int timeleft = Int32.Parse(eve.Value.Args["Timer_Value"]);
                     timeleft--;
                     if (timeleft <= 0)
                     {
                         Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
                         processer.ProcessEvent(timers[eve.Value.ID]);
-                        eve.Value.Args[3] = eve.Value.Args[2];
+                        eve.Value.Args["Timer_Value"] = eve.Value.Args["Timer_Delay"];
                     }
                     else
                     {
-                        eve.Value.Args[3] = timeleft.ToString();
+                        eve.Value.Args["Timer_Value"] = timeleft.ToString();
                     }
                 }
             }
