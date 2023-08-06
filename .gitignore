@@ -397,4 +397,15 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-/Lakea Stream Assistant/Config.xml
+/config.xml
+Lakea Stream Assistant/Config.xml
+Lakea Stream Assistant/bin/
+Lakea Stream Assistant/obj/
+Lakea Tester/obj/Debug/net6.0/Lakea Tester.pdb
+Lakea Tester/obj/Debug/net6.0/Lakea Tester.dll
+Lakea Tester/obj/Debug/net6.0/Lakea Tester.csproj.AssemblyReference.cache
+Lakea Tester/bin/Debug/net6.0/Lakea Tester.pdb
+Lakea Tester/bin/Debug/net6.0/Lakea Tester.dll
+Lakea Tester/bin/Debug/net6.0/Lakea Stream Assistant.pdb
+Lakea Tester/bin/Debug/net6.0/Lakea Stream Assistant.dll
+Lakea Tester/bin/Debug/net6.0/Config.xml
