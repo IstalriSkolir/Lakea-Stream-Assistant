@@ -7,16 +7,12 @@
         Twitch
     }
 
-    public enum TwitchEventType
+    public enum EventType
     {
-        Bits,
-        Follow,
-        Redeem
-    }
-
-    public enum LakeaEventType
-    {
-        Callback
+        Twitch_Bits,
+        Twitch_Follow,
+        Twitch_Redeem,
+        Lakea_Callback
     }
 
     public enum EventTarget
@@ -28,11 +24,11 @@
 
     public enum EventGoal
     {
-        Enable_OBS_Source,
-        Disable_OBS_Source,
-        Enable_Random_OBS_Source,
-        Disable_Random_OBS_Source,
-        Change_OBS_Scene,
-        Send_Twitch_Chat_Message
+        OBS_Enable_Source,
+        OBS_Disable_Source,
+        OBS_Enable_Random_Source,
+        OBS_Disable_Random_Source,
+        OBS_Change_Scene,
+        Twitch_Send_Chat_Message
     }
 }

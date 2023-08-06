@@ -1,5 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Models.Configuration;
-using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.OutputFunctions;
 using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant
@@ -11,7 +11,7 @@ namespace Lakea_Stream_Assistant
         {
             Console.WriteLine("Lakea is waking up...");
             Config config = new LoadConfig().LoadConfigFromFile();
-            HandleEvents eventHandler = new HandleEvents(config.Events);
+            EventInput eventHandler = new EventInput(config.Events);
             OBS.Init(config);
             while (!OBS.Initiliased)
             {

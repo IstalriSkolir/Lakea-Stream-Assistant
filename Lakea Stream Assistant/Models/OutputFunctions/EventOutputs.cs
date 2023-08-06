@@ -1,17 +1,14 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
-using System;
-using TwitchLib.Api.Helix.Models.Soundtrack;
-
 namespace Lakea_Stream_Assistant.Models.OutputFunctions
 {
     //This class handles the outputs that are triggered from events
     public class EventOutputs
     {
-        private HandleEvents handleEvents;
+        private EventInput handleEvents;
         private Random random = new Random();
 
-        public EventOutputs(HandleEvents handleEvents)
+        public EventOutputs(EventInput handleEvents)
         {
             this.handleEvents = handleEvents;
         }
@@ -101,7 +98,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         //Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(IDictionary<string, string> args, string callback)
         {
-            handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, LakeaEventType.Callback, callback, args));
+            handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
         }
     }
 }
