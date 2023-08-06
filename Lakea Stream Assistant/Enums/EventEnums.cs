@@ -12,7 +12,8 @@
         Twitch_Bits,
         Twitch_Follow,
         Twitch_Redeem,
-        Lakea_Callback
+        Lakea_Callback,
+        Lakea_Timer
     }
 
     public enum EventTarget
