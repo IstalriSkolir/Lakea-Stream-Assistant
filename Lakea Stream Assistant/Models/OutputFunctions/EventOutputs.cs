@@ -69,7 +69,14 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         //Changes OBS scene
         public void ChangeOBSScene(IDictionary<string, string> args, string callback)
         {
-            Singletons.OBS.ChangeScene(args["Scene"]);
+            if (args.ContainsKey("Transition"))
+            {
+                Singletons.OBS.ChangeScene(args["Scene"], args["Transition"]);
+            }
+            else
+            {
+                Singletons.OBS.ChangeScene(args["Scene"]);
+            }
             if (callback != null && callback != string.Empty)
             {
                 IDictionary<string, string> callbackArgs = new Dictionary<string, string>

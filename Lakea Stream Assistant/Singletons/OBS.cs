@@ -82,7 +82,13 @@ namespace Lakea_Stream_Assistant.Singletons
                     }
                 }
                 Console.WriteLine("OBS: Initialising Resources...");
-                resources = new OBSResources(sceneList, sourceDict);
+                var sceneTransitions = client.GetSceneTransitionList();
+                List<string> transitionNames = new List<string>();
+                foreach (var transition in sceneTransitions.Transitions)
+                {
+                    transitionNames.Add(transition.Name);
+                }
+                resources = new OBSResources(sceneList, sourceDict, transitionNames);
             }
             catch (Exception ex)
             {
@@ -113,12 +119,31 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Changing scene -> " + scene);
+                Console.WriteLine("OBS: Changing Scene -> " + scene);
                 client.SetCurrentProgramScene(scene);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("OBS: Failed to Change Scenes -> " + ex.Message);
+            }
+        }
+
+        //Changes the scene to the passed in scene with the passesd in transition
+        //Todo: Client resets the default transition after 3 seconds, will cause issues for transitions that are longer than
+        //3 seconds, should get transition length then reset after that period of time
+        public static void ChangeScene(string scene, string transition)
+        {
+            try
+            {
+                Console.WriteLine("OBS: Changing Scene with Transition -> " + scene);
+                string curTransition = client.GetCurrentSceneTransition().Name;
+                client.SetCurrentSceneTransition(transition);
+                client.SetCurrentProgramScene(scene);
+                Task.Delay(3000).ContinueWith(t => { client.SetCurrentSceneTransition(curTransition); });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("OBS: Failed to Change Scenes with Transition -> " + ex.Message);
             }
         }
 
