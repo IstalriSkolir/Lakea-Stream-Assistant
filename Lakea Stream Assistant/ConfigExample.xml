@@ -16,6 +16,7 @@
       <UserToken>{User_Token}</UserToken>
       <ChannelConnection>materiescoil</ChannelConnection>
     </BotChannel>
+    <CommandIdentifier>!</CommandIdentifier>
   </Twitch>
   <Events>
 

@@ -25,6 +25,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static string botUsername;
         private static string botAuthKey;
         private static string botChannelToJoin;
+        private static char commandIdentifier;
 
         #region Initiliase
 
@@ -40,6 +41,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 botUsername = config.Twitch.BotChannel.UserName;
                 botAuthKey = config.Twitch.BotChannel.UserToken;
                 botChannelToJoin = config.Twitch.BotChannel.ChannelConnection;
+                commandIdentifier = config.Twitch.CommandIdentifier.ToCharArray()[0];
                 initiliaseClient();
                 initiliasePubSub();
             }
@@ -66,7 +68,9 @@ namespace Lakea_Stream_Assistant.Singletons
                 WebSocketClient customClient = new WebSocketClient(clientOptions);
                 client = new TwitchClient(customClient);
                 client.Initialize(crednetials, botChannelToJoin);
+                client.AddChatCommandIdentifier(commandIdentifier);
                 client.OnConnected += onClientConnected;
+                client.OnChatCommandReceived += onChatCommand;
                 client.Connect();
             }
             catch (Exception ex)
@@ -107,6 +111,12 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Console.WriteLine("Twitch: Client Connected");
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
+        }
+
+        private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
+        {
+            Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+            eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
         }
 
         //Write a message to Twitch chat

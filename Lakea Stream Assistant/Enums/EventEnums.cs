@@ -10,6 +10,7 @@
     public enum EventType
     {
         Twitch_Bits,
+        Twitch_Command,
         Twitch_Follow,
         Twitch_Redeem,
         Lakea_Callback,

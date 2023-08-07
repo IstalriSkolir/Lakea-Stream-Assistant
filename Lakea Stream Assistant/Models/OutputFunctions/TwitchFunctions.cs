@@ -13,6 +13,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
         private IDictionary<string, EventItem> follows;
         private IDictionary<string, EventItem> bits;
         private IDictionary<string, EventItem> redeems;
+        private IDictionary<string, EventItem> commands;
         private List<Tuple<int, string>> bitsOrder;
         
         //Contructor stores list of events to check against when it receives a new event
@@ -22,6 +23,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             this.follows = new Dictionary<string, EventItem>();
             this.bits = new Dictionary<string, EventItem>();
             this.redeems = new Dictionary<string, EventItem>();
+            this.commands = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -39,6 +41,9 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                             break;
                         case EventType.Twitch_Redeem:
                             redeems.Add(eve.EventDetails.ID, new EventItem(eve));
+                            break;
+                        case EventType.Twitch_Command:
+                            commands.Add(eve.EventDetails.ID, new EventItem(eve));
                             break;
                         default:
                             Console.WriteLine("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
@@ -64,7 +69,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             return bitsOrder;
         }
 
-        //When a follow event is triggered, checks dictionary for event before triggering events effect
+        //When a follow event is triggered, checks the follow dictionary for event before triggering events effect
         public void NewFollow(TwitchFollow eve)
         {
             try
@@ -84,7 +89,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             }
         }
 
-        //When a channel redeem event is triggered, checks dictionary for event before triggering the events effect
+        //When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
         public void NewBits(TwitchBits eve)
         {
             bool eventFound = false;
@@ -116,7 +121,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             }
         }
 
-        //When a channel redeem event is triggered, checks dictionary for event before triggering the events effect
+        //When a channel redeem event is triggered, checks the redeem dictionary for event before triggering the events effect
         public void NewRedeem(TwitchRedeem eve)
         {
             try
@@ -133,6 +138,26 @@ namespace Lakea_Stream_Assistant.Models.Twitch
             catch(Exception e)
             {
                 Console.WriteLine("Lakea: Twitch Redeem Error -> " + e.Message);
+            }
+        }
+
+        //When a chat command event is triggered, checks the commands dictionary for event before triggering the events effect
+        public void NewCommand(TwitchCommand eve)
+        {
+            try
+            {
+                if (commands.ContainsKey(eve.Args.Command.CommandText))
+                {
+                    processer.ProcessEvent(commands[eve.Args.Command.CommandText]);
+                }
+                else
+                {
+                    Console.WriteLine("Lakea: Unrecognised Channel Command -> " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
+                }
+            }
+            catch(Exception e) 
+            {
+                Console.WriteLine("Lakea: Twitch Command Error -> " + e.Message);
             }
         }
     }
