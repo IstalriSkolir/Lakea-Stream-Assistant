@@ -125,6 +125,8 @@ public partial class ConfigTwitch
 
     private ConfigTwitchBotChannel botChannelField;
 
+    private string commandIdentifierField;
+
     /// <remarks/>
     public ConfigTwitchStreamingChannel StreamingChannel
     {
@@ -148,6 +150,19 @@ public partial class ConfigTwitch
         set
         {
             this.botChannelField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string CommandIdentifier
+    {
+        get
+        {
+            return this.commandIdentifierField;
+        }
+        set
+        {
+            this.commandIdentifierField = value;
         }
     }
 }

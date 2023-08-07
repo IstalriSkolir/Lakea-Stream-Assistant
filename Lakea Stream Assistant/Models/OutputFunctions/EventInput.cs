@@ -35,6 +35,9 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                 case EventType.Twitch_Bits:
                     twitch.NewBits((TwitchBits)eve);
                     break;
+                case EventType.Twitch_Command:
+                    twitch.NewCommand((TwitchCommand)eve);
+                    break;
                 case EventType.Twitch_Follow:
                     twitch.NewFollow((TwitchFollow)eve);
                     break;
