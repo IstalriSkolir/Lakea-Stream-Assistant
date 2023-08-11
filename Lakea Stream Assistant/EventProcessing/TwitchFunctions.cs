@@ -2,9 +2,8 @@
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
-using Lakea_Stream_Assistant.Models.OutputFunctions;
 
-namespace Lakea_Stream_Assistant.Models.Twitch
+namespace Lakea_Stream_Assistant.EventProcessing
 {
     // Functions for handling Twitch Events
     public class TwitchFunctions
@@ -15,15 +14,15 @@ namespace Lakea_Stream_Assistant.Models.Twitch
         private IDictionary<string, EventItem> redeems;
         private IDictionary<string, EventItem> commands;
         private List<Tuple<int, string>> bitsOrder;
-        
+
         //Contructor stores list of events to check against when it receives a new event
         public TwitchFunctions(ConfigEvent[] events, EventProcesser processer)
         {
             this.processer = processer;
-            this.follows = new Dictionary<string, EventItem>();
-            this.bits = new Dictionary<string, EventItem>();
-            this.redeems = new Dictionary<string, EventItem>();
-            this.commands = new Dictionary<string, EventItem>();
+            follows = new Dictionary<string, EventItem>();
+            bits = new Dictionary<string, EventItem>();
+            redeems = new Dictionary<string, EventItem>();
+            commands = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -48,7 +47,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                         default:
                             Console.WriteLine("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
                             break;
-                    }                   
+                    }
                 }
             }
             bitsOrder = sortBitsOrder();
@@ -58,9 +57,9 @@ namespace Lakea_Stream_Assistant.Models.Twitch
         private List<Tuple<int, string>> sortBitsOrder()
         {
             List<Tuple<int, string>> bitsOrder = new List<Tuple<int, string>>();
-            foreach(var eve in bits)
+            foreach (var eve in bits)
             {
-                int bitAmount = Int32.Parse(eve.Value.Args["BitsAmount"]);
+                int bitAmount = int.Parse(eve.Value.Args["BitsAmount"]);
                 string id = eve.Value.ID;
                 Tuple<int, string> tuple = Tuple.Create(bitAmount, id);
                 bitsOrder.Add(tuple);
@@ -94,9 +93,9 @@ namespace Lakea_Stream_Assistant.Models.Twitch
         {
             bool eventFound = false;
             int bitAmount = eve.Args.BitsUsed;
-            for(int i = 0; i < bitsOrder.Count; i++)
+            for (int i = 0; i < bitsOrder.Count; i++)
             {
-                if(i + 1 != bitsOrder.Count)
+                if (i + 1 != bitsOrder.Count)
                 {
                     if (bitAmount >= bitsOrder[i].Item1 && bitAmount < bitsOrder[i + 1].Item1)
                     {
@@ -107,7 +106,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                 }
                 else
                 {
-                    if(bitAmount >= bitsOrder[i].Item1)
+                    if (bitAmount >= bitsOrder[i].Item1)
                     {
                         eventFound = true;
                         string id = bitsOrder[i].Item2;
@@ -135,7 +134,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                     Console.WriteLine("Lakea: Unrecognised Channel Redeem -> " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Lakea: Twitch Redeem Error -> " + e.Message);
             }
@@ -155,7 +154,7 @@ namespace Lakea_Stream_Assistant.Models.Twitch
                     Console.WriteLine("Lakea: Unrecognised Channel Command -> " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
                 }
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 Console.WriteLine("Lakea: Twitch Command Error -> " + e.Message);
             }

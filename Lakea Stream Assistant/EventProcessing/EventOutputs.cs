@@ -1,6 +1,8 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
-namespace Lakea_Stream_Assistant.Models.OutputFunctions
+using Lakea_Stream_Assistant.Models.Events.EventItems;
+
+namespace Lakea_Stream_Assistant.EventProcessing
 {
     //This class handles the outputs that are triggered from events
     public class EventOutputs
@@ -16,14 +18,14 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         #region OBS Outputs
 
         //Set OBS source active status, resets after duration expires if there is a duration
-        public void SetActiveOBSSource(IDictionary<string, string> args, int duration, bool active, string callback, bool invoked = false)
+        public void SetActiveOBSSource(IDictionary<string, string> args, int duration, bool active, Callbacks callback, bool invoked = false)
         {
             Singletons.OBS.SetSourceEnabled(args["Source"], active);
             if (!invoked && duration > 0)
             {
-                Task.Delay(duration * 1000).ContinueWith(t => SetActiveOBSSource(args, duration, !active, string.Empty, true));
+                Task.Delay(duration * 1000).ContinueWith(t => SetActiveOBSSource(args, duration, !active, null, true));
             }
-            if (callback != null && callback != string.Empty)
+            if (callback != null)
             {
                 IDictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
@@ -36,7 +38,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         }
 
         //Set random OBS source active, resets after duration expires if there is a duration
-        public void SetRandomActiveOBSSource(IDictionary<string, string> args, int duration, bool active, string callback)
+        public void SetRandomActiveOBSSource(IDictionary<string, string> args, int duration, bool active, Callbacks callback)
         {
             int ran = random.Next(1, args.Count + 1);
             string key = "Source" + ran;
@@ -46,9 +48,9 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
             {
                 IDictionary<string, string> newArgs = new Dictionary<string, string>();
                 newArgs.Add("Source", args[key]);
-                Task.Delay(duration * 1000).ContinueWith(t => { SetActiveOBSSource(newArgs, duration, !active, string.Empty, true); });
+                Task.Delay(duration * 1000).ContinueWith(t => { SetActiveOBSSource(newArgs, duration, !active, null, true); });
             }
-            if (callback != null && callback != string.Empty)
+            if (callback != null)
             {
                 IDictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
@@ -67,7 +69,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         }
 
         //Changes OBS scene
-        public void ChangeOBSScene(IDictionary<string, string> args, string callback)
+        public void ChangeOBSScene(IDictionary<string, string> args, Callbacks callback)
         {
             if (args.ContainsKey("Transition"))
             {
@@ -77,7 +79,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
             {
                 Singletons.OBS.ChangeScene(args["Scene"]);
             }
-            if (callback != null && callback != string.Empty)
+            if (callback != null)
             {
                 IDictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
@@ -91,10 +93,10 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
 
         #region Twitch Outputs
 
-        public void SendTwitchChatMessage(IDictionary<string, string> args, string callback)
+        public void SendTwitchChatMessage(IDictionary<string, string> args, Callbacks callback)
         {
             Singletons.Twitch.WriteToChat(args["Message"]);
-            if(callback != null && callback != string.Empty)
+            if (callback != null)
             {
                 IDictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
@@ -113,9 +115,19 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         }
 
         //Creates a callback object with the passed arguments and reruns the New Event function
-        private void createCallback(IDictionary<string, string> args, string callback)
+        private void createCallback(IDictionary<string, string> args, Callbacks callback)
         {
-            handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+            if(callback.Delay > 0)
+            {
+                handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+            }
+            else
+            {
+                Task.Delay(callback.Delay * 1000).ContinueWith(t =>
+                {
+                    handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+                });
+            }
         }
     }
 }

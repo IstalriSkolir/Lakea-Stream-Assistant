@@ -2,10 +2,8 @@
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
-using System;
-using TwitchLib.Api.Helix.Models.Soundtrack;
 
-namespace Lakea_Stream_Assistant.Models.OutputFunctions
+namespace Lakea_Stream_Assistant.EventProcessing
 {
     // Functions for handling Lakea Events
     public class LakeaFunctions
@@ -15,16 +13,16 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         private IDictionary<string, EventItem> timers;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer) 
+        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer)
         {
             this.processer = processer;
-            this.callbacks = new Dictionary<string, EventItem>();
-            this.timers = new Dictionary<string, EventItem>();
+            callbacks = new Dictionary<string, EventItem>();
+            timers = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
-            foreach (ConfigEvent eve in  events)
+            foreach (ConfigEvent eve in events)
             {
                 EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
-                if (source == Enums.EventSource.Lakea)
+                if (source == EventSource.Lakea)
                 {
                     EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
                     switch (type)
@@ -48,26 +46,26 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         {
             try
             {
-                if (callbacks.ContainsKey(eve.CallbackID))
+                if (callbacks.ContainsKey(eve.Callback.CallbackID))
                 {
-                    Console.WriteLine("Lakea: Callback -> " + callbacks[eve.CallbackID].Name);
-                    if (callbacks[eve.CallbackID].UsePreviousArguments)
+                    Console.WriteLine("Lakea: Callback -> " + callbacks[eve.Callback.CallbackID].Name);
+                    if (callbacks[eve.Callback.CallbackID].UsePreviousArguments)
                     {
-                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.CallbackID]);
-                        EventItem item = new EventItem(callbacks[eve.CallbackID], args);
+                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.CallbackID]);
+                        EventItem item = new EventItem(callbacks[eve.Callback.CallbackID], args);
                         processer.ProcessEvent(item);
                     }
                     else
                     {
-                        processer.ProcessEvent(callbacks[eve.CallbackID]);
+                        processer.ProcessEvent(callbacks[eve.Callback.CallbackID]);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: Unrecognised Callback ID -> " + eve.CallbackID);
+                    Console.WriteLine("Lakea: Unrecognised Callback ID -> " + eve.Callback.CallbackID);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Lakea: Callback Error -> " + e.Message);
             }
@@ -76,9 +74,9 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         //Starts internal 1 second ticking timer if there are any timer events
         public void NewTimerStart()
         {
-            if(timers.Count > 0)
+            if (timers.Count > 0)
             {
-                if(timers.Count == 1)
+                if (timers.Count == 1)
                 {
                     Console.WriteLine("Lakea: " + timers.Count + " Timer event Found, Initiliasing Timer...");
                 }
@@ -97,13 +95,13 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
         //Internal timer ticks every second
         public void NewTimerTick()
         {
-            foreach(var eve in timers)
+            foreach (var eve in timers)
             {
                 if (eve.Value.Args["First_Fire"] == "false")
                 {
-                    int timeLeft = Int32.Parse(eve.Value.Args["Timer_Value"]);
+                    int timeLeft = int.Parse(eve.Value.Args["Timer_Value"]);
                     timeLeft--;
-                    if(timeLeft <= 0)
+                    if (timeLeft <= 0)
                     {
                         Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
                         processer.ProcessEvent(timers[eve.Value.ID]);
@@ -116,7 +114,7 @@ namespace Lakea_Stream_Assistant.Models.OutputFunctions
                 }
                 else
                 {
-                    int timeleft = Int32.Parse(eve.Value.Args["Timer_Value"]);
+                    int timeleft = int.Parse(eve.Value.Args["Timer_Value"]);
                     timeleft--;
                     if (timeleft <= 0)
                     {

@@ -396,7 +396,7 @@ public partial class ConfigEventEventTarget
 
     private bool usePreviousArgumentsFieldSpecified;
 
-    private string callbackField;
+    private ConfigEventEventTargetCallback callbackField;
 
     private ushort durationField;
 
@@ -468,7 +468,7 @@ public partial class ConfigEventEventTarget
     }
 
     /// <remarks/>
-    public string Callback
+    public ConfigEventEventTargetCallback Callback
     {
         get
         {
@@ -528,6 +528,44 @@ public partial class ConfigEventEventTargetArg
         set
         {
             this.valueField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class ConfigEventEventTargetCallback
+{
+
+    private string eventIDField;
+
+    private byte delayField;
+
+    /// <remarks/>
+    public string EventID
+    {
+        get
+        {
+            return this.eventIDField;
+        }
+        set
+        {
+            this.eventIDField = value;
+        }
+    }
+
+    /// <remarks/>
+    public byte Delay
+    {
+        get
+        {
+            return this.delayField;
+        }
+        set
+        {
+            this.delayField = value;
         }
     }
 }

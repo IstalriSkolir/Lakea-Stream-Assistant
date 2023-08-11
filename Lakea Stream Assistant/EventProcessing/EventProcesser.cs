@@ -1,14 +1,14 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 
-namespace Lakea_Stream_Assistant.Models.OutputFunctions
+namespace Lakea_Stream_Assistant.EventProcessing
 {
     //handles stored 'EventItem' and calls the corresponding 'EventOutputs' function
     public class EventProcesser
     {
         private EventOutputs outputs;
 
-        public EventProcesser(EventOutputs outputs) 
+        public EventProcesser(EventOutputs outputs)
         {
             this.outputs = outputs;
         }

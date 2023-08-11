@@ -7,8 +7,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Client.Events;
-using Lakea_Stream_Assistant.Models.OutputFunctions;
-using TwitchLib.Api.Core.Internal;
+using Lakea_Stream_Assistant.EventProcessing;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
