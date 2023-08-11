@@ -47,6 +47,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: Failed to Connect -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Console.ReadLine();
                 Environment.Exit(1);
             }
@@ -58,6 +59,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Console.WriteLine("Twitch: Client Connecting...");
+                Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
                 ConnectionCredentials crednetials = new ConnectionCredentials(botUsername, botAuthKey);
                 var clientOptions = new ClientOptions
                 {
@@ -75,6 +77,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: Client Failed to Connect -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -84,6 +87,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Console.WriteLine("Twitch: PubSub Connecting...");
+                Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Pub Sub...");
                 pubSub = new TwitchPubSub();
                 pubSub.OnPubSubServiceConnected += onPubSubServiceConnected;
                 pubSub.OnListenResponse += onPubSubListenResponse;
@@ -98,6 +102,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: PubSub Failed to Connect -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -109,12 +114,14 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onClientConnected(object sender, OnConnectedArgs e)
         {
             Console.WriteLine("Twitch: Client Connected");
+            Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch Client...");
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
 
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
             Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Command: -> " + e.Command.CommandIdentifier + e.Command.CommandText);
             eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
         }
 
@@ -122,6 +129,7 @@ namespace Lakea_Stream_Assistant.Singletons
         public static void WriteToChat(string message)
         {
             Console.WriteLine("Twitch: Sending Message -> '" + message + "'");
+            Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
             client.SendMessage(client.JoinedChannels[0], $"" + message);
         }
 
@@ -135,30 +143,29 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Console.WriteLine("Twitch: Sending PubSub Auth Key...");
+                Logs.Instance.NewLog(LogLevel.Info, "Sending Twitch PubSub Auth Key...");
                 pubSub.SendTopics(channelAuthKey);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Twitch: Failed to send PubSub Auth Key -> " + ex.Message);
-                Console.ReadLine();
-                Environment.Exit(1);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
         //Listen for if connection and auth key were succesful
         private static void onPubSubListenResponse(object sender, OnListenResponseArgs e)
         {
-            if (!e.Successful)
+            if (e.Successful)
             {
-                Console.WriteLine("Failed to connect to Twitch PubSub: " + e.Response.Error);
-                Console.ReadLine();
-                Environment.Exit(1);
+                Console.WriteLine("Twitch: PubSub Connected");
+                Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch PubSub");
+                ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
             }
             else
             {
-                Console.WriteLine("Twitch: PubSub Connected");
-                //Initiliased = true;
-                ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
+                Console.WriteLine("Failed to connect to Twitch PubSub: " + e.Response.Error);
+                Logs.Instance.NewLog(LogLevel.Error, e.Response.Error);
             }
         }
 
@@ -166,6 +173,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChannelFollow(object sender, OnFollowArgs e)
         {
             Console.WriteLine("Twitch: Follow -> " + e.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.DisplayName);
             eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
         }
 
@@ -173,6 +181,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChannelBitsV2(object sender, OnBitsReceivedV2Args e)
         {
             Console.WriteLine("Twitch: Bits -> " + e.BitsUsed);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Bits -> " + e.BitsUsed);
             eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
         }
 
@@ -180,6 +189,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
             Console.WriteLine("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
             eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
         }
 

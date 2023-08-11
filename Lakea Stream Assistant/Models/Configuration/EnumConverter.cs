@@ -5,7 +5,10 @@ namespace Lakea_Stream_Assistant.Models.Configuration
 {
     //This class converts string to their respective enum types
     public class EnumConverter
-    { 
+    {
+
+        #region Event Enums
+
         //Returns 'EventSource' type from string
         public EventSource ConvertEventSourceString(string source)
         {
@@ -65,6 +68,26 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventGoal'");
             }
         }
+
+        #endregion
+
+        #region Lakea Enums
+
+        //Returns 'LogLevel' type from string
+        public LogLevel ConvertLogLevelString(string source)
+        {
+            source = prepareString(source);
+            switch (source)
+            {
+                case "info": return LogLevel.Info;
+                case "warning": return LogLevel.Warning;
+                case "error": return LogLevel.Error;
+                case "fatal": return LogLevel.Fatal;
+                default: throw new EnumConversionException("Can not convert '" + source + "' to type 'LogLevel'");
+            }
+        }
+
+        #endregion
 
         //Cuts source string down to minimise chance of user error
         private string prepareString(string source)

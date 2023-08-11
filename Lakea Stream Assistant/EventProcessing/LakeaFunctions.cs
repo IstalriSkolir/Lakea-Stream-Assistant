@@ -2,6 +2,7 @@
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
+using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant.EventProcessing
 {
@@ -21,22 +22,31 @@ namespace Lakea_Stream_Assistant.EventProcessing
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
-                EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
-                if (source == EventSource.Lakea)
+                try
                 {
-                    EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
-                    switch (type)
+                    EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
+                    if (source == EventSource.Lakea)
                     {
-                        case EventType.Lakea_Callback:
-                            callbacks.Add(eve.EventDetails.ID, new EventItem(eve));
-                            break;
-                        case EventType.Lakea_Timer:
-                            timers.Add(eve.EventDetails.ID, new EventItem(eve));
-                            break;
-                        default:
-                            Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
-                            break;
+                        EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
+                        switch (type)
+                        {
+                            case EventType.Lakea_Callback:
+                                callbacks.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Lakea_Timer:
+                                timers.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            default:
+                                Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
+                                Logs.Instance.NewLog(LogLevel.Warning, new Exception("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type));
+                                break;
+                        }
                     }
+                }
+                catch(Exception ex)
+                {
+                    Console.Error.WriteLine("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
+                    Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
         }
@@ -63,11 +73,13 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 else
                 {
                     Console.WriteLine("Lakea: Unrecognised Callback ID -> " + eve.Callback.CallbackID);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Callback ID -> " + eve.Callback.CallbackID);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Callback Error -> " + e.Message);
+                Console.WriteLine("Lakea: Callback Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -78,17 +90,20 @@ namespace Lakea_Stream_Assistant.EventProcessing
             {
                 if (timers.Count == 1)
                 {
-                    Console.WriteLine("Lakea: " + timers.Count + " Timer event Found, Initiliasing Timer...");
+                    Console.WriteLine("Lakea: " + timers.Count + " Timer Event Found, Initiliasing Timer...");
+                    Logs.Instance.NewLog(LogLevel.Info, timers.Count + " Timer Event Found, Initiliasing Timer...");
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: " + timers.Count + " Timer events Found, Initiliasing Timer...");
+                    Console.WriteLine("Lakea: " + timers.Count + " Timer Events Found, Initiliasing Timer...");
+                    Logs.Instance.NewLog(LogLevel.Info, timers.Count + " Timer Events Found, Initiliasing Timer...");
                 }
                 Task.Delay(1000).ContinueWith(t => NewTimerTick());
             }
             else
             {
                 Console.WriteLine("Lakea: No Timer Events, Timer Not Initiliased");
+                Logs.Instance.NewLog(LogLevel.Info, "No Timer Events, Timer Not Initiliased");
             }
         }
 
@@ -97,35 +112,42 @@ namespace Lakea_Stream_Assistant.EventProcessing
         {
             foreach (var eve in timers)
             {
-                if (eve.Value.Args["First_Fire"] == "false")
+                try
                 {
-                    int timeLeft = int.Parse(eve.Value.Args["Timer_Value"]);
-                    timeLeft--;
-                    if (timeLeft <= 0)
+                    if (eve.Value.Args["First_Fire"] == "false")
                     {
-                        Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
-                        processer.ProcessEvent(timers[eve.Value.ID]);
-                        eve.Value.Args["First_Fire"] = "true";
+                        int timeLeft = int.Parse(eve.Value.Args["Timer_Value"]);
+                        timeLeft--;
+                        if (timeLeft <= 0)
+                        {
+                            Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
+                            processer.ProcessEvent(timers[eve.Value.ID]);
+                            eve.Value.Args["First_Fire"] = "true";
+                        }
+                        else
+                        {
+                            eve.Value.Args["Timer_Value"] = timeLeft.ToString();
+                        }
                     }
                     else
                     {
-                        eve.Value.Args["Timer_Value"] = timeLeft.ToString();
+                        int timeleft = int.Parse(eve.Value.Args["Timer_Value"]);
+                        timeleft--;
+                        if (timeleft <= 0)
+                        {
+                            Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
+                            processer.ProcessEvent(timers[eve.Value.ID]);
+                            eve.Value.Args["Timer_Value"] = eve.Value.Args["Timer_Delay"];
+                        }
+                        else
+                        {
+                            eve.Value.Args["Timer_Value"] = timeleft.ToString();
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    int timeleft = int.Parse(eve.Value.Args["Timer_Value"]);
-                    timeleft--;
-                    if (timeleft <= 0)
-                    {
-                        Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
-                        processer.ProcessEvent(timers[eve.Value.ID]);
-                        eve.Value.Args["Timer_Value"] = eve.Value.Args["Timer_Delay"];
-                    }
-                    else
-                    {
-                        eve.Value.Args["Timer_Value"] = timeleft.ToString();
-                    }
+                    Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
             Task.Delay(1000).ContinueWith(t => NewTimerTick());
