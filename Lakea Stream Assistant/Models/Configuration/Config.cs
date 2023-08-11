@@ -14,11 +14,26 @@ in the xml file before returning here and selecting Edit -> Paste Special -> Pas
 public partial class Config
 {
 
+    private ConfigSettings settingsField;
+
     private ConfigOBS oBSField;
 
     private ConfigTwitch twitchField;
 
     private ConfigEvent[] eventsField;
+
+    /// <remarks/>
+    public ConfigSettings Settings
+    {
+        get
+        {
+            return this.settingsField;
+        }
+        set
+        {
+            this.settingsField = value;
+        }
+    }
 
     /// <remarks/>
     public ConfigOBS OBS
@@ -57,6 +72,29 @@ public partial class Config
         set
         {
             this.eventsField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class ConfigSettings
+{
+
+    private string logLevelField;
+
+    /// <remarks/>
+    public string LogLevel
+    {
+        get
+        {
+            return this.logLevelField;
+        }
+        set
+        {
+            this.logLevelField = value;
         }
     }
 }

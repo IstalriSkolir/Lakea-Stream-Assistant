@@ -1,6 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
+using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant.EventProcessing
 {
@@ -112,6 +113,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         public void NullEvent(string message)
         {
             Console.WriteLine("Lakea: " + message);
+            Logs.Instance.NewLog(LogLevel.Info, "Null Event -> ");
         }
 
         //Creates a callback object with the passed arguments and reruns the New Event function
