@@ -1,9 +1,8 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
-using Lakea_Stream_Assistant.Models.Twitch;
 
-namespace Lakea_Stream_Assistant.Models.OutputFunctions
+namespace Lakea_Stream_Assistant.EventProcessing
 {
     //Receives new events and calls the relevant functions for the event type
     public class EventInput

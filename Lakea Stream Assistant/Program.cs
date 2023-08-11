@@ -1,7 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
-using Lakea_Stream_Assistant.Models.OutputFunctions;
+using Lakea_Stream_Assistant.EventProcessing;
 using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant
