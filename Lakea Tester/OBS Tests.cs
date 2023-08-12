@@ -15,7 +15,7 @@ namespace Lakea_Tester
             {
                 sourceIDs.Add("Item " + i, i);
             }
-            resources = new OBSResources(scenes, sourceIDs);
+            resources = new OBSResources(scenes, sourceIDs, scenes);
         }
 
         [TestMethod]
