@@ -6,6 +6,8 @@ using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant
 {
+
+    //Start Object
     class Program
     {
         //Point of Entry
