@@ -32,7 +32,10 @@ namespace Lakea_Stream_Assistant
             Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
 
             //Pauses main thread to prevent application terminating
-            Console.ReadLine();
+            while (true)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

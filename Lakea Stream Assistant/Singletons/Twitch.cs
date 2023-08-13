@@ -72,6 +72,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client.AddChatCommandIdentifier(commandIdentifier);
                 client.OnConnected += onClientConnected;
                 client.OnChatCommandReceived += onChatCommand;
+                client.OnRaidNotification += onRaid;
                 client.Connect();
             }
             catch (Exception ex)
@@ -118,11 +119,20 @@ namespace Lakea_Stream_Assistant.Singletons
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
 
+        //Called on a command event, passes event info to the eventHandler
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
             Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Command: -> " + e.Command.CommandIdentifier + e.Command.CommandText);
             eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+        }
+
+        //Called on a command event, passes event info to the eventHandler
+        private static void onRaid(object sender, OnRaidNotificationArgs e)
+        {
+            Console.WriteLine("Twitch: Raid -> " + e.RaidNotification.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid: -> " + e.RaidNotification.DisplayName);
+            eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
         }
 
         //Write a message to Twitch chat

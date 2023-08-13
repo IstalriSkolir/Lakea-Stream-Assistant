@@ -14,6 +14,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         private IDictionary<string, EventItem> bits;
         private IDictionary<string, EventItem> redeems;
         private IDictionary<string, EventItem> commands;
+        private IDictionary<string, EventItem> raids;
         private List<Tuple<int, string>> bitsOrder;
 
         //Contructor stores list of events to check against when it receives a new event
@@ -24,6 +25,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             bits = new Dictionary<string, EventItem>();
             redeems = new Dictionary<string, EventItem>();
             commands = new Dictionary<string, EventItem>();
+            raids = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -46,6 +48,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
                                 break;
                             case EventType.Twitch_Command:
                                 commands.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_Raid:
+                                raids.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
@@ -173,6 +178,38 @@ namespace Lakea_Stream_Assistant.EventProcessing
             catch (Exception ex)
             {
                 Console.WriteLine("Lakea: Twitch Command Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+    
+        //When a channel raid event is triggered, checks the raid dictionary for event before triggering the events effect
+        public void NewRaid(TwitchRaid eve)
+        {
+            try
+            {
+                string id = "Twitch_Raid_" + eve.Args.RaidNotification.DisplayName;
+                if(raids.ContainsKey(id))
+                {
+                    processer.ProcessEvent(raids[id]);
+                }
+                else if (raids.ContainsKey("Twitch_Raid_Default"))
+                {
+                    processer.ProcessEvent(raids["Twitch_Raid_Default"]);
+                }
+                else if(raids.Count > 0)
+                {
+                    Console.WriteLine("Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
+                }
+                else
+                {
+                    Console.WriteLine("Lakea: No Raid Events Configured");
+                    Logs.Instance.NewLog(LogLevel.Info, "No Raid Events Configured -> " + eve.Args.RaidNotification.DisplayName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lakea: Twitch Raid Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

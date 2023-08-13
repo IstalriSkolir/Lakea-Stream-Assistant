@@ -40,6 +40,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 case EventType.Twitch_Follow:
                     twitch.NewFollow((TwitchFollow)eve);
                     break;
+                case EventType.Twitch_Raid:
+                    twitch.NewRaid((TwitchRaid)eve);
+                    break;
                 case EventType.Twitch_Redeem:
                     twitch.NewRedeem((TwitchRedeem)eve);
                     break;
