@@ -31,6 +31,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                 case "twitchbits": return EventType.Twitch_Bits;
                 case "twitchcommand": return EventType.Twitch_Command;
                 case "twitchfollow": return EventType.Twitch_Follow;
+                case "twitchraid": return EventType.Twitch_Raid;
                 case "twitchredeem": return EventType.Twitch_Redeem;
                 case "lakeacallback": return EventType.Lakea_Callback;
                 case "lakeatimer": return EventType.Lakea_Timer;

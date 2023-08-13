@@ -12,6 +12,7 @@
         Twitch_Bits,
         Twitch_Command,
         Twitch_Follow,
+        Twitch_Raid,
         Twitch_Redeem,
         Lakea_Callback,
         Lakea_Timer
