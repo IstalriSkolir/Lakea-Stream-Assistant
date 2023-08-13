@@ -56,24 +56,24 @@ namespace Lakea_Stream_Assistant.EventProcessing
         {
             try
             {
-                if (callbacks.ContainsKey(eve.Callback.CallbackID))
+                if (callbacks.ContainsKey(eve.Callback.ID))
                 {
-                    Console.WriteLine("Lakea: Callback -> " + callbacks[eve.Callback.CallbackID].Name);
-                    if (callbacks[eve.Callback.CallbackID].UsePreviousArguments)
+                    Console.WriteLine("Lakea: Callback -> " + callbacks[eve.Callback.ID].Name);
+                    if (callbacks[eve.Callback.ID].UsePreviousArguments)
                     {
-                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.CallbackID]);
-                        EventItem item = new EventItem(callbacks[eve.Callback.CallbackID], args);
+                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.ID]);
+                        EventItem item = new EventItem(callbacks[eve.Callback.ID], args);
                         processer.ProcessEvent(item);
                     }
                     else
                     {
-                        processer.ProcessEvent(callbacks[eve.Callback.CallbackID]);
+                        processer.ProcessEvent(callbacks[eve.Callback.ID]);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: Unrecognised Callback ID -> " + eve.Callback.CallbackID);
-                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Callback ID -> " + eve.Callback.CallbackID);
+                    Console.WriteLine("Lakea: Unrecognised Callback ID -> " + eve.Callback.ID);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Callback ID -> " + eve.Callback.ID);
                 }
             }
             catch (Exception ex)

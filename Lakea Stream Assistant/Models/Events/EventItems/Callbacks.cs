@@ -2,16 +2,16 @@
 {
     public class Callbacks
     {
-        private string callbackID;
+        private string id;
         private int delay;
 
         public Callbacks(ConfigEventEventTargetCallback callback)
         {
-            this.callbackID = callback.EventID;
+            this.id = callback.EventID;
             this.delay = callback.Delay;
         }
 
-        public string CallbackID { get { return callbackID; } }
+        public string ID { get { return id; } }
         public int Delay { get { return delay; } }
     }
 }

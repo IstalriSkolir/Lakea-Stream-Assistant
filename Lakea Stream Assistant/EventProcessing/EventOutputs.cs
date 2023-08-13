@@ -113,7 +113,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         public void NullEvent(string message)
         {
             Console.WriteLine("Lakea: " + message);
-            Logs.Instance.NewLog(LogLevel.Info, "Null Event -> ");
+            Logs.Instance.NewLog(LogLevel.Info, "Null Event Output -> ");
         }
 
         //Creates a callback object with the passed arguments and reruns the New Event function
