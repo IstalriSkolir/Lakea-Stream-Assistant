@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,15 +13,12 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Config.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Config.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+  <PropertyGroup>
+    <TransformOnBuild>true</TransformOnBuild>
+    <OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="obs-websocket-dotnet" Version="5.0.0.3" />
@@ -33,17 +30,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="AssemblyInfo.cs">
+    <Compile Update="VersionIncrementer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+      <DependentUpon>VersionIncrementer.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="AssemblyInfo.tt">
+    <None Update="Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="VersionIncrementer.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
+      <LastGenOutput>VersionIncrementer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

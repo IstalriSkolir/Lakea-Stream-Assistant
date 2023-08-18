@@ -13,5 +13,10 @@ namespace Lakea_Stream_Assistant.Models.Events
 
         public override EventSource Source { get { return source; } }
         public override EventType Type { get { return type; } }
+
+        public override Dictionary<string, string> GetArgs()
+        {
+            return new Dictionary<string, string>();    
+        }
     }
 }

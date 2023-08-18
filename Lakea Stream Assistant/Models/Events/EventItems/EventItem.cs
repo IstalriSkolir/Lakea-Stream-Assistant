@@ -9,7 +9,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
     public class EventItem : Event
     {
         private readonly Callbacks callback;
-        private readonly IDictionary<string, string> args;
+        private readonly Dictionary<string, string> args;
         private readonly EventTarget target;
         private readonly EventGoal goal;
         private readonly string name;
@@ -39,7 +39,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
             }
         }
 
-        public EventItem(EventItem item, IDictionary<string, string> args)
+        public EventItem(EventItem item, Dictionary<string, string> args)
         {
             this.source = item.Source;
             this.target = item.target;
@@ -57,9 +57,14 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
         public EventGoal EventGoal { get { return goal; } }
         public string Name { get { return name; } }
         public string ID { get { return id; } }
-        public IDictionary<string, string> Args { get { return args; } }
+        public Dictionary<string, string> Args { get { return args; } }
         public int Duration { get { return duration; } }
         public Callbacks Callback { get { return callback; } }
         public bool UsePreviousArguments { get {  return usePreviousArguments; } }
+
+        public override Dictionary<string, string> GetArgs()
+        {
+            return args;
+        }
     }
 }

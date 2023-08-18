@@ -11,13 +11,15 @@ namespace Lakea_Stream_Assistant.EventProcessing
         private TwitchFunctions twitch;
         private EventOutputs outputs;
         private EventProcesser processer;
+        private EventPassArguments passArgs;
 
         public EventInput(ConfigEvent[] events)
         {
             outputs = new EventOutputs(this);
+            passArgs = new EventPassArguments();
             processer = new EventProcesser(outputs);
-            twitch = new TwitchFunctions(events, processer);
-            lakea = new LakeaFunctions(events, processer);
+            twitch = new TwitchFunctions(events, processer, passArgs);
+            lakea = new LakeaFunctions(events, processer, passArgs);
         }
 
         //Called on a new event, checks event type before callin relevent function

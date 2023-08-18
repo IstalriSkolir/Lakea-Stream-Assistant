@@ -19,7 +19,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         #region OBS Outputs
 
         //Set OBS source active status, resets after duration expires if there is a duration
-        public void SetActiveOBSSource(IDictionary<string, string> args, int duration, bool active, Callbacks callback, bool invoked = false)
+        public void SetActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback, bool invoked = false)
         {
             Singletons.OBS.SetSourceEnabled(args["Source"], active);
             if (!invoked && duration > 0)
@@ -28,49 +28,67 @@ namespace Lakea_Stream_Assistant.EventProcessing
             }
             if (callback != null)
             {
-                IDictionary<string, string> callbackArgs = new Dictionary<string, string>
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
-                    { "source", args["Source"] },
-                    { "duraction", duration.ToString() },
-                    { "active", active.ToString() }
+                    { "Duraction", duration.ToString() },
+                    { "Active", active.ToString() }
                 };
+                foreach(var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
                 createCallback(callbackArgs, callback);
             }
         }
 
         //Set random OBS source active, resets after duration expires if there is a duration
-        public void SetRandomActiveOBSSource(IDictionary<string, string> args, int duration, bool active, Callbacks callback)
+        public void SetRandomActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback)
         {
-            int ran = random.Next(1, args.Count + 1);
+            int sourceCount = 0;
+            for(int i = 0; i < args.Count; i++)
+            {
+                if(args.ContainsKey("Source" + i))
+                {
+                    sourceCount++;
+                }
+            }
+            int ran = random.Next(1, sourceCount + 1);
             string key = "Source" + ran;
             string source = args[key];
             Singletons.OBS.SetSourceEnabled(source, active);
             if (duration > 0)
             {
-                IDictionary<string, string> newArgs = new Dictionary<string, string>();
+                Dictionary<string, string> newArgs = new Dictionary<string, string>();
                 newArgs.Add("Source", args[key]);
                 Task.Delay(duration * 1000).ContinueWith(t => { SetActiveOBSSource(newArgs, duration, !active, null, true); });
             }
             if (callback != null)
             {
-                IDictionary<string, string> callbackArgs = new Dictionary<string, string>
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
-                    { "sourceName", source },
-                    { "sourceNumber", ran.ToString() },
-                    { "duration", duration.ToString() },
-                    { "active", active.ToString() }
+                    { "SourceName", source },
+                    { "SourceNumber", ran.ToString() },
+                    { "Duration", duration.ToString() },
+                    { "Active", active.ToString() }
                 };
-                for (int i = 1; i < args.Count + 1; i++)
+                for (int i = 1; i <= sourceCount; i++)
                 {
                     key = "Source" + i;
                     callbackArgs.Add("arg" + i, args[key]);
+                }
+                foreach(var arg in args)
+                {
+                    if (!arg.Key.Contains("Source"))
+                    {
+                        callbackArgs.Add(arg.Key, arg.Value);
+                    }
                 }
                 createCallback(callbackArgs, callback);
             }
         }
 
         //Changes OBS scene
-        public void ChangeOBSScene(IDictionary<string, string> args, Callbacks callback)
+        public void ChangeOBSScene(Dictionary<string, string> args, Callbacks callback)
         {
             if (args.ContainsKey("Transition"))
             {
@@ -82,10 +100,11 @@ namespace Lakea_Stream_Assistant.EventProcessing
             }
             if (callback != null)
             {
-                IDictionary<string, string> callbackArgs = new Dictionary<string, string>
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args) 
                 {
-                    { "scene", args["Scene"] },
-                };
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
                 createCallback(callbackArgs, callback);
             }
         }
@@ -94,15 +113,16 @@ namespace Lakea_Stream_Assistant.EventProcessing
 
         #region Twitch Outputs
 
-        public void SendTwitchChatMessage(IDictionary<string, string> args, Callbacks callback)
+        public void SendTwitchChatMessage(Dictionary<string, string> args, Callbacks callback)
         {
             Singletons.Twitch.WriteToChat(args["Message"]);
             if (callback != null)
             {
-                IDictionary<string, string> callbackArgs = new Dictionary<string, string>
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args) 
                 {
-                    { "message", args["Message"] }
-                };
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
                 createCallback(callbackArgs, callback);
             }
         }
@@ -117,18 +137,18 @@ namespace Lakea_Stream_Assistant.EventProcessing
         }
 
         //Creates a callback object with the passed arguments and reruns the New Event function
-        private void createCallback(IDictionary<string, string> args, Callbacks callback)
+        private void createCallback(Dictionary<string, string> args, Callbacks callback)
         {
             if(callback.Delay > 0)
-            {
-                handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
-            }
-            else
             {
                 Task.Delay(callback.Delay * 1000).ContinueWith(t =>
                 {
                     handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
                 });
+            }
+            else
+            {
+                handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
             }
         }
     }

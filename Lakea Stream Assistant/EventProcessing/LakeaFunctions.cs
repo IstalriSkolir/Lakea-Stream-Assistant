@@ -10,13 +10,15 @@ namespace Lakea_Stream_Assistant.EventProcessing
     public class LakeaFunctions
     {
         private EventProcesser processer;
+        private EventPassArguments passArgs;
         private IDictionary<string, EventItem> callbacks;
         private IDictionary<string, EventItem> timers;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer)
+        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs)
         {
             this.processer = processer;
+            this.passArgs = passArgs;
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
@@ -43,7 +45,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.Error.WriteLine("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
@@ -61,12 +63,25 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     Console.WriteLine("Lakea: Callback -> " + callbacks[eve.Callback.ID].Name);
                     if (callbacks[eve.Callback.ID].UsePreviousArguments)
                     {
-                        IDictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.ID]);
-                        EventItem item = new EventItem(callbacks[eve.Callback.ID], args);
+                        Dictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.ID]);
+                        //Dictionary<string, string> currentArgs = callbacks[eve.Callback.ID].Args;
+                        Dictionary<string, string> currentArgs = new Dictionary<string, string>();
+                        foreach(var arg in callbacks[eve.Callback.ID].Args)
+                        {
+                            currentArgs.Add(arg.Key, arg.Value);
+                        }
+                        foreach (var arg in args)
+                        {
+                            currentArgs.Add(arg.Key, arg.Value);
+                        }
+                        EventItem item = new EventItem(callbacks[eve.Callback.ID], currentArgs);
+                        item = passArgs.GetEventArgs(item, eve);
                         processer.ProcessEvent(item);
                     }
                     else
                     {
+                        EventItem item = callbacks[eve.Callback.ID];
+                        item = passArgs.GetEventArgs(item, eve);
                         processer.ProcessEvent(callbacks[eve.Callback.ID]);
                     }
                 }
@@ -114,34 +129,34 @@ namespace Lakea_Stream_Assistant.EventProcessing
             {
                 try
                 {
-                    if (eve.Value.Args["First_Fire"] == "false")
+                    if (eve.Value.GetArgs()["First_Fire"] == "false")
                     {
-                        int timeLeft = int.Parse(eve.Value.Args["Timer_Value"]);
+                        int timeLeft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
                         timeLeft--;
                         if (timeLeft <= 0)
                         {
                             Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
                             processer.ProcessEvent(timers[eve.Value.ID]);
-                            eve.Value.Args["First_Fire"] = "true";
+                            eve.Value.GetArgs()["First_Fire"] = "true";
                         }
                         else
                         {
-                            eve.Value.Args["Timer_Value"] = timeLeft.ToString();
+                            eve.Value.GetArgs()["Timer_Value"] = timeLeft.ToString();
                         }
                     }
                     else
                     {
-                        int timeleft = int.Parse(eve.Value.Args["Timer_Value"]);
+                        int timeleft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
                         timeleft--;
                         if (timeleft <= 0)
                         {
                             Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
                             processer.ProcessEvent(timers[eve.Value.ID]);
-                            eve.Value.Args["Timer_Value"] = eve.Value.Args["Timer_Delay"];
+                            eve.Value.GetArgs()["Timer_Value"] = eve.Value.GetArgs()["Timer_Delay"];
                         }
                         else
                         {
-                            eve.Value.Args["Timer_Value"] = timeleft.ToString();
+                            eve.Value.GetArgs()["Timer_Value"] = timeleft.ToString();
                         }
                     }
                 }

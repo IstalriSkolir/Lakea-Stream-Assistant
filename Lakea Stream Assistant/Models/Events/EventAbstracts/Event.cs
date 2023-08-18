@@ -10,5 +10,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventAbstracts
 
         public abstract EventSource Source { get; }
         public abstract EventType Type { get; }
+
+        public abstract Dictionary<string, string> GetArgs();
     }
 }
