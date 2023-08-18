@@ -7,10 +7,10 @@ namespace Lakea_Stream_Assistant.Models.Events
 {
     public class LakeaCallback : Event
     {
-        private IDictionary<string, string> args;
+        private Dictionary<string, string> args;
         private Callbacks callback;
 
-        public LakeaCallback(EventSource source, EventType type, Callbacks callback, IDictionary<string, string> args) 
+        public LakeaCallback(EventSource source, EventType type, Callbacks callback, Dictionary<string, string> args) 
         {
             this.source = source;
             this.type = type;
@@ -20,21 +20,16 @@ namespace Lakea_Stream_Assistant.Models.Events
         public override EventSource Source { get { return source; } }
         public override EventType Type { get { return type; } }
         public Callbacks Callback { get { return callback; } }
-        public IDictionary<string, string> Args { get { return args; } }
+        public Dictionary<string, string> Args { get { return args; } }
 
-        public IDictionary<string, string> GetCallbackArguments(EventItem item)
+        public override Dictionary<string, string> GetArgs()
         {
+            return args;
+        }
 
-            //foreach (var arg in args)
-            //{
-            //    if (item.Args.ContainsKey(arg.Key))
-            //    {
-            //        item.Args.Remove(arg.Key);
-            //    }
-            //    item.Args.Add(arg.Key, arg.Value);
-            //}
-            //return item.Args;
-            IDictionary<string, string> newArgs = new Dictionary<string, string>();
+        public Dictionary<string, string> GetCallbackArguments(EventItem item)
+        {
+            Dictionary<string, string> newArgs = new Dictionary<string, string>();
             switch (item.EventGoal)
             {
                 case EventGoal.Twitch_Send_Chat_Message:
@@ -44,10 +39,10 @@ namespace Lakea_Stream_Assistant.Models.Events
             return newArgs;
         }
 
-        private IDictionary<string, string> callbackArgsForTwitchChatMessage(EventItem item)
+        private Dictionary<string, string> callbackArgsForTwitchChatMessage(EventItem item)
         {
-            IDictionary<string, string> newArgs = new Dictionary<string, string>();
-            string key = "Message" + args["sourceNumber"];
+            Dictionary<string, string> newArgs = new Dictionary<string, string>();
+            string key = "Message" + args["SourceNumber"];
             newArgs.Add("Message", item.Args[key]);
             return newArgs;
         }

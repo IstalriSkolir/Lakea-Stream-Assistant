@@ -18,5 +18,19 @@ namespace Lakea_Stream_Assistant.Models.Events
         public override EventSource Source { get { return source; } }
         public override EventType Type { get { return type; } }
         public OnBitsReceivedV2Args Args { get { return args; } }
+
+        public override Dictionary<string, string> GetArgs()
+        {
+            Dictionary<string, string> bitsArgs = new Dictionary<string, string>
+            {
+                { "Bits", args.BitsUsed.ToString() },
+                { "TotalBits", args.TotalBitsUsed.ToString() },
+                { "IsAnonymous", args.IsAnonymous.ToString() },
+                { "DisplayName", args.UserName },
+                { "ChannelName", args.ChannelName },
+                { "ChatMessage", args.ChatMessage }
+            };
+            return bitsArgs;
+        }
     }
 }

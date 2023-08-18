@@ -10,6 +10,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
     public class TwitchFunctions
     {
         private EventProcesser processer;
+        private EventPassArguments passArgs;
         private IDictionary<string, EventItem> follows;
         private IDictionary<string, EventItem> bits;
         private IDictionary<string, EventItem> redeems;
@@ -18,9 +19,10 @@ namespace Lakea_Stream_Assistant.EventProcessing
         private List<Tuple<int, string>> bitsOrder;
 
         //Contructor stores list of events to check against when it receives a new event
-        public TwitchFunctions(ConfigEvent[] events, EventProcesser processer)
+        public TwitchFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs)
         {
             this.processer = processer;
+            this.passArgs = passArgs;
             follows = new Dictionary<string, EventItem>();
             bits = new Dictionary<string, EventItem>();
             redeems = new Dictionary<string, EventItem>();
@@ -59,7 +61,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.Error.WriteLine("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
@@ -74,7 +76,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             List<Tuple<int, string>> bitsOrder = new List<Tuple<int, string>>();
             foreach (var eve in bits)
             {
-                int bitAmount = int.Parse(eve.Value.Args["BitsAmount"]);
+                int bitAmount = int.Parse(eve.Value.GetArgs()["BitsAmount"]);
                 string id = eve.Value.ID;
                 Tuple<int, string> tuple = Tuple.Create(bitAmount, id);
                 bitsOrder.Add(tuple);
@@ -90,7 +92,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
             {
                 if (follows.ContainsKey(eve.Args.FollowedChannelId))
                 {
-                    processer.ProcessEvent(follows[eve.Args.FollowedChannelId]);
+                    EventItem item = follows[eve.Args.FollowedChannelId];
+                    item = passArgs.GetEventArgs(item, eve);
+                    processer.ProcessEvent(item);
                 }
                 else
                 {
@@ -118,7 +122,12 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     {
                         eventFound = true;
                         string id = bitsOrder[i].Item2;
-                        processer.ProcessEvent(bits[id]);
+                        EventItem item = bits[id];
+                        item = passArgs.GetEventArgs(item, eve);
+                        if(item  != null)
+                        {
+                            processer.ProcessEvent(item);
+                        }
                     }
                 }
                 else
@@ -127,7 +136,12 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     {
                         eventFound = true;
                         string id = bitsOrder[i].Item2;
-                        processer.ProcessEvent(bits[id]);
+                        EventItem item = bits[id];
+                        item = passArgs.GetEventArgs(item, eve);
+                        if(item != null)
+                        {
+                            processer.ProcessEvent(bits[id]);
+                        }
                     }
                 }
             }
@@ -145,7 +159,11 @@ namespace Lakea_Stream_Assistant.EventProcessing
             {
                 if (redeems.ContainsKey(eve.Args.RewardRedeemed.Redemption.Reward.Id))
                 {
-                    processer.ProcessEvent(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id]);
+                    EventItem item = passArgs.GetEventArgs(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id], eve);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
                 }
                 else
                 {
@@ -167,7 +185,11 @@ namespace Lakea_Stream_Assistant.EventProcessing
             {
                 if (commands.ContainsKey(eve.Args.Command.CommandText))
                 {
-                    processer.ProcessEvent(commands[eve.Args.Command.CommandText]);
+                    EventItem item = passArgs.GetEventArgs(commands[eve.Args.Command.CommandText], eve);
+                    if (item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
                 }
                 else
                 {
@@ -190,11 +212,21 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 string id = "Twitch_Raid_" + eve.Args.RaidNotification.DisplayName;
                 if(raids.ContainsKey(id))
                 {
-                    processer.ProcessEvent(raids[id]);
+                    EventItem item = raids[id];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
                 }
                 else if (raids.ContainsKey("Twitch_Raid_Default"))
                 {
-                    processer.ProcessEvent(raids["Twitch_Raid_Default"]);
+                    EventItem item = raids["Twitch_Raid_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
                 }
                 else if(raids.Count > 0)
                 {

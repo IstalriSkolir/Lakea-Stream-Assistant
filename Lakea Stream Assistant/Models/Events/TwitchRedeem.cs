@@ -19,5 +19,16 @@ namespace Lakea_Stream_Assistant.Models.Events
         public override EventSource Source { get { return source; } }
         public override EventType Type { get { return type; } }
         public OnChannelPointsRewardRedeemedArgs Args { get { return args; } }
+
+        public override Dictionary<string, string> GetArgs()
+        {
+            Dictionary<string, string> redeemArgs = new Dictionary<string, string>
+            {
+                { "DisplayName", args.RewardRedeemed.Redemption.User.DisplayName },
+                { "RedeemTitle", args.RewardRedeemed.Redemption.Reward.Title },
+                { "RedeemCost", args.RewardRedeemed.Redemption.Reward.Cost.ToString() }
+            };
+            return redeemArgs;
+        }
     }
 }
