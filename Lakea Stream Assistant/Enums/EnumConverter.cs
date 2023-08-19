@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Exceptions;
+using System.Diagnostics;
 
 namespace Lakea_Stream_Assistant.Enums
 {
@@ -84,6 +85,23 @@ namespace Lakea_Stream_Assistant.Enums
                 case "warning": return LogLevel.Warning;
                 case "error": return LogLevel.Error;
                 case "fatal": return LogLevel.Fatal;
+                default: throw new EnumConversionException("Can not convert '" + source + "' to type 'LogLevel'");
+            }
+        }
+
+        #endregion
+
+        #region System Enums
+
+        public ProcessWindowStyle ConvertWindowStyleString(string source)
+        {
+            source = prepareString(source);
+            switch (source)
+            {
+                case "normal": return ProcessWindowStyle.Normal;
+                case "hidden": return ProcessWindowStyle.Hidden;
+                case "minimised": return ProcessWindowStyle.Minimized;
+                case "maximised": return ProcessWindowStyle.Maximized;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'LogLevel'");
             }
         }

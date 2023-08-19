@@ -21,6 +21,18 @@
     </BotChannel>
     <CommandIdentifier>!</CommandIdentifier>
   </Twitch>
+  <Applications>
+    <Application>
+      <Name>Woodland Background</Name>
+      <Path>D:\Twitch\Stream Applications\Stream Background\V0.8.1\GreenScreenShit.exe</Path>
+      <WindowStyle>Normal</WindowStyle>
+    </Application>
+    <Application>
+      <Name>VeadoTube</Name>
+      <Path>D:\Twitch\Stream Applications\veadotubemini-1.3c-win64-20211123\veadotube mini.exe</Path>
+      <WindowStyle>Normal</WindowStyle>
+    </Application>
+  </Applications>
   <Events>
 
     <!--Twitch Channel Follows & Subscriptions-->
@@ -33,15 +45,15 @@
         <ID>756882056</ID>
       </EventDetails>
       <EventTarget>
-        <Target>OBS</Target>
-        <Goal>OBS_Enable_Source</Goal>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
         <Args>
           <Arg>
-            <Key>Source</Key>
-            <Value>Tea - Image</Value>
+            <Key>Message</Key>
+            <Value>Welcome to the Woodland Rangers {DisplayName}!</Value>
           </Arg>
         </Args>
-        <Duration>5</Duration>
+        <Duration>0</Duration>
       </EventTarget>
     </Event>
 
@@ -49,7 +61,7 @@
 
     <Event>
       <EventDetails>
-        <Name>Twitch Bits 1</Name>
+        <Name>Fire Spiral</Name>
         <Source>Twitch</Source>
         <Type>Twitch_Bits</Type>
         <ID>Twitch_Bits_ID_1</ID>
@@ -60,19 +72,23 @@
         <Args>
           <Arg>
             <Key>Source</Key>
-            <Value>Art 1 - Image</Value>
+            <Value>Fire Spiral - Media Source</Value>
           </Arg>
           <Arg>
             <Key>BitsAmount</Key>
             <Value>1</Value>
           </Arg>
         </Args>
-        <Duration>5</Duration>
+        <Callback>
+          <EventID>Bits_Callback_ID_1</EventID>
+          <Delay>0</Delay>
+        </Callback>
+        <Duration>10</Duration>
       </EventTarget>
     </Event>
     <Event>
       <EventDetails>
-        <Name>Twitch Bits 2</Name>
+        <Name>Arrow Volley</Name>
         <Source>Twitch</Source>
         <Type>Twitch_Bits</Type>
         <ID>Twitch_Bits_ID_2</ID>
@@ -83,22 +99,182 @@
         <Args>
           <Arg>
             <Key>Source</Key>
-            <Value>Art 2 - Image</Value>
+            <Value>Arrow Volley - Media Source</Value>
           </Arg>
           <Arg>
             <Key>BitsAmount</Key>
-            <Value>5</Value>
+            <Value>100</Value>
           </Arg>
         </Args>
-        <Duration>5</Duration>
+        <Callback>
+          <EventID>Bits_Callback_ID_2</EventID>
+          <Delay>0</Delay>
+        </Callback>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Twitch Channel Redeems-->
+
+    <Event>
+      <EventDetails>
+        <Name>Feed The Fire!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>c00779f9-57f0-4f34-a7fc-82cc6f205481</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>0</Duration>
       </EventTarget>
     </Event>
     <Event>
       <EventDetails>
-        <Name>Twitch Bits 3</Name>
+        <Name>Feed The Fire x3</Name>
         <Source>Twitch</Source>
-        <Type>Twitch_Bits</Type>
-        <ID>Twitch_Bits_ID_3</ID>
+        <Type>Twitch_Redeem</Type>
+        <ID>48fa2eff-4dd9-4d22-b50d-c6c4f9d8a275</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Chop Firewood</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>833da4c5-9fdc-42f8-99bf-efa8d5bc51d8</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Wolf Howl</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>c1bd93c3-0064-462d-93a8-886f33acfb1c</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Random_Source</Goal>
+        <Args>
+          <Arg>
+            <Key>Source1</Key>
+            <Value>Wolf Howl 1 - Media Source</Value>
+          </Arg>
+          <Arg>
+            <Key>Source2</Key>
+            <Value>Wolf Howl 2 - Media Source</Value>
+          </Arg>
+          <Arg>
+            <Key>Source3</Key>
+            <Value>Wolf Howl 3 - Media Source</Value>
+          </Arg>
+        </Args>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Display Random Art</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>ba3ab3b7-5802-4d1b-a79a-2f6f8653f387</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Random_Source</Goal>
+        <Args>
+          <Arg>
+            <Key>Source1</Key>
+            <Value>Art 1 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source2</Key>
+            <Value>Art 2 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source3</Key>
+            <Value>Art 3 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source4</Key>
+            <Value>Art 4 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source5</Key>
+            <Value>Art 5 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source6</Key>
+            <Value>Art 6 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source7</Key>
+            <Value>Art 7 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source8</Key>
+            <Value>Art 8 - Image</Value>
+          </Arg>
+        </Args>
+        <Callback>
+          <EventID>Callback_ID_1</EventID>
+          <Delay>0</Delay>
+        </Callback>
+        <Duration>30</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Viewer Attack: F in the chat</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>923b7e11-6c80-4f89-b503-2ab0db91e9fa</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>We're testing shizz {DisplayName}!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Viewer Attack: Wasted</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>dc9dd86e-e82d-47ac-9d6c-aa22682956ad</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Boop Me!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>c765a0ca-dde6-4ead-ac8c-6fe2127b7137</ID>
       </EventDetails>
       <EventTarget>
         <Target>OBS</Target>
@@ -106,19 +282,59 @@
         <Args>
           <Arg>
             <Key>Source</Key>
-            <Value>Art 3 - Image</Value>
-          </Arg>
-          <Arg>
-            <Key>BitsAmount</Key>
-            <Value>3</Value>
+            <Value>Boop - Media Source</Value>
           </Arg>
         </Args>
+        <Duration>3</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Hema Tip!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>bc2ad326-57f6-4b89-b268-e3ae00432fc2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
         <Duration>5</Duration>
       </EventTarget>
     </Event>
-
-    <!--Twitch Channel Redeems-->
-
+    <Event>
+      <EventDetails>
+        <Name>Survival Tip!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>f0862801-c126-4652-b636-1f86d09bd13c</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args></Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Throw a Dagger!</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Redeem</Type>
+        <ID>dd288ff5-2795-4a85-986a-eed84bcaaaab</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Dagger Throw - Media Source</Value>
+          </Arg>
+        </Args>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
     <Event>
       <EventDetails>
         <Name>Moustached Wolf</Name>
@@ -159,25 +375,6 @@
     </Event>
     <Event>
       <EventDetails>
-        <Name>Throw a Dagger!</Name>
-        <Source>Twitch</Source>
-        <Type>Twitch_Redeem</Type>
-        <ID>dd288ff5-2795-4a85-986a-eed84bcaaaab</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>OBS</Target>
-        <Goal>OBS_Enable_Source</Goal>
-        <Args>
-          <Arg>
-            <Key>Source</Key>
-            <Value>Dagger Throw - Media Source</Value>
-          </Arg>
-        </Args>
-        <Duration>10</Duration>
-      </EventTarget>
-    </Event>
-    <Event>
-      <EventDetails>
         <Name>Catch me!</Name>
         <Source>Twitch</Source>
         <Type>Twitch_Redeem</Type>
@@ -214,68 +411,12 @@
         <Duration>0</Duration>
       </EventTarget>
     </Event>
-    <Event>
-      <EventDetails>
-        <Name>Display Random Art</Name>
-        <Source>Twitch</Source>
-        <Type>Twitch_Redeem</Type>
-        <ID>ba3ab3b7-5802-4d1b-a79a-2f6f8653f387</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>OBS</Target>
-        <Goal>OBS_Enable_Random_Source</Goal>
-        <Args>
-          <Arg>
-            <Key>Source1</Key>
-            <Value>Art 1 - Image</Value>
-          </Arg>
-          <Arg>
-            <Key>Source2</Key>
-            <Value>Art 2 - Image</Value>
-          </Arg>
-          <Arg>
-            <Key>Source3</Key>
-            <Value>Art 3 - Image</Value>
-          </Arg>
-        </Args>
-        <Callback>Callback_ID_1</Callback>
-        <Duration>5</Duration>
-      </EventTarget>
-    </Event>
-    <Event>
-      <EventDetails>
-        <Name>Hema Tip!</Name>
-        <Source>Twitch</Source>
-        <Type>Twitch_Redeem</Type>
-        <ID>bc2ad326-57f6-4b89-b268-e3ae00432fc2</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>Null</Target>
-        <Goal>Null</Goal>
-        <Args></Args>
-        <Duration>5</Duration>
-      </EventTarget>
-    </Event>
-    <Event>
-      <EventDetails>
-        <Name>Survival Tip!</Name>
-        <Source>Twitch</Source>
-        <Type>Twitch_Redeem</Type>
-        <ID>f0862801-c126-4652-b636-1f86d09bd13c</ID>
-      </EventDetails>
-      <EventTarget>
-        <Target>Null</Target>
-        <Goal>Null</Goal>
-        <Args></Args>
-        <Duration>5</Duration>
-      </EventTarget>
-    </Event>
 
     <!--Twitch Timers-->
 
     <Event>
       <EventDetails>
-        <Name>Lakea Timer 1</Name>
+        <Name>Lakea Discord Timer</Name>
         <Source>Lakea</Source>
         <Type>Lakea_Timer</Type>
         <ID>Lakea_Timer_ID_1</ID>
@@ -286,23 +427,309 @@
         <Args>
           <Arg>
             <Key>Message</Key>
-            <Value>This is a message!</Value>
+            <Value>Come join the Woodland Rangers Discord for more content and hanging out with the community! https://discord.gg/MjF9Qq25nR</Value>
           </Arg>
           <Arg>
             <Key>Start_Delay</Key>
-            <Value>30000</Value>
+            <Value>2700</Value>
+            <!-- 45 minutes -->
           </Arg>
           <Arg>
             <Key>Timer_Delay</Key>
-            <Value>50000</Value>
+            <Value>2700</Value>
+            <!-- 45 minutes -->
           </Arg>
           <Arg>
             <Key>Timer_Value</Key>
-            <Value>50000</Value>
+            <Value>2700</Value>
+            <!-- 45 minutes -->
           </Arg>
           <Arg>
             <Key>First_Fire</Key>
             <Value>false</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Lakea Discord Command Channel Timer</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Timer</Type>
+        <ID>Lakea_Timer_ID_2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Check out the #stream-commands channel in the !discord to see how you can interact with the stream!</Value>
+          </Arg>
+          <Arg>
+            <Key>Start_Delay</Key>
+            <Value>1200</Value>
+            <!-- 20 minutes -->
+          </Arg>
+          <Arg>
+            <Key>Timer_Delay</Key>
+            <Value>2700</Value>
+            <!-- 45 minutes -->
+          </Arg>
+          <Arg>
+            <Key>Timer_Value</Key>
+            <Value>2700</Value>
+            <!-- 45 minutes -->
+          </Arg>
+          <Arg>
+            <Key>First_Fire</Key>
+            <Value>false</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Lakea Kofi Link Timer</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Timer</Type>
+        <ID>Lakea_Timer_ID_3</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Want to buy me a drink? Feel free to check out my Kofi! https://ko-fi.com/mcwolfranger</Value>
+          </Arg>
+          <Arg>
+            <Key>Start_Delay</Key>
+            <Value>4500</Value>
+            <!-- 75 minutes -->
+          </Arg>
+          <Arg>
+            <Key>Timer_Delay</Key>
+            <Value>5400</Value>
+            <!-- 90 minutes -->
+          </Arg>
+          <Arg>
+            <Key>Timer_Value</Key>
+            <Value>5400</Value>
+            <!-- 90 minutes -->
+          </Arg>
+          <Arg>
+            <Key>First_Fire</Key>
+            <Value>false</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Twitch Commands-->
+
+    <Event>
+      <EventDetails>
+        <Name>Post Discord</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>discord</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Come join the Woodland Rangers Discord for more content and hanging out with the community! https://discord.gg/MjF9Qq25nR</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Post Backloggery</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>backloggery</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Check out our games list of what we've completed and what we're yet to play here: https://backloggery.com/MateriesCoil</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Post Twitter</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>twitter</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Follow Materies on Twitter @mcwolfranger for more HEMA and survival content! He'll also post when he's at furmeets, assuming he remembers that is!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Lurk Mode</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>lurk</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>As you lay down on the forest floor, you listen to the gentle breeze in the trees and feel the life in the land around you. You stare up at the clear night sky and relax, slowly drifting off to sleep under the starlight...</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Get Quote</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>quote</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Add Quote</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>addquote</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Get Quote Count</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>quotecount</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Null</Target>
+        <Goal>Null</Goal>
+        <Args>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Test Command</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>hey</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Hey there {DisplayName}, your argument was {CommandArg1}</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Test Command</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>whisper</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Whisper_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>User</Key>
+            <Value>{DisplayName}</Value>
+          </Arg>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Hey there {DisplayName}, thank you for the command!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--Twitch Raid Events-->
+
+    <Event>
+      <EventDetails>
+        <Name>Default Raid</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Raid</Type>
+        <ID>Twitch_Raid_Default</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>{DisplayName} raiding with {RaiderCount} raiders! Defend the woodland!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Default Raid</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Raid</Type>
+        <ID>Twitch_Raid_SethWuffer</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>We're being Wuffer raided by {RaiderCount} wuffers! Welcome them all in!</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>
@@ -324,19 +751,107 @@
         <Args>
           <Arg>
             <Key>Message1</Key>
-            <Value>Art Message 1</Value>
+            <Value>Materies may act like a daft {DisplayName} sod sometimes, but he's not one you want to cross blades with in anger! This amazing artwork of Materies was done by Liminal Gender! Go check out their Twitter: https://twitter.com/liminal_gender</Value>
           </Arg>
           <Arg>
             <Key>Message2</Key>
-            <Value>Art Message 2</Value>
+            <Value>It's about time we got some art {DisplayName} of me, my turn to get some attention! This beautiful artwork was done by Gretactic! Go check out their Twitter: https://twitter.com/Gretactic</Value>
           </Arg>
           <Arg>
             <Key>Message3</Key>
-            <Value>Art Message 3</Value>
+            <Value>It's not often these two stop {DisplayName} from their adventures, this serene artwork of Materies and Looping was done by Gretactic! Go check out their Twitter: https://twitter.com/Gretactic</Value>
+          </Arg>
+          <Arg>
+            <Key>Message4</Key>
+            <Value>This was the first piece of {DisplayName} art that Materies ever commissioned, for D&amp;D with Looping Coil! This piece was done by Augmented Waffles! Go check out their Instagram: https://www.instagram.com/augmentedwaffles/</Value>
+          </Arg>
+          <Arg>
+            <Key>Message5</Key>
+            <Value>From Materies's travels, sights {DisplayName} like these are part of the reason he does what he does. This stellar artwork was a YCH done by XelArtz! Go check out their Twitter: https://twitter.com/xel_artz</Value>
+          </Arg>
+          <Arg>
+            <Key>Message6</Key>
+            <Value>Materies should know better than {DisplayName} to stand on a open cliff in a storm, but he never listens to his own advice! This stormy artwork was a YCH done by XelArtz! Go check out their Twitter: https://twitter.com/xel_artz</Value>
+          </Arg>
+          <Arg>
+            <Key>Message7</Key>
+            <Value>Loopings always up to trouble of {DisplayName} some kind, it's good that he's so skilled in stealth or someone would have knocked some sense into him by now! This amazing artwork was done by Gretactic! Go check out their Twitter: https://twitter.com/Gretactic</Value>
+          </Arg>
+          <Arg>
+            <Key>Message8</Key>
+            <Value>I love the peace and tranquility {DisplayName} of the forests, you could never get the same sense of peace and freedom in a city. This beautiful artwork was done by Gretactic! Go check out their Twitter: https://twitter.com/Gretactic</Value>
           </Arg>
         </Args>
         <UsePreviousArguments>true</UsePreviousArguments>
         <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Fire Spiral Audio</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Callback</Type>
+        <ID>Bits_Callback_ID_1</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Fire Spiral Audio - Media Source</Value>
+          </Arg>
+        </Args>
+        <Callback>
+          <EventID>Bits_Callback_ID_3</EventID>
+          <Delay>0</Delay>
+        </Callback>
+        <UsePreviousArguments>false</UsePreviousArguments>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Arrow Volley Audio</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Callback</Type>
+        <ID>Bits_Callback_ID_2</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>OBS</Target>
+        <Goal>OBS_Enable_Source</Goal>
+        <Args>
+          <Arg>
+            <Key>Source</Key>
+            <Value>Arrow Volley Audio - Media Source</Value>
+          </Arg>
+        </Args>
+        <Callback>
+          <EventID>Bits_Callback_ID_3</EventID>
+          <Delay>0</Delay>
+        </Callback>
+        <UsePreviousArguments>false</UsePreviousArguments>
+        <Duration>10</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Write Bits Total To Chat</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Callback</Type>
+        <ID>Bits_Callback_ID_3</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>{DisplayName} Cheered {Bits}, they've cheered {TotalBits} total!</Value>
+          </Arg>
+        </Args>
+        <UsePreviousArguments>false</UsePreviousArguments>
+        <Duration>10</Duration>
       </EventTarget>
     </Event>
 
