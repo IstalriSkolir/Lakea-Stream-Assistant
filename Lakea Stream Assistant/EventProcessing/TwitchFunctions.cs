@@ -1,5 +1,4 @@
 ﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;

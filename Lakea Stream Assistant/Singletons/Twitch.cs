@@ -123,7 +123,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
             Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Command: -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
             eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
         }
 
@@ -131,7 +131,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onRaid(object sender, OnRaidNotificationArgs e)
         {
             Console.WriteLine("Twitch: Raid -> " + e.RaidNotification.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid: -> " + e.RaidNotification.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
             eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
         }
 
@@ -139,8 +139,17 @@ namespace Lakea_Stream_Assistant.Singletons
         public static void WriteToChat(string message)
         {
             Console.WriteLine("Twitch: Sending Message -> '" + message + "'");
-            Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message -> " + message);
             client.SendMessage(client.JoinedChannels[0], $"" + message);
+        }
+
+        //Write a whisper message to a Twitch user
+        //Currently not working, Todo issue #70
+        public static void WriteWhisperToUser(string message, string user)
+        {
+            Console.WriteLine("Twitch: Sending Whisper -> '" + user + "' - '" + message + "'");
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Whisper Message -> '" + user + "' - '" + message + "'");
+            client.SendWhisper(user, message, true);//https://wiki.streamer.bot/en/Sub-Actions/Code/CSharp/Available-Methods/Twitch#whisper
         }
 
         #endregion

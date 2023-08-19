@@ -126,5 +126,4 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\refint\Lak
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.pdb
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.genruntimeconfig.cache
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\ref\Lakea Tester.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\tempConfig.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Config.xml

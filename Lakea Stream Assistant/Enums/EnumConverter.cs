@@ -1,7 +1,6 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Exceptions;
+﻿using Lakea_Stream_Assistant.Exceptions;
 
-namespace Lakea_Stream_Assistant.Models.Configuration
+namespace Lakea_Stream_Assistant.Enums
 {
     //This class converts string to their respective enum types
     public class EnumConverter
@@ -13,7 +12,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
         public EventSource ConvertEventSourceString(string source)
         {
             source = prepareString(source);
-            switch(source)
+            switch (source)
             {
                 case "basecamp": return EventSource.Base_Camp;
                 case "twitch": return EventSource.Twitch;
@@ -66,6 +65,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                 case "obsdisablerandomsource": return EventGoal.OBS_Disable_Random_Source;
                 case "obschangescene": return EventGoal.OBS_Change_Scene;
                 case "twitchsendchatmessage": return EventGoal.Twitch_Send_Chat_Message;
+                case "twitchsendwhispermessage": return EventGoal.Twitch_Send_Whisper_Message;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventGoal'");
             }
         }

@@ -7,9 +7,9 @@
 
 using System.Reflection;
 
-[assembly: AssemblyVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.SecondsSinceMidnight  #>")]
-[assembly: AssemblyFileVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.SecondsSinceMidnight  #>")]
-[assembly: AssemblyInformationalVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.SecondsSinceMidnight  #>")]
+[assembly: AssemblyVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.MinutesSinceMidnight  #>")]
+[assembly: AssemblyFileVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.MinutesSinceMidnight  #>")]
+[assembly: AssemblyInformationalVersion("<#= this.MajorVersion #>.<#= this.MinorVersion #>.<#= this.DaysSinceLastMinorUpdate #>.<#= this.MinutesSinceMidnight  #>")]
 
 <#+
 
@@ -20,7 +20,7 @@ using System.Reflection;
  
  int MonthsSinceLastMinorUpdate = (int)((Int32.Parse(DateTime.Now.ToString("yyyy")) * 12) + Int32.Parse(DateTime.Now.ToString("MM"))) - ((LastMinorUpdate.Year * 12) + LastMinorUpdate.Month);
  int DaysSinceLastMinorUpdate = (int)(DateTime.Now - LastMinorUpdate).TotalDays;
- int SecondsSinceMidnight = (int)DateTime.UtcNow.TimeOfDay.TotalSeconds;
+ int MinutesSinceMidnight = (int)DateTime.UtcNow.TimeOfDay.TotalMinutes;
 
 #>
 
