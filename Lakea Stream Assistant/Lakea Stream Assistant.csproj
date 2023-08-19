@@ -38,7 +38,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Config.xml">
+    <None Update="Configurations\Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configurations\ConfigExample.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="VersionIncrementer.tt">

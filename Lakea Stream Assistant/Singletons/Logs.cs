@@ -30,12 +30,12 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Initiliase
 
-        public void Initiliase(Config config)
+        public void Initiliase()
         {
             try
             {
-                EnumConverter enums = new EnumConverter();
-                logLevel = enums.ConvertLogLevelString(config.Settings.LogLevel);
+                //EnumConverter enums = new EnumConverter();
+                //logLevel = enums.ConvertLogLevelString(config.Settings.LogLevel);
                 currentFilePath = getCurrentFilePath();
                 firstLog = true;
             }
@@ -55,6 +55,12 @@ namespace Lakea_Stream_Assistant.Singletons
             return path;
         }
 
+        public void SetErrorLogLevel(string level)
+        {
+            EnumConverter enums = new EnumConverter();
+            logLevel = enums.ConvertLogLevelString(level);
+        }
+
         #endregion
 
         public void NewLog(LogLevel level, Exception ex)
@@ -67,7 +73,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 if (((int)level) >= (int)logLevel)
                 {
-                    string log = DateTime.Now.ToString() + ": Log Level -> " + level + ", " + ex.Message + ", Stack Track - " + ex.StackTrace;
+                    string log = DateTime.Now.ToString() + ": Log Level -> " + level + ", " + ex.Message + ",\nStack Trace - " + ex.StackTrace;
                     using (StreamWriter writer = new StreamWriter(currentFilePath, true))
                     {
                         writer.WriteLine(log);

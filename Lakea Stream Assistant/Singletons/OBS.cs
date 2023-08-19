@@ -29,7 +29,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to connect to OBS: " + ex.Message);
+                Console.WriteLine("Fatal Error: Failed to Connect to OBS -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Console.ReadLine();
                 Environment.Exit(1);
@@ -101,7 +101,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Get Resources -> " + ex.Message);
+                Console.WriteLine("Fatal Error: Failed to Fetch OBS Resources -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Console.ReadLine();
                 Environment.Exit(1);

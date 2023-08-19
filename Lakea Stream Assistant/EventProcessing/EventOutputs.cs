@@ -113,6 +113,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
 
         #region Twitch Outputs
 
+        //Send Twitch chat message
         public void SendTwitchChatMessage(Dictionary<string, string> args, Callbacks callback)
         {
             Singletons.Twitch.WriteToChat(args["Message"]);
@@ -127,6 +128,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             }
         }
 
+        //Send Twitch Whisper
         public void SendTwitchWhisperMessage(Dictionary<string, string> args, Callbacks callback)
         {
             Singletons.Twitch.WriteWhisperToUser(args["DisplayName"], args["Message"]);
