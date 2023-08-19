@@ -13,9 +13,12 @@ namespace Lakea_Stream_Assistant
         //Point of Entry
         static void Main(string[] args)
         {
+            Logs.Instance.Initiliase();
+            string filePath = selectProfile();
             Console.WriteLine("Lakea is waking up...");
-            Config config = new LoadConfig().LoadConfigFromFile();
-            Logs.Instance.Initiliase(config);
+            Config config = new LoadConfig().LoadConfigFromFile(filePath);
+            Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
+            Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
             EventInput eventHandler = new EventInput(config.Events);
             OBS.Init(config);
             while (!OBS.Initiliased)
@@ -35,6 +38,79 @@ namespace Lakea_Stream_Assistant
             while (true)
             {
                 Console.ReadLine();
+            }
+        }
+
+        //Lists avaliable config files and has the user select one
+        static string selectProfile()
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(Environment.CurrentDirectory + "\\Configurations\\", "*.xml");
+                Console.WriteLine("Avaliable Configurations:\n");
+                int length = (Environment.CurrentDirectory + "\\Configurations\\").Length;
+                for (int i = 0; i < files.Length; i++)
+                {
+                    string fileName = Path.GetFileName(files[i]);
+                    fileName = fileName.Remove(fileName.Length - 4, 4);
+                    Console.WriteLine((i + 1) + ". " + fileName);
+                }
+                Console.Write("\nEnter the name/number of your chosen configuration files: ");
+                string input = Console.ReadLine();
+                string filePath = getFilePathFromInput(input, files);
+                if(filePath == string.Empty)
+                {
+                    Console.WriteLine("\nInvalid Input: " + input + "\n\nPress Enter to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                    selectProfile();
+                }
+                Console.Clear();
+                return filePath;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Fatal Error Loading Configuration List -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Fatal, ex);
+                Console.ReadLine();
+                Environment.Exit(1);
+            }
+            return string.Empty;
+        }
+
+        //Get the file path of the chosen configuration file from the file list
+        static string getFilePathFromInput(string input, string[] files)
+        {
+            if(input == null)
+            {
+                return string.Empty;
+            }
+            else if(int.TryParse(input, out int index))
+            {
+                index--;
+                if(index >= 0 &&  index < files.Length)
+                {
+                    return files[index];
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                string filePath = string.Empty;
+                foreach(string file in files)
+                {
+                    string fileName = Path.GetFileName(file);
+                    fileName = fileName.Remove(fileName.Length - 4, 4);
+                    if(fileName.ToLower() == input.ToLower())
+                    {
+                        filePath = file;
+                        break;
+                    }
+                }
+                return filePath;       
             }
         }
     }

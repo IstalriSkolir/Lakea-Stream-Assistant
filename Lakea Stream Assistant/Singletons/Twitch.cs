@@ -46,7 +46,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Twitch: Failed to Connect -> " + ex.Message);
+                Console.WriteLine("Fatal Error: Failed to Connect to Twitch -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Console.ReadLine();
                 Environment.Exit(1);
