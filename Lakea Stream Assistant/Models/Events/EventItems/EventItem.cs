@@ -1,6 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
-using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 
 namespace Lakea_Stream_Assistant.Models.Events.EventLists

@@ -127,6 +127,19 @@ namespace Lakea_Stream_Assistant.EventProcessing
             }
         }
 
+        public void SendTwitchWhisperMessage(Dictionary<string, string> args, Callbacks callback)
+        {
+            Singletons.Twitch.WriteWhisperToUser(args["DisplayName"], args["Message"]);
+            if(callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+            }
+        }
+
         #endregion
 
         //For null events that don't require any actions

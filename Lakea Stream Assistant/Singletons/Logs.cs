@@ -1,5 +1,4 @@
 ﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Models.Configuration;
 using System.IO;
 
 namespace Lakea_Stream_Assistant.Singletons

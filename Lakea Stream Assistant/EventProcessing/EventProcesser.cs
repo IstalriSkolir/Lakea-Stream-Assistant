@@ -25,22 +25,25 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         outputs.NullEvent("Null Event -> " + item.Name);
                         break;
                     case EventGoal.OBS_Disable_Source:
-                        outputs.SetActiveOBSSource(item.GetArgs(), item.Duration, false, item.Callback);
+                        outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                         break;
                     case EventGoal.OBS_Enable_Source:
-                        outputs.SetActiveOBSSource(item.GetArgs(), item.Duration, true, item.Callback);
+                        outputs.SetActiveOBSSource(item.Args, item.Duration, true, item.Callback);
                         break;
                     case EventGoal.OBS_Enable_Random_Source:
-                        outputs.SetRandomActiveOBSSource(item.GetArgs(), item.Duration, true, item.Callback);
+                        outputs.SetRandomActiveOBSSource(item.Args, item.Duration, true, item.Callback);
                         break;
                     case EventGoal.OBS_Disable_Random_Source:
-                        outputs.SetRandomActiveOBSSource(item.GetArgs(), item.Duration, false, item.Callback);
+                        outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                         break;
                     case EventGoal.OBS_Change_Scene:
-                        outputs.ChangeOBSScene(item.GetArgs(), item.Callback);
+                        outputs.ChangeOBSScene(item.Args, item.Callback);
                         break;
                     case EventGoal.Twitch_Send_Chat_Message:
-                        outputs.SendTwitchChatMessage(item.GetArgs(), item.Callback);
+                        outputs.SendTwitchChatMessage(item.Args, item.Callback);
+                        break;
+                    case EventGoal.Twitch_Send_Whisper_Message:
+                        outputs.SendTwitchWhisperMessage(item.Args, item.Callback);
                         break;
                 }
             }
