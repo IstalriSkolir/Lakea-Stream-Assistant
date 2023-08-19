@@ -20,6 +20,8 @@ public partial class Config
 
     private ConfigTwitch twitchField;
 
+    private ConfigApplication[] applicationsField;
+
     private ConfigEvent[] eventsField;
 
     /// <remarks/>
@@ -58,6 +60,20 @@ public partial class Config
         set
         {
             this.twitchField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("Application", IsNullable = false)]
+    public ConfigApplication[] Applications
+    {
+        get
+        {
+            return this.applicationsField;
+        }
+        set
+        {
+            this.applicationsField = value;
         }
     }
 
@@ -310,6 +326,88 @@ public partial class ConfigTwitchBotChannel
         }
     }
 }
+
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class Applications
+{
+
+    private ConfigApplication[] applicationField;
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Application")]
+    public ConfigApplication[] Application
+    {
+        get
+        {
+            return this.applicationField;
+        }
+        set
+        {
+            this.applicationField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class ConfigApplication
+{
+
+    private string nameField;
+
+    private string pathField;
+
+    private string windowStyleField;
+
+    /// <remarks/>
+    public string Name
+    {
+        get
+        {
+            return this.nameField;
+        }
+        set
+        {
+            this.nameField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string Path
+    {
+        get
+        {
+            return this.pathField;
+        }
+        set
+        {
+            this.pathField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string WindowStyle
+    {
+        get
+        {
+            return this.windowStyleField;
+        }
+        set
+        {
+            this.windowStyleField = value;
+        }
+    }
+}
+
+
 
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -607,4 +705,3 @@ public partial class ConfigEventEventTargetCallback
         }
     }
 }
-

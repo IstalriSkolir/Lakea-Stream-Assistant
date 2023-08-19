@@ -3,6 +3,7 @@ using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.EventProcessing;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Processes;
 
 namespace Lakea_Stream_Assistant
 {
@@ -10,8 +11,30 @@ namespace Lakea_Stream_Assistant
     //Start Object
     class Program
     {
+        static EventInput eventHandler;
+        static ExternalProcesses externalProcesses;
+
         //Point of Entry
         static void Main(string[] args)
+        {
+            initiliase();
+            bool exit = false;
+            //Pauses main thread to prevent application terminating, until told by the user
+            while (!exit)
+            {
+                string input = Console.ReadLine();
+                if ("exit".Equals(input.ToLower()))
+                {
+                    shutdown();
+                    exit = true;
+                }
+            }
+        }
+
+        #region Initiliase
+
+        //initiliase Lakea
+        static void initiliase()
         {
             Logs.Instance.Initiliase();
             string filePath = selectProfile();
@@ -19,7 +42,9 @@ namespace Lakea_Stream_Assistant
             Config config = new LoadConfig().LoadConfigFromFile(filePath);
             Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
             Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-            EventInput eventHandler = new EventInput(config.Events);
+            eventHandler = new EventInput(config.Events);
+            externalProcesses = new ExternalProcesses(config.Applications);
+            externalProcesses.StartAllExternalProcesses();
             OBS.Init(config);
             while (!OBS.Initiliased)
             {
@@ -33,12 +58,6 @@ namespace Lakea_Stream_Assistant
             eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer));
             Console.WriteLine("Lakea: All set and ready to go!");
             Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
-
-            //Pauses main thread to prevent application terminating
-            while (true)
-            {
-                Console.ReadLine();
-            }
         }
 
         //Lists avaliable config files and has the user select one
@@ -113,5 +132,16 @@ namespace Lakea_Stream_Assistant
                 return filePath;       
             }
         }
+
+        #endregion
+
+        #region Shutdown
+
+        static void shutdown()
+        {
+            externalProcesses.StopAllExternalProcesses();
+        }
+
+        #endregion
     }
 }
