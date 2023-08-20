@@ -73,6 +73,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client.OnConnected += onClientConnected;
                 client.OnChatCommandReceived += onChatCommand;
                 client.OnRaidNotification += onRaid;
+                client.OnNewSubscriber += onSubscription;
                 client.Connect();
             }
             catch (Exception ex)
@@ -133,6 +134,14 @@ namespace Lakea_Stream_Assistant.Singletons
             Console.WriteLine("Twitch: Raid -> " + e.RaidNotification.DisplayName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
             eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
+        }
+
+        //Called on a subscription event, passes event info to the eventHandler
+        private static void onSubscription(object sender, OnNewSubscriberArgs e)
+        {
+            Console.WriteLine("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+            eventHandler.NewEvent(new TwitchSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
         }
 
         //Write a message to Twitch chat

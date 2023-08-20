@@ -15,6 +15,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         private IDictionary<string, EventItem> redeems;
         private IDictionary<string, EventItem> commands;
         private IDictionary<string, EventItem> raids;
+        private IDictionary<string, EventItem> subscriptions;
         private List<Tuple<int, string>> bitsOrder;
 
         //Contructor stores list of events to check against when it receives a new event
@@ -27,6 +28,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             redeems = new Dictionary<string, EventItem>();
             commands = new Dictionary<string, EventItem>();
             raids = new Dictionary<string, EventItem>();
+            subscriptions = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -52,6 +54,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
                                 break;
                             case EventType.Twitch_Raid:
                                 raids.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_Subscription:
+                                subscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
@@ -93,7 +98,10 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 {
                     EventItem item = follows[eve.Args.FollowedChannelId];
                     item = passArgs.GetEventArgs(item, eve);
-                    processer.ProcessEvent(item);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
                 }
                 else
                 {
@@ -241,6 +249,48 @@ namespace Lakea_Stream_Assistant.EventProcessing
             catch (Exception ex)
             {
                 Console.WriteLine("Lakea: Twitch Raid Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+    
+        //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
+        public void newSubscription(TwitchSubscription eve)
+        {
+            try
+            {
+                string id = "Twitch_Subscription_" + eve.Args.Subscriber.SubscriptionPlan.ToString();
+                if(subscriptions.ContainsKey(id))
+                {
+                    EventItem item = subscriptions[id];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
+                }
+                else if(subscriptions.ContainsKey("Twitch_Subscription_Default"))
+                {
+                    EventItem item = subscriptions["Twitch_Subscription_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if(item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
+                }
+                else if(subscriptions.Count > 0)
+                {
+                    Console.WriteLine("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                }
+                else
+                {
+                    Console.WriteLine("Lakea: No Subscription Events Configured");
+                    Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lakea: Twitch Subscription Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

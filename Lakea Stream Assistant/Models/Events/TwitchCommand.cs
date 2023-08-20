@@ -29,6 +29,7 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "CommandText", args.Command.CommandText },
                 { "IsModerator", args.Command.ChatMessage.IsModerator.ToString() },
                 { "IsSubscriber", args.Command.ChatMessage.IsSubscriber.ToString() },
+                { "IsPartner", args.Command.ChatMessage.IsPartner.ToString() },
                 { "IsVip", args.Command.ChatMessage.IsVip.ToString() },
                 { "DisplayName", args.Command.ChatMessage.DisplayName },
                 { "ChatMessage", args.Command.ChatMessage.Message }

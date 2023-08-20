@@ -45,6 +45,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 case EventType.Twitch_Raid:
                     twitch.NewRaid((TwitchRaid)eve);
                     break;
+                case EventType.Twitch_Subscription:
+                    twitch.newSubscription((TwitchSubscription)eve);
+                    break;
                 case EventType.Twitch_Redeem:
                     twitch.NewRedeem((TwitchRedeem)eve);
                     break;
