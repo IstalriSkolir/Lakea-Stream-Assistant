@@ -14,6 +14,7 @@
         Twitch_Follow,
         Twitch_Raid,
         Twitch_Redeem,
+        Twitch_Subscription,
         Lakea_Callback,
         Lakea_Timer
     }
