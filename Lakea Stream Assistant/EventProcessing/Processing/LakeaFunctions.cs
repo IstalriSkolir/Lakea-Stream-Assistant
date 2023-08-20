@@ -1,23 +1,26 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     // Functions for handling Lakea Events
     public class LakeaFunctions
     {
         private EventProcesser processer;
         private EventPassArguments passArgs;
+        private InternalCommands commands;
         private IDictionary<string, EventItem> callbacks;
         private IDictionary<string, EventItem> timers;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs)
+        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, InternalCommands commands)
         {
             this.processer = processer;
             this.passArgs = passArgs;
+            this.commands = commands;
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
@@ -65,7 +68,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         Dictionary<string, string> args = eve.GetCallbackArguments(callbacks[eve.Callback.ID]);
                         //Dictionary<string, string> currentArgs = callbacks[eve.Callback.ID].Args;
                         Dictionary<string, string> currentArgs = new Dictionary<string, string>();
-                        foreach(var arg in callbacks[eve.Callback.ID].Args)
+                        foreach (var arg in callbacks[eve.Callback.ID].Args)
                         {
                             currentArgs.Add(arg.Key, arg.Value);
                         }
@@ -93,6 +96,24 @@ namespace Lakea_Stream_Assistant.EventProcessing
             catch (Exception ex)
             {
                 Console.WriteLine("Lakea: Callback Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
+        //When a command event that is a inbuilt Lake command, call the commands object to call the relevant 'EventItem' for it
+        public void NewCommand(LakeaCommand eve)
+        {
+            try
+            {
+                EventItem item = commands.NewLakeaCommand(eve);
+                if (item != null)
+                {
+                    processer.ProcessEvent(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lakea: Default Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

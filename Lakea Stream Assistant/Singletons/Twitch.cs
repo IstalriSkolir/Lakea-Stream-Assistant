@@ -7,14 +7,15 @@ using TwitchLib.Client.Models;
 using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Client.Events;
-using Lakea_Stream_Assistant.EventProcessing;
+using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
     public sealed class Twitch
     {
-        //public static bool Initiliased = false;
         public static Tuple<int, int> ServicesConnected = Tuple.Create(0, 2);
+        private static InternalCommands lakeaCommands;
         private static EventInput eventHandler;
         private static TwitchPubSub pubSub;
         private static TwitchClient client;
@@ -29,11 +30,12 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initiliases the Singleton by connecting to Twitch with the settings in the config object
-        public static void Init(Config config, EventInput newEventsObj)
+        public static void Init(Config config, EventInput newEventsObj, InternalCommands commands)
         {
             try
             {
                 eventHandler = newEventsObj;
+                lakeaCommands = commands;
                 channelUsername = config.Twitch.StreamingChannel.UserName;
                 channelID = config.Twitch.StreamingChannel.ID.ToString();
                 channelAuthKey = config.Twitch.StreamingChannel.AuthKey;
@@ -120,12 +122,21 @@ namespace Lakea_Stream_Assistant.Singletons
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
 
-        //Called on a command event, passes event info to the eventHandler
+        //Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
-            Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-            eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+            if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
+            {
+                Console.WriteLine("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                eventHandler.NewEvent(new LakeaCommand(EventSource.Twitch, EventType.Lakea_Command, e));
+            }
+            else
+            {
+                Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+            }
         }
 
         //Called on a command event, passes event info to the eventHandler

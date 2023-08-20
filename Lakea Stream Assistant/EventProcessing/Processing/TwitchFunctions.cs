@@ -3,7 +3,7 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     // Functions for handling Twitch Events
     public class TwitchFunctions
@@ -98,7 +98,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 {
                     EventItem item = follows[eve.Args.FollowedChannelId];
                     item = passArgs.GetEventArgs(item, eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
@@ -131,7 +131,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         string id = bitsOrder[i].Item2;
                         EventItem item = bits[id];
                         item = passArgs.GetEventArgs(item, eve);
-                        if(item  != null)
+                        if (item != null)
                         {
                             processer.ProcessEvent(item);
                         }
@@ -145,7 +145,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                         string id = bitsOrder[i].Item2;
                         EventItem item = bits[id];
                         item = passArgs.GetEventArgs(item, eve);
-                        if(item != null)
+                        if (item != null)
                         {
                             processer.ProcessEvent(bits[id]);
                         }
@@ -167,7 +167,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 if (redeems.ContainsKey(eve.Args.RewardRedeemed.Redemption.Reward.Id))
                 {
                     EventItem item = passArgs.GetEventArgs(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id], eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
@@ -210,18 +210,18 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
-    
+
         //When a channel raid event is triggered, checks the raid dictionary for event before triggering the events effect
         public void NewRaid(TwitchRaid eve)
         {
             try
             {
                 string id = "Twitch_Raid_" + eve.Args.RaidNotification.DisplayName;
-                if(raids.ContainsKey(id))
+                if (raids.ContainsKey(id))
                 {
                     EventItem item = raids[id];
                     item = passArgs.GetEventArgs(item, eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
@@ -230,12 +230,12 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 {
                     EventItem item = raids["Twitch_Raid_Default"];
                     item = passArgs.GetEventArgs(item, eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
                 }
-                else if(raids.Count > 0)
+                else if (raids.Count > 0)
                 {
                     Console.WriteLine("Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
                     Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
@@ -252,32 +252,32 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
-    
+
         //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
         public void newSubscription(TwitchSubscription eve)
         {
             try
             {
                 string id = "Twitch_Subscription_" + eve.Args.Subscriber.SubscriptionPlan.ToString();
-                if(subscriptions.ContainsKey(id))
+                if (subscriptions.ContainsKey(id))
                 {
                     EventItem item = subscriptions[id];
                     item = passArgs.GetEventArgs(item, eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
                 }
-                else if(subscriptions.ContainsKey("Twitch_Subscription_Default"))
+                else if (subscriptions.ContainsKey("Twitch_Subscription_Default"))
                 {
                     EventItem item = subscriptions["Twitch_Subscription_Default"];
                     item = passArgs.GetEventArgs(item, eve);
-                    if(item != null)
+                    if (item != null)
                     {
                         processer.ProcessEvent(item);
                     }
                 }
-                else if(subscriptions.Count > 0)
+                else if (subscriptions.Count > 0)
                 {
                     Console.WriteLine("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
                     Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);

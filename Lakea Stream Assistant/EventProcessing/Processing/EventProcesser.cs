@@ -2,7 +2,7 @@
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     //handles stored 'EventItem' and calls the corresponding 'EventOutputs' function
     public class EventProcesser

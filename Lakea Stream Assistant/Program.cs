@@ -1,9 +1,10 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
-using Lakea_Stream_Assistant.EventProcessing;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Processes;
+using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
 
 namespace Lakea_Stream_Assistant
 {
@@ -42,7 +43,8 @@ namespace Lakea_Stream_Assistant
             Config config = new LoadConfig().LoadConfigFromFile(filePath);
             Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
             Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-            eventHandler = new EventInput(config.Events);
+            InternalCommands lakeaCommands = new InternalCommands(config.Settings.Commands);
+            eventHandler = new EventInput(config.Events, lakeaCommands);
             externalProcesses = new ExternalProcesses(config.Applications);
             externalProcesses.StartAllExternalProcesses();
             OBS.Init(config);
@@ -50,7 +52,7 @@ namespace Lakea_Stream_Assistant
             {
                 Thread.Sleep(100);
             }
-            Twitch.Init(config, eventHandler);
+            Twitch.Init(config, eventHandler, lakeaCommands);
             while (Twitch.ServicesConnected.Item1 < Twitch.ServicesConnected.Item2)
             {
                 Thread.Sleep(100);

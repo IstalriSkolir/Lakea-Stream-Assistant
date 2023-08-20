@@ -3,7 +3,7 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     //This class handles the outputs that are triggered from events
     public class EventOutputs
@@ -21,7 +21,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
         //Set OBS source active status, resets after duration expires if there is a duration
         public void SetActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback, bool invoked = false)
         {
-            Singletons.OBS.SetSourceEnabled(args["Source"], active);
+            OBS.SetSourceEnabled(args["Source"], active);
             if (!invoked && duration > 0)
             {
                 Task.Delay(duration * 1000).ContinueWith(t => SetActiveOBSSource(args, duration, !active, null, true));
@@ -33,7 +33,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     { "Duraction", duration.ToString() },
                     { "Active", active.ToString() }
                 };
-                foreach(var arg in args)
+                foreach (var arg in args)
                 {
                     callbackArgs.Add(arg.Key, arg.Value);
                 }
@@ -45,9 +45,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
         public void SetRandomActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback)
         {
             int sourceCount = 0;
-            for(int i = 0; i < args.Count; i++)
+            for (int i = 0; i < args.Count; i++)
             {
-                if(args.ContainsKey("Source" + i))
+                if (args.ContainsKey("Source" + i))
                 {
                     sourceCount++;
                 }
@@ -55,7 +55,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             int ran = random.Next(1, sourceCount + 1);
             string key = "Source" + ran;
             string source = args[key];
-            Singletons.OBS.SetSourceEnabled(source, active);
+            OBS.SetSourceEnabled(source, active);
             if (duration > 0)
             {
                 Dictionary<string, string> newArgs = new Dictionary<string, string>();
@@ -76,7 +76,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     key = "Source" + i;
                     callbackArgs.Add("arg" + i, args[key]);
                 }
-                foreach(var arg in args)
+                foreach (var arg in args)
                 {
                     if (!arg.Key.Contains("Source"))
                     {
@@ -92,16 +92,16 @@ namespace Lakea_Stream_Assistant.EventProcessing
         {
             if (args.ContainsKey("Transition"))
             {
-                Singletons.OBS.ChangeScene(args["Scene"], args["Transition"]);
+                OBS.ChangeScene(args["Scene"], args["Transition"]);
             }
             else
             {
-                Singletons.OBS.ChangeScene(args["Scene"]);
+                OBS.ChangeScene(args["Scene"]);
             }
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
-                foreach (var arg in args) 
+                foreach (var arg in args)
                 {
                     callbackArgs.Add(arg.Key, arg.Value);
                 }
@@ -116,11 +116,11 @@ namespace Lakea_Stream_Assistant.EventProcessing
         //Send Twitch chat message
         public void SendTwitchChatMessage(Dictionary<string, string> args, Callbacks callback)
         {
-            Singletons.Twitch.WriteToChat(args["Message"]);
+            Twitch.WriteToChat(args["Message"]);
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
-                foreach (var arg in args) 
+                foreach (var arg in args)
                 {
                     callbackArgs.Add(arg.Key, arg.Value);
                 }
@@ -131,8 +131,8 @@ namespace Lakea_Stream_Assistant.EventProcessing
         //Send Twitch Whisper
         public void SendTwitchWhisperMessage(Dictionary<string, string> args, Callbacks callback)
         {
-            Singletons.Twitch.WriteWhisperToUser(args["DisplayName"], args["Message"]);
-            if(callback != null)
+            Twitch.WriteWhisperToUser(args["DisplayName"], args["Message"]);
+            if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
                 foreach (var arg in args)
@@ -148,13 +148,13 @@ namespace Lakea_Stream_Assistant.EventProcessing
         public void NullEvent(string message)
         {
             Console.WriteLine("Lakea: " + message);
-            Logs.Instance.NewLog(LogLevel.Info, "Null Event Output -> ");
+            Logs.Instance.NewLog(LogLevel.Info, message);
         }
 
         //Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(Dictionary<string, string> args, Callbacks callback)
         {
-            if(callback.Delay > 0)
+            if (callback.Delay > 0)
             {
                 Task.Delay(callback.Delay * 1000).ContinueWith(t =>
                 {
