@@ -32,9 +32,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             try
             {
-                if (active[eve.Command])
+                string command = eve.Command.ToLower();
+                if (active[command])
                 {
-                    return commands[eve.Command].Invoke(eve);
+                    return commands[command].Invoke(eve);
                 }
                 else
                 {
