@@ -3,7 +3,7 @@ using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     //Get arguments from the triggering events and replace any templates with their corresponding values
     public class EventPassArguments
@@ -11,12 +11,12 @@ namespace Lakea_Stream_Assistant.EventProcessing
         public EventItem GetEventArgs(EventItem storedItem, Event eve)
         {
             try
-            { 
+            {
                 if (!checkEventForArgs(storedItem))
                 {
                     Dictionary<string, string> currentEveArgs = storedItem.GetArgs();
                     Dictionary<string, string> newEveArgs = eve.GetArgs();
-                    foreach(var arg in currentEveArgs)
+                    foreach (var arg in currentEveArgs)
                     {
                         newEveArgs.Add(arg.Key, arg.Value);
                     }
@@ -26,7 +26,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                 Dictionary<string, string> triggerArgs = eve.GetArgs();
                 Dictionary<string, string> currentArgs = storedItem.GetArgs();
                 Dictionary<string, string> adjustedArgs = new Dictionary<string, string>();
-                foreach(var arg in currentArgs)
+                foreach (var arg in currentArgs)
                 {
                     string value = arg.Value;
                     if (value.Contains('{') && value.Contains('}'))
@@ -35,7 +35,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     }
                     adjustedArgs.Add(arg.Key, value);
                 }
-                foreach(var arg in triggerArgs)
+                foreach (var arg in triggerArgs)
                 {
                     adjustedArgs.Add(arg.Key, arg.Value);
                 }
@@ -53,9 +53,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
         //Checks if any of the arguments have templates that need replacing with their corresponding values
         private bool checkEventForArgs(EventItem Item)
         {
-            foreach(var arg in Item.GetArgs())
+            foreach (var arg in Item.GetArgs())
             {
-                if(arg.Value.Contains('{') && arg.Value.Contains('}'))
+                if (arg.Value.Contains('{') && arg.Value.Contains('}'))
                 {
                     return true;
                 }
@@ -73,7 +73,7 @@ namespace Lakea_Stream_Assistant.EventProcessing
             string key = template.Remove(template.Length - 1, 1).Remove(0, 1);
             string arg = triggerArgs[key];
             value = value.Replace(template, arg);
-            if(value.Contains('{') && value.Contains('}'))
+            if (value.Contains('{') && value.Contains('}'))
             {
                 value = replaceTemplate(triggerArgs, value);
             }

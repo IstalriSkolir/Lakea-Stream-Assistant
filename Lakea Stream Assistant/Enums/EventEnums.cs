@@ -9,14 +9,15 @@
 
     public enum EventType
     {
+        Lakea_Callback,
+        Lakea_Command,
+        Lakea_Timer,
         Twitch_Bits,
         Twitch_Command,
         Twitch_Follow,
         Twitch_Raid,
         Twitch_Redeem,
-        Twitch_Subscription,
-        Lakea_Callback,
-        Lakea_Timer
+        Twitch_Subscription
     }
 
     public enum EventTarget

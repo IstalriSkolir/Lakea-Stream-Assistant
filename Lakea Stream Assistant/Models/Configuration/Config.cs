@@ -92,14 +92,19 @@ public partial class Config
     }
 }
 
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
 public partial class ConfigSettings
 {
 
     private string logLevelField;
+
+    private SettingsCommands commandsField;
 
     /// <remarks/>
     public string LogLevel
@@ -113,7 +118,45 @@ public partial class ConfigSettings
             this.logLevelField = value;
         }
     }
+
+    /// <remarks/>
+    public SettingsCommands Commands
+    {
+        get
+        {
+            return this.commandsField;
+        }
+        set
+        {
+            this.commandsField = value;
+        }
+    }
 }
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class SettingsCommands
+{
+
+    private bool statusField;
+
+    /// <remarks/>
+    public bool Status
+    {
+        get
+        {
+            return this.statusField;
+        }
+        set
+        {
+            this.statusField = value;
+        }
+    }
+}
+
+
 
 /// <remarks/>
 [System.SerializableAttribute()]

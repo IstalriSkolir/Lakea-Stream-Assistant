@@ -1,8 +1,9 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 
-namespace Lakea_Stream_Assistant.EventProcessing
+namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     //Receives new events and calls the relevant functions for the event type
     public class EventInput
@@ -13,13 +14,13 @@ namespace Lakea_Stream_Assistant.EventProcessing
         private EventProcesser processer;
         private EventPassArguments passArgs;
 
-        public EventInput(ConfigEvent[] events)
+        public EventInput(ConfigEvent[] events, InternalCommands commands)
         {
             outputs = new EventOutputs(this);
             passArgs = new EventPassArguments();
             processer = new EventProcesser(outputs);
             twitch = new TwitchFunctions(events, processer, passArgs);
-            lakea = new LakeaFunctions(events, processer, passArgs);
+            lakea = new LakeaFunctions(events, processer, passArgs, commands);
         }
 
         //Called on a new event, checks event type before callin relevent function
@@ -32,6 +33,9 @@ namespace Lakea_Stream_Assistant.EventProcessing
                     break;
                 case EventType.Lakea_Callback:
                     lakea.NewCallback((LakeaCallback)eve);
+                    break;
+                case EventType.Lakea_Command:
+                    lakea.NewCommand((LakeaCommand)eve);
                     break;
                 case EventType.Twitch_Bits:
                     twitch.NewBits((TwitchBits)eve);

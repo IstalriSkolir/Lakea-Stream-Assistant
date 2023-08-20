@@ -2,6 +2,9 @@
 <Config>
   <Settings>
     <LogLevel>Warning</LogLevel>
+    <Commands>
+      <Status>true</Status>
+    </Commands>
   </Settings>
   <OBS>
     <IP>localhost</IP>
