@@ -142,6 +142,8 @@ public partial class SettingsCommands
 
     private bool statusField;
 
+    private bool quotesField;
+
     /// <remarks/>
     public bool Status
     {
@@ -152,6 +154,19 @@ public partial class SettingsCommands
         set
         {
             this.statusField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool Quotes
+    {
+        get
+        {
+            return this.quotesField;
+        }
+        set
+        {
+            this.quotesField = value;
         }
     }
 }

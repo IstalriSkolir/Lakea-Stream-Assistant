@@ -8,6 +8,7 @@ namespace Lakea_Stream_Assistant.Models.Events
     public class LakeaCommand : Event
     {
         private List<string> args;
+        private string argsAsString;
         private string command;
         private char identifier;
 
@@ -15,6 +16,7 @@ namespace Lakea_Stream_Assistant.Models.Events
         {
             this.source = source;
             this.type = type;
+            this.argsAsString = args.Command.ArgumentsAsString;
             this.command = args.Command.CommandText;
             this.identifier = args.Command.CommandIdentifier;
             this.args = new List<string>();
@@ -27,6 +29,7 @@ namespace Lakea_Stream_Assistant.Models.Events
         public override EventSource Source { get { return source; } }
         public override EventType Type { get { return type; } }
         public List<string> Args { get { return args; } }
+        public string ArgsAsString { get { return argsAsString; } }
         public string Command { get { return command; } }
         public char Identifier { get { return identifier; } }
 
