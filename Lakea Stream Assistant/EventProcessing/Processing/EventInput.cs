@@ -14,7 +14,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventProcesser processer;
         private EventPassArguments passArgs;
 
-        public EventInput(ConfigEvent[] events, InternalCommands commands)
+        public EventInput(ConfigEvent[] events, DefaultCommands commands)
         {
             outputs = new EventOutputs(this);
             passArgs = new EventPassArguments();

@@ -43,7 +43,7 @@ namespace Lakea_Stream_Assistant
             Config config = new LoadConfig().LoadConfigFromFile(filePath);
             Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
             Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-            InternalCommands lakeaCommands = new InternalCommands(config.Settings.Commands);
+            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands);
             eventHandler = new EventInput(config.Events, lakeaCommands);
             externalProcesses = new ExternalProcesses(config.Applications);
             externalProcesses.StartAllExternalProcesses();

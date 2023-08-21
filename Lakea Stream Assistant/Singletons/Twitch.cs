@@ -15,7 +15,7 @@ namespace Lakea_Stream_Assistant.Singletons
     public sealed class Twitch
     {
         public static Tuple<int, int> ServicesConnected = Tuple.Create(0, 2);
-        private static InternalCommands lakeaCommands;
+        private static DefaultCommands lakeaCommands;
         private static EventInput eventHandler;
         private static TwitchPubSub pubSub;
         private static TwitchClient client;
@@ -30,7 +30,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initiliases the Singleton by connecting to Twitch with the settings in the config object
-        public static void Init(Config config, EventInput newEventsObj, InternalCommands commands)
+        public static void Init(Config config, EventInput newEventsObj, DefaultCommands commands)
         {
             try
             {

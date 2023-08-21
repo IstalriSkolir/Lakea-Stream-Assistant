@@ -11,12 +11,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     {
         private EventProcesser processer;
         private EventPassArguments passArgs;
-        private InternalCommands commands;
+        private DefaultCommands commands;
         private IDictionary<string, EventItem> callbacks;
         private IDictionary<string, EventItem> timers;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, InternalCommands commands)
+        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands)
         {
             this.processer = processer;
             this.passArgs = passArgs;

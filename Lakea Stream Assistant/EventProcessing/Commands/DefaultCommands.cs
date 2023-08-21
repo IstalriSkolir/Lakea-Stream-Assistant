@@ -5,20 +5,32 @@ using Lakea_Stream_Assistant.Singletons;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
-    public class InternalCommands
+    public class DefaultCommands
     {
+        private QuoteCommand quotes;
         private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commands;
         private readonly Dictionary<string, bool> active;
 
-        public InternalCommands(SettingsCommands commands)
+        public DefaultCommands(SettingsCommands commands)
         {
+            this.quotes = new QuoteCommand();
             this.commands = new Dictionary<string, Func<LakeaCommand, EventItem>>
             {
-                { "status", statusCommands }
+                { "status", statusCommand },
+                { "quote", quoteCommand },
+                { "quotecount", quoteCommand },
+                { "addquote", quoteCommand },
+                { "quoteadd", quoteCommand },
+                { "quotefest", quoteCommand }
             };
             this.active = new Dictionary<string, bool>
             {
-                { "status", commands.Status }
+                { "status", commands.Status },
+                { "quote", commands.Quotes },
+                { "quotecount", commands.Quotes },
+                { "addquote", commands.Quotes },
+                { "quoteadd", commands.Quotes },
+                { "quotefest", commands.Quotes }
             };
         }
 
@@ -52,13 +64,30 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             return null;
         }
 
-        private EventItem statusCommands(LakeaCommand eve)
+        private EventItem statusCommand(LakeaCommand eve)
         {
+            Console.WriteLine("Lakea: Status Command -> Active");
+            Logs.Instance.NewLog(LogLevel.Info, "Status Command -> Active");
             Dictionary<string, string> args = new Dictionary<string, string>
             {
                 { "Message", "I'm still active, all is well Cuppa" }
             };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Status Command", "Lakea_Status_Command", args: args);
+        }
+
+        private EventItem quoteCommand(LakeaCommand eve)
+        {
+            Console.WriteLine("Lakea: Quote Command -> " + eve.Command);
+            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Command);
+            Dictionary<string, string> args = quotes.NewQuote(eve);
+            if ("quotefest".Equals(eve.Command))
+            {
+                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
+            }
+            else
+            {
+                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
+            }
         }
     }
 }

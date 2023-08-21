@@ -4,6 +4,7 @@
     <LogLevel>Warning</LogLevel>
     <Commands>
       <Status>true</Status>
+      <Quotes>true</Quotes>
     </Commands>
   </Settings>
   <OBS>

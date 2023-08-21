@@ -128,6 +128,43 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
+        //Sends a list of Chat Messages
+        public void SendTwitchChatMessageList(Dictionary<string, string> args, Callbacks callback)
+        {
+            int messageCount = -1;
+            foreach(var arg in args)
+            {
+                if (arg.Key.Contains("Message"))
+                {
+                    messageCount++;
+                }
+            }
+            var task = Task.Run(() =>
+            {
+                int count = 0;
+                while(count <= messageCount)
+                {
+                    Twitch.WriteToChat(args["Message" +  count]);
+                    count++;
+                    Thread.Sleep(1000);
+                }
+            });
+            task.Wait();
+            //for(int i = 0; i < messageCount; i++)
+            //{
+            //    Task.Delay(i * 1000).ContinueWith(t => { Twitch.WriteToChat(args["Message" + i]); }); // Sending one message multiple times
+            //}
+            if(callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
+        }
+
         //Send Twitch Whisper
         public void SendTwitchWhisperMessage(Dictionary<string, string> args, Callbacks callback)
         {
