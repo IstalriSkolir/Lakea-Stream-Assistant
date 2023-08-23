@@ -18,7 +18,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     Dictionary<string, string> newEveArgs = eve.GetArgs();
                     foreach (var arg in currentEveArgs)
                     {
-                        newEveArgs.Add(arg.Key, arg.Value);
+                        if (!newEveArgs.ContainsKey(arg.Key))
+                        {
+                            newEveArgs.Add(arg.Key, arg.Value);
+                        }
+                        else
+                        {
+                            newEveArgs.Remove(arg.Key);
+                            newEveArgs.Add(arg.Key, arg.Value);
+                        }
                     }
                     EventItem newItem = new EventItem(storedItem, newEveArgs);
                     return newItem;
@@ -37,7 +45,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 foreach (var arg in triggerArgs)
                 {
-                    adjustedArgs.Add(arg.Key, arg.Value);
+                    if (!adjustedArgs.ContainsKey(arg.Key))
+                    {
+                        adjustedArgs.Add(arg.Key, arg.Value);
+                    }
+                    else
+                    {
+                        adjustedArgs.Remove(arg.Key);
+                        adjustedArgs.Add(arg.Key, arg.Value);
+                    }
                 }
                 EventItem item = new EventItem(storedItem, adjustedArgs);
                 return item;

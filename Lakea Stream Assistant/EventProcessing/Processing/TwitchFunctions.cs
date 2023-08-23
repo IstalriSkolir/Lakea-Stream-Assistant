@@ -129,8 +129,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     {
                         eventFound = true;
                         string id = bitsOrder[i].Item2;
-                        EventItem item = bits[id];
-                        item = passArgs.GetEventArgs(item, eve);
+                        EventItem item = passArgs.GetEventArgs(bits[id], eve);
                         if (item != null)
                         {
                             processer.ProcessEvent(item);
@@ -143,8 +142,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     {
                         eventFound = true;
                         string id = bitsOrder[i].Item2;
-                        EventItem item = bits[id];
-                        item = passArgs.GetEventArgs(item, eve);
+                        EventItem item = passArgs.GetEventArgs(bits[id], eve);
                         if (item != null)
                         {
                             processer.ProcessEvent(bits[id]);

@@ -84,7 +84,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     {
                         EventItem item = callbacks[eve.Callback.ID];
                         item = passArgs.GetEventArgs(item, eve);
-                        processer.ProcessEvent(callbacks[eve.Callback.ID]);
+                        processer.ProcessEvent(item);
                     }
                 }
                 else
@@ -118,10 +118,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Starts internal 1 second ticking timer if there are any timer events
         public void NewTimerStart()
         {
-            if (timers.Count > 0)
+            if(timers.Count > 0)
             {
                 if (timers.Count == 1)
                 {
@@ -133,7 +132,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     Console.WriteLine("Lakea: " + timers.Count + " Timer Events Found, Initiliasing Timer...");
                     Logs.Instance.NewLog(LogLevel.Info, timers.Count + " Timer Events Found, Initiliasing Timer...");
                 }
-                Task.Delay(1000).ContinueWith(t => NewTimerTick());
+
+                List<Task> tasks = new List<Task>();
+                foreach (var timer in timers)
+                {
+                    //Task.Factory.StartNew(t => timerTick(timer.Key), timer.Value.Args["Start_Delay"]);
+                    try
+                    {
+                        tasks.Add(Task.Delay(Int32.Parse(timer.Value.Args["Start_Delay"]) * 1000).ContinueWith(t => { timerTick(timer.Key); }));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine("Lakea: Timer Initilasation Error -> " + timer.Value.Name);
+                        Logs.Instance.NewLog(LogLevel.Error, ex);
+                    }
+                }
             }
             else
             {
@@ -142,50 +155,97 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Internal timer ticks every second
-        public void NewTimerTick()
+        //When a timer fires, check dictionary for the relevant event and process it
+        private void timerTick(string timerID)
         {
-            foreach (var eve in timers)
+            try
             {
-                try
+                if (timers.ContainsKey(timerID))
                 {
-                    if (eve.Value.GetArgs()["First_Fire"] == "false")
-                    {
-                        int timeLeft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
-                        timeLeft--;
-                        if (timeLeft <= 0)
-                        {
-                            Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
-                            processer.ProcessEvent(timers[eve.Value.ID]);
-                            eve.Value.GetArgs()["First_Fire"] = "true";
-                        }
-                        else
-                        {
-                            eve.Value.GetArgs()["Timer_Value"] = timeLeft.ToString();
-                        }
-                    }
-                    else
-                    {
-                        int timeleft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
-                        timeleft--;
-                        if (timeleft <= 0)
-                        {
-                            Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
-                            processer.ProcessEvent(timers[eve.Value.ID]);
-                            eve.Value.GetArgs()["Timer_Value"] = eve.Value.GetArgs()["Timer_Delay"];
-                        }
-                        else
-                        {
-                            eve.Value.GetArgs()["Timer_Value"] = timeleft.ToString();
-                        }
-                    }
+                    processer.ProcessEvent(timers[timerID]);
+                    Task.Delay(Int32.Parse(timers[timerID].Args["Timer_Delay"]) * 1000).ContinueWith(t => { timerTick(timerID); });
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logs.Instance.NewLog(LogLevel.Error, ex);
+                    Console.WriteLine("Lakea: Unrecognised Timer ID -> " + timerID);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Timer ID -> " + timerID);
                 }
             }
-            Task.Delay(1000).ContinueWith(t => NewTimerTick());
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Lakea: Timer Error -> " + timerID);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
         }
+
+        ////Starts internal 1 second ticking timer if there are any timer events
+        //public void NewTimerStart()
+        //{
+        //    if (timers.Count > 0)
+        //    {
+        //        if (timers.Count == 1)
+        //        {
+        //            Console.WriteLine("Lakea: " + timers.Count + " Timer Event Found, Initiliasing Timer...");
+        //            Logs.Instance.NewLog(LogLevel.Info, timers.Count + " Timer Event Found, Initiliasing Timer...");
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("Lakea: " + timers.Count + " Timer Events Found, Initiliasing Timer...");
+        //            Logs.Instance.NewLog(LogLevel.Info, timers.Count + " Timer Events Found, Initiliasing Timer...");
+        //        }
+        //        Task.Delay(1000).ContinueWith(t => NewTimerTick());
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Lakea: No Timer Events, Timer Not Initiliased");
+        //        Logs.Instance.NewLog(LogLevel.Info, "No Timer Events, Timer Not Initiliased");
+        //    }
+        //}
+
+        ////Internal timer ticks every second
+        //public void NewTimerTick()
+        //{
+        //    foreach (var eve in timers)
+        //    {
+        //        try
+        //        {
+        //            if (eve.Value.GetArgs()["First_Fire"] == "false")
+        //            {
+        //                int timeLeft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
+        //                timeLeft--;
+        //                if (timeLeft <= 0)
+        //                {
+        //                    Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
+        //                    processer.ProcessEvent(timers[eve.Value.ID]);
+        //                    eve.Value.GetArgs()["First_Fire"] = "true";
+        //                }
+        //                else
+        //                {
+        //                    eve.Value.GetArgs()["Timer_Value"] = timeLeft.ToString();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                int timeleft = int.Parse(eve.Value.GetArgs()["Timer_Value"]);
+        //                timeleft--;
+        //                if (timeleft <= 0)
+        //                {
+        //                    Console.WriteLine("Lakea: Timer -> " + timers[eve.Value.ID].Name);
+        //                    processer.ProcessEvent(timers[eve.Value.ID]);
+        //                    eve.Value.GetArgs()["Timer_Value"] = eve.Value.GetArgs()["Timer_Delay"];
+        //                }
+        //                else
+        //                {
+        //                    eve.Value.GetArgs()["Timer_Value"] = timeleft.ToString();
+        //                }
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Logs.Instance.NewLog(LogLevel.Error, ex);
+        //        }
+        //    }
+        //    Task.Delay(1000).ContinueWith(t => NewTimerTick());
+        //}
     }
 }

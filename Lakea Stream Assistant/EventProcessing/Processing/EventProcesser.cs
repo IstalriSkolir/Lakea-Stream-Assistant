@@ -19,35 +19,38 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                switch (item.EventGoal)
+                if(item != null)
                 {
-                    case EventGoal.Null:
-                        outputs.NullEvent("Null Event -> " + item.Name);
-                        break;
-                    case EventGoal.OBS_Disable_Source:
-                        outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);
-                        break;
-                    case EventGoal.OBS_Enable_Source:
-                        outputs.SetActiveOBSSource(item.Args, item.Duration, true, item.Callback);
-                        break;
-                    case EventGoal.OBS_Enable_Random_Source:
-                        outputs.SetRandomActiveOBSSource(item.Args, item.Duration, true, item.Callback);
-                        break;
-                    case EventGoal.OBS_Disable_Random_Source:
-                        outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
-                        break;
-                    case EventGoal.OBS_Change_Scene:
-                        outputs.ChangeOBSScene(item.Args, item.Callback);
-                        break;
-                    case EventGoal.Twitch_Send_Chat_Message:
-                        outputs.SendTwitchChatMessage(item.Args, item.Callback);
-                        break;
-                    case EventGoal.Twitch_Send_Chat_Message_List:
-                        outputs.SendTwitchChatMessageList(item.Args, item.Callback);
-                        break;
-                    case EventGoal.Twitch_Send_Whisper_Message:
-                        outputs.SendTwitchWhisperMessage(item.Args, item.Callback);
-                        break;
+                    switch (item.EventGoal)
+                    {
+                        case EventGoal.Null:
+                            outputs.NullEvent("Null Event -> " + item.Name);
+                            break;
+                        case EventGoal.OBS_Disable_Source:
+                            outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);
+                            break;
+                        case EventGoal.OBS_Enable_Source:
+                            outputs.SetActiveOBSSource(item.Args, item.Duration, true, item.Callback);
+                            break;
+                        case EventGoal.OBS_Enable_Random_Source:
+                            outputs.SetRandomActiveOBSSource(item.Args, item.Duration, true, item.Callback);
+                            break;
+                        case EventGoal.OBS_Disable_Random_Source:
+                            outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
+                            break;
+                        case EventGoal.OBS_Change_Scene:
+                            outputs.ChangeOBSScene(item.Args, item.Callback);
+                            break;
+                        case EventGoal.Twitch_Send_Chat_Message:
+                            outputs.SendTwitchChatMessage(item.Args, item.Callback);
+                            break;
+                        case EventGoal.Twitch_Send_Chat_Message_List:
+                            outputs.SendTwitchChatMessageList(item.Args, item.Callback);
+                            break;
+                        case EventGoal.Twitch_Send_Whisper_Message:
+                            outputs.SendTwitchWhisperMessage(item.Args, item.Callback);
+                            break;
+                    }
                 }
             }
             catch (Exception ex)
