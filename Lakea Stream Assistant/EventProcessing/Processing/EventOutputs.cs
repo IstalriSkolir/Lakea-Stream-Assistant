@@ -35,7 +35,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 };
                 foreach (var arg in args)
                 {
-                    callbackArgs.Add(arg.Key, arg.Value);
+                    if (!callbackArgs.ContainsKey(arg.Key))
+                    {
+                        callbackArgs.Add(arg.Key, arg.Value);
+                    }
                 }
                 createCallback(callbackArgs, callback);
             }
@@ -103,7 +106,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
                 foreach (var arg in args)
                 {
-                    callbackArgs.Add(arg.Key, arg.Value);
+                    if (!callbackArgs.ContainsKey(arg.Key))
+                    {
+                        callbackArgs.Add(arg.Key, arg.Value);
+                    }
                 }
                 createCallback(callbackArgs, callback);
             }
