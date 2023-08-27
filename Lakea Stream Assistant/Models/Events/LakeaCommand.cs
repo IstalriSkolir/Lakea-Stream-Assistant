@@ -16,8 +16,6 @@ namespace Lakea_Stream_Assistant.Models.Events
             this.args = args;
         }
 
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
         public List<string> Args { get { return args.Command.ArgumentsAsList; } }
         public string ArgsAsString { get { return args.Command.ArgumentsAsString; } }
         public string Command { get { return args.Command.CommandText; } }

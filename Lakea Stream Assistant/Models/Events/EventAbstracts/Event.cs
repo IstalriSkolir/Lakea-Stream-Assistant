@@ -8,8 +8,8 @@ namespace Lakea_Stream_Assistant.Models.Events.EventAbstracts
         private protected EventSource source;
         private protected EventType type;
 
-        public abstract EventSource Source { get; }
-        public abstract EventType Type { get; }
+        public EventSource Source { get { return source; } }
+        public EventType Type { get { return type; } }
 
         public abstract Dictionary<string, string> GetArgs();
     }

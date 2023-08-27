@@ -5,19 +5,17 @@ using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.Models.Events
 {
-    public class TwitchSubscription : Event
+    public class TwitchClientSubscription : Event
     {
         private OnNewSubscriberArgs args;
 
-        public TwitchSubscription(EventSource source, EventType type, OnNewSubscriberArgs args)
+        public TwitchClientSubscription(EventSource source, EventType type, OnNewSubscriberArgs args)
         {
             this.source = source;
             this.type = type;
             this.args = args;
         }
 
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
         public OnNewSubscriberArgs Args { get { return args; } }
 
         public override Dictionary<string, string> GetArgs()

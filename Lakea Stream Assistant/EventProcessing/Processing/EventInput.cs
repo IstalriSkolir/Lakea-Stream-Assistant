@@ -2,6 +2,8 @@
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
+using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -26,39 +28,47 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //Called on a new event, checks event type before callin relevent function
         public void NewEvent(Event eve)
         {
-            EventStats.NewEvent(eve);
-            switch (eve.Type)
+            try
             {
-                case EventType.Lakea_Timer_Start:
-                    lakea.NewTimerStart();
-                    break;
-                case EventType.Lakea_Callback:
-                    lakea.NewCallback((LakeaCallback)eve);
-                    break;
-                case EventType.Lakea_Command:
-                    lakea.NewCommand((LakeaCommand)eve);
-                    break;
-                case EventType.Lakea_Timer_Fired:
-                    lakea.NewTimer((LakeaTimer)eve);
-                    break;
-                case EventType.Twitch_Bits:
-                    twitch.NewBits((TwitchBits)eve);
-                    break;
-                case EventType.Twitch_Command:
-                    twitch.NewCommand((TwitchCommand)eve);
-                    break;
-                case EventType.Twitch_Follow:
-                    twitch.NewFollow((TwitchFollow)eve);
-                    break;
-                case EventType.Twitch_Raid:
-                    twitch.NewRaid((TwitchRaid)eve);
-                    break;
-                case EventType.Twitch_Subscription:
-                    twitch.newSubscription((TwitchSubscription)eve);
-                    break;
-                case EventType.Twitch_Redeem:
-                    twitch.NewRedeem((TwitchRedeem)eve);
-                    break;
+                EventStats.NewEvent(eve);
+                switch (eve.Type)
+                {
+                    case EventType.Lakea_Timer_Start:
+                        lakea.NewTimerStart();
+                        break;
+                    case EventType.Lakea_Callback:
+                        lakea.NewCallback((LakeaCallback)eve);
+                        break;
+                    case EventType.Lakea_Command:
+                        lakea.NewCommand((LakeaCommand)eve);
+                        break;
+                    case EventType.Lakea_Timer_Fired:
+                        lakea.NewTimer((LakeaTimer)eve);
+                        break;
+                    case EventType.Twitch_Bits:
+                        twitch.NewBits((TwitchBits)eve);
+                        break;
+                    case EventType.Twitch_Command:
+                        twitch.NewCommand((TwitchCommand)eve);
+                        break;
+                    case EventType.Twitch_Follow:
+                        twitch.NewFollow((TwitchFollow)eve);
+                        break;
+                    case EventType.Twitch_Raid:
+                        twitch.NewRaid((TwitchRaid)eve);
+                        break;
+                    case EventType.Twitch_Subscription:
+                         twitch.newSubscription((TwitchPubSubSubscription)eve);
+                        break;
+                    case EventType.Twitch_Redeem:
+                        twitch.NewRedeem((TwitchRedeem)eve);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: New Event Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
     }

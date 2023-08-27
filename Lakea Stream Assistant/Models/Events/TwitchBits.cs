@@ -15,8 +15,6 @@ namespace Lakea_Stream_Assistant.Models.Events
             this.args = args;
         }
 
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
         public OnBitsReceivedV2Args Args { get { return args; } }
 
         public override Dictionary<string, string> GetArgs()

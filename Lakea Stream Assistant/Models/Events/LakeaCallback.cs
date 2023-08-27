@@ -17,8 +17,7 @@ namespace Lakea_Stream_Assistant.Models.Events
             this.callback = callback;
             this.args = args;
         }
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
+
         public Callbacks Callback { get { return callback; } }
         public Dictionary<string, string> Args { get { return args; } }
 
