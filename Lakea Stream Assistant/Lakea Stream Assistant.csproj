@@ -62,4 +62,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="&quot;$(DevEnvDir)TextTransform.exe&quot; -out &quot;$(ProjectDir)VersionIncrementer.cs&quot; &quot;$(ProjectDir)VersionIncrementer.tt" />
+  </Target>
+
 </Project>
