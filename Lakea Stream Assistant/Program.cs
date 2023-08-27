@@ -49,7 +49,7 @@ namespace Lakea_Stream_Assistant
             eventHandler = new EventInput(config.Events, lakeaCommands);
             externalProcesses = new ExternalProcesses(config.Applications);
             externalProcesses.StartAllExternalProcesses();
-            OBS.Init(config);
+            OBS.Init(config.OBS.IP, config.OBS.Port, config.OBS.Password);
             while (!OBS.Initiliased)
             {
                 Thread.Sleep(100);

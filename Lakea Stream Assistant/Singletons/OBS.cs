@@ -3,6 +3,7 @@ using OBSWebsocketDotNet.Types;
 using Lakea_Stream_Assistant.Models.OBS;
 using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
+using OBSWebsocketDotNet.Communication;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -14,6 +15,9 @@ namespace Lakea_Stream_Assistant.Singletons
         private static OBSWebsocket client;
         private static CancellationTokenSource keepAliveTokenSource;
         private static readonly int keepAliveInterval = 500;
+        private static string ip;
+        private static int port;
+        private static string password;
 
         public static bool IsConnected
         {
@@ -27,15 +31,19 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initialises the connected with the passed in configuration data
-        public static void Init(Config config)
+        public static void Init(string newIP, int newPort, string newPassword)
         {
             try
             {
+                ip = newIP;
+                port = newPort;
+                password = newPassword;
                 Terminal.Output("OBS: Connecting...");
                 Logs.Instance.NewLog(LogLevel.Info, "Connecting to OBS...");
                 client = new OBSWebsocket();
                 client.Connected += onConnect;
-                client.ConnectAsync("ws://" + config.OBS.IP + ":" + config.OBS.Port, config.OBS.Password);
+                client.Disconnected += onDisconnect;
+                client.ConnectAsync("ws://" + ip + ":" + port, password);
             }
             catch (Exception ex)
             {
@@ -67,6 +75,15 @@ namespace Lakea_Stream_Assistant.Singletons
             }, keepAliveToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
             getResources();
             Initiliased = true;
+        }
+
+        //If OBS disconnects, then reconnect to OBS
+        private static void onDisconnect(object sender, ObsDisconnectionInfo e)
+        {
+            Terminal.Output("OBS: Disconnected -> " + e.DisconnectReason);
+            Logs.Instance.NewLog(LogLevel.Warning, "Disconnected from OBS, " + e.DisconnectReason);
+            Terminal.Output("OBS: Attempting to reconnected...");
+            Init(ip, port, password);
         }
 
         //Once connected, gether source and scene information that can be referred back to later in the 'resources' object
