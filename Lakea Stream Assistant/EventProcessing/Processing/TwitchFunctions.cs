@@ -2,6 +2,7 @@
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -59,7 +60,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 subscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
-                                Console.WriteLine("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
+                                Terminal.Output("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
                                 Logs.Instance.NewLog(LogLevel.Warning, new Exception("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type));
                                 break;
                         }
@@ -67,7 +68,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
+                    Terminal.Output("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
@@ -105,13 +106,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: Unrecognised Follow Channel -> " + eve.Args.FollowedChannelId);
+                    Terminal.Output("Lakea: Unrecognised Follow Channel -> " + eve.Args.FollowedChannelId);
                     Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Follow Channel Event -> " + eve.Args.FollowedChannelId);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Twitch Follows Error -> " + ex.Message);
+                Terminal.Output("Lakea: Twitch Follows Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -152,7 +153,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             if (!eventFound)
             {
-                Console.WriteLine("Lakea: Bit Event Warning-> " + eve.Args.BitsUsed);
+                Terminal.Output("Lakea: Bit Event Warning-> " + eve.Args.BitsUsed);
                 Logs.Instance.NewLog(LogLevel.Warning, "Bit Event Warning -> " + eve.Args.BitsUsed);
             }
         }
@@ -172,13 +173,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: Unrecognised Channel Redeem -> " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
+                    Terminal.Output("Lakea: Unrecognised Channel Redeem -> " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
                     Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Channel Redeem -> " + eve.Args.RewardRedeemed.Redemption.Reward.Title + " - " + eve.Args.RewardRedeemed.Redemption.Reward.Id);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Twitch Redeem Error -> " + ex.Message);
+                Terminal.Output("Lakea: Twitch Redeem Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -198,13 +199,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: Unrecognised Channel Command -> " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
+                    Terminal.Output("Lakea: Unrecognised Channel Command -> " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
                     Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Channel Command -> " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Twitch Command Error -> " + ex.Message);
+                Terminal.Output("Lakea: Twitch Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -235,18 +236,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else if (raids.Count > 0)
                 {
-                    Console.WriteLine("Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
+                    Terminal.Output("Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
                     Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Raid Event, No Default Event Set -> " + eve.Args.RaidNotification.DisplayName);
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: No Raid Events Configured");
+                    Terminal.Output("Lakea: No Raid Events Configured");
                     Logs.Instance.NewLog(LogLevel.Info, "No Raid Events Configured -> " + eve.Args.RaidNotification.DisplayName);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Twitch Raid Error -> " + ex.Message);
+                Terminal.Output("Lakea: Twitch Raid Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -277,18 +278,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else if (subscriptions.Count > 0)
                 {
-                    Console.WriteLine("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                    Terminal.Output("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
                     Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
                 }
                 else
                 {
-                    Console.WriteLine("Lakea: No Subscription Events Configured");
+                    Terminal.Output("Lakea: No Subscription Events Configured");
                     Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Twitch Subscription Error -> " + ex.Message);
+                Terminal.Output("Lakea: Twitch Subscription Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

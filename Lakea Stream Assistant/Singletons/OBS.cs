@@ -2,6 +2,7 @@
 using OBSWebsocketDotNet.Types;
 using Lakea_Stream_Assistant.Models.OBS;
 using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -14,6 +15,15 @@ namespace Lakea_Stream_Assistant.Singletons
         private static CancellationTokenSource keepAliveTokenSource;
         private static readonly int keepAliveInterval = 500;
 
+        public static bool IsConnected
+        {
+            get
+            {
+                if(client != null) return client.IsConnected;
+                else return false;
+            }
+        }
+
         #region Initiliase
 
         //Initialises the connected with the passed in configuration data
@@ -21,7 +31,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Connecting...");
+                Terminal.Output("OBS: Connecting...");
                 Logs.Instance.NewLog(LogLevel.Info, "Connecting to OBS...");
                 client = new OBSWebsocket();
                 client.Connected += onConnect;
@@ -29,9 +39,10 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fatal Error: Failed to Connect to OBS -> " + ex.Message);
+                Terminal.Output("Fatal Error: Failed to Connect to OBS -> " + ex.Message);
+                Terminal.Output("Terminating Lakea...");
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
-                Console.ReadLine();
+                Thread.Sleep(5000);
                 Environment.Exit(1);
             }
         }
@@ -39,7 +50,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Once connected, sets the keep alive token to avoid disconnected and calls for resources to be collected
         private static void onConnect(object sender, EventArgs e)
         {
-            Console.WriteLine("OBS: Connected");
+            Terminal.Output("OBS: Connected");
             Logs.Instance.NewLog(LogLevel.Info, "Connected to OBS");
             keepAliveTokenSource = new CancellationTokenSource();
             CancellationToken keepAliveToken = keepAliveTokenSource.Token;
@@ -63,7 +74,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Fetching Scenes...");
+                Terminal.Output("OBS: Fetching Scenes...");
                 Logs.Instance.NewLog(LogLevel.Info, "Fetching OBS Scenes...");
                 var scenes = client.ListScenes();
                 List<string> sceneList = new List<string>();
@@ -71,7 +82,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 {
                     sceneList.Add(scene.Name);
                 }
-                Console.WriteLine("OBS: Fetching Sources...");
+                Terminal.Output("OBS: Fetching Sources...");
                 Logs.Instance.NewLog(LogLevel.Info, "Fetching OBS Sources...");
                 IDictionary<string, int> sourceDict = new Dictionary<string, int>();
                 foreach (var scene in scenes)
@@ -85,7 +96,7 @@ namespace Lakea_Stream_Assistant.Singletons
                         }
                     }
                 }
-                Console.WriteLine("OBS: Fetching Transitions...");
+                Terminal.Output("OBS: Fetching Transitions...");
                 Logs.Instance.NewLog(LogLevel.Info, "Fetching OBS Transitions...");
                 var sceneTransitions = client.GetSceneTransitionList();
                 List<string> transitionNames = new List<string>();
@@ -93,17 +104,18 @@ namespace Lakea_Stream_Assistant.Singletons
                 {
                     transitionNames.Add(transition.Name);
                 }
-                Console.WriteLine("OBS: Initialising Resources...");
+                Terminal.Output("OBS: Initialising Resources...");
                 Logs.Instance.NewLog(LogLevel.Info, "Initialising OBS Resources...");
                 resources = new OBSResources(sceneList, sourceDict, transitionNames);
-                Console.WriteLine("OBS: Initialised OBS Resources");
+                Terminal.Output("OBS: Initialised OBS Resources");
                 Logs.Instance.NewLog(LogLevel.Info, "Initialised OBS Resources");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fatal Error: Failed to Fetch OBS Resources -> " + ex.Message);
+                Terminal.Output("Fatal Error: Failed to Fetch OBS Resources -> " + ex.Message);
+                Terminal.Output("Terminating Lakea...");
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
-                Console.ReadLine();
+                Thread.Sleep(5000);
                 Environment.Exit(1);
             }
         }
@@ -119,7 +131,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Get Current Scene -> " + ex.Message);
+                Terminal.Output("OBS: Failed to Get Current Scene -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return string.Empty;
@@ -130,13 +142,13 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Changing Scene -> " + scene);
+                Terminal.Output("OBS: Changing Scene -> " + scene);
                 Logs.Instance.NewLog(LogLevel.Info, "Changing OBS Scene -> " + scene);
                 client.SetCurrentProgramScene(scene);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Change Scenes -> " + ex.Message);
+                Terminal.Output("OBS: Failed to Change Scenes -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -148,7 +160,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Changing Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
+                Terminal.Output("OBS: Changing Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
                 Logs.Instance.NewLog(LogLevel.Info, "Changing OBS Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
                 string curTransition = client.GetCurrentSceneTransition().Name;
                 client.SetCurrentSceneTransition(transition);
@@ -157,7 +169,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Change Scenes with Transition -> " + ex.Message);
+                Terminal.Output("OBS: Failed to Change Scenes with Transition -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -167,14 +179,14 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + scene + "'");
+                Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + scene + "'");
                 Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + scene + "'");
                 int sourceID = resources.GetSourceId(source);
                 client.SetSceneItemEnabled(scene, sourceID, active);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Set Source Enabled -> " + ex.Message);
+                Terminal.Output("OBS: Failed to Set Source Enabled -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -185,7 +197,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 string curScene = client.GetCurrentProgramScene();
-                Console.WriteLine("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
+                Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
                 Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
                 string scene = searchForSource(curScene, source);
                 int sourceID = resources.GetSourceId(source);
@@ -193,7 +205,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OBS: Failed to Set Source Enabled -> " + ex.Message);
+                Terminal.Output("OBS: Failed to Set Source Enabled -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

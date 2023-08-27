@@ -9,9 +9,11 @@ using TwitchLib.Communication.Clients;
 using TwitchLib.Client.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
+    //Sealed class for Twitch Integration
     public sealed class Twitch
     {
         public static Tuple<int, int> ServicesConnected = Tuple.Create(0, 2);
@@ -26,6 +28,9 @@ namespace Lakea_Stream_Assistant.Singletons
         private static string botAuthKey;
         private static string botChannelToJoin;
         private static char commandIdentifier;
+        private static bool pubSubConnected = false;
+
+        public static bool IsPubSubConnected { get { return pubSubConnected; } }
 
         #region Initiliase
 
@@ -48,9 +53,10 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fatal Error: Failed to Connect to Twitch -> " + ex.Message);
+                Terminal.Output("Fatal Error: Failed to Connect to Twitch -> " + ex.Message);
+                Terminal.Output("Terminating Lakea...");
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
-                Console.ReadLine();
+                Thread.Sleep(5000);
                 Environment.Exit(1);
             }
         }
@@ -60,7 +66,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("Twitch: Client Connecting...");
+                Terminal.Output("Twitch: Client Connecting...");
                 Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
                 ConnectionCredentials crednetials = new ConnectionCredentials(botUsername, botAuthKey);
                 var clientOptions = new ClientOptions
@@ -80,7 +86,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Twitch: Client Failed to Connect -> " + ex.Message);
+                Terminal.Output("Twitch: Client Failed to Connect -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -90,10 +96,11 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Console.WriteLine("Twitch: PubSub Connecting...");
+                Terminal.Output("Twitch: PubSub Connecting...");
                 Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Pub Sub...");
                 pubSub = new TwitchPubSub();
                 pubSub.OnPubSubServiceConnected += onPubSubServiceConnected;
+                pubSub.OnPubSubServiceClosed += onPubSubServiceDisconnected;
                 pubSub.OnListenResponse += onPubSubListenResponse;
                 pubSub.OnFollow += onChannelFollow;
                 pubSub.OnBitsReceivedV2 += onChannelBitsV2;
@@ -105,7 +112,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Twitch: PubSub Failed to Connect -> " + ex.Message);
+                Terminal.Output("Twitch: PubSub Failed to Connect -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -114,10 +121,19 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Twitch Client
 
+        public static bool IsClientConnected
+        {
+            get
+            {
+                if(client != null) return client.IsConnected;
+                else return false;
+            }
+        }
+
         //Called when the client successfully connects to Twitch
         private static void onClientConnected(object sender, OnConnectedArgs e)
         {
-            Console.WriteLine("Twitch: Client Connected");
+            Terminal.Output("Twitch: Client Connected");
             Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch Client...");
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
@@ -127,13 +143,13 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
             {
-                Console.WriteLine("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                Terminal.Output("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                 Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                 eventHandler.NewEvent(new LakeaCommand(EventSource.Twitch, EventType.Lakea_Command, e));
             }
             else
             {
-                Console.WriteLine("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                Terminal.Output("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                 Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                 eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
             }
@@ -142,7 +158,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Called on a command event, passes event info to the eventHandler
         private static void onRaid(object sender, OnRaidNotificationArgs e)
         {
-            Console.WriteLine("Twitch: Raid -> " + e.RaidNotification.DisplayName);
+            Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
             eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
         }
@@ -150,7 +166,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Called on a subscription event, passes event info to the eventHandler
         private static void onSubscription(object sender, OnNewSubscriberArgs e)
         {
-            Console.WriteLine("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+            Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
             eventHandler.NewEvent(new TwitchSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
         }
@@ -158,7 +174,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Write a message to Twitch chat
         public static void WriteToChat(string message)
         {
-            Console.WriteLine("Twitch: Sending Message -> '" + message + "'");
+            Terminal.Output("Twitch: Sending Message -> '" + message + "'");
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message -> " + message);
             client.SendMessage(client.JoinedChannels[0], $"" + message);
         }
@@ -167,7 +183,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Currently not working, Todo issue #70
         public static void WriteWhisperToUser(string message, string user)
         {
-            Console.WriteLine("Twitch: Sending Whisper -> '" + user + "' - '" + message + "'");
+            Terminal.Output("Twitch: Sending Whisper -> '" + user + "' - '" + message + "'");
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Whisper Message -> '" + user + "' - '" + message + "'");
             client.SendWhisper(user, message, true);//https://wiki.streamer.bot/en/Sub-Actions/Code/CSharp/Available-Methods/Twitch#whisper
         }
@@ -176,18 +192,25 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Twitch Pubsub
 
+        private static void onPubSubServiceDisconnected(object sender, EventArgs e)
+        {
+            pubSubConnected = false;
+            Terminal.Output("Twitch: PubSub Disconnected");
+            Logs.Instance.NewLog(LogLevel.Info, "PubSub Disconnected");
+        }
+
         //Once connected, send auth key to verify connection
         private static void onPubSubServiceConnected(object sender, EventArgs e)
         {
             try
             {
-                Console.WriteLine("Twitch: Sending PubSub Auth Key...");
+                Terminal.Output("Twitch: PubSub Connected, Sending Auth Key...");
                 Logs.Instance.NewLog(LogLevel.Info, "Sending Twitch PubSub Auth Key...");
                 pubSub.SendTopics(channelAuthKey);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Twitch: Failed to send PubSub Auth Key -> " + ex.Message);
+                Terminal.Output("Twitch: Failed to send PubSub Auth Key -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -197,13 +220,14 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             if (e.Successful)
             {
-                Console.WriteLine("Twitch: PubSub Connected");
-                Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch PubSub");
+                pubSubConnected = true;
+                Terminal.Output("Twitch: Auth Key Accepted");
+                Logs.Instance.NewLog(LogLevel.Info, "PubSub Auth Key Accepted");
                 ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
             }
             else
             {
-                Console.WriteLine("Failed to connect to Twitch PubSub: " + e.Response.Error);
+                Terminal.Output("Auth Key Rejected: " + e.Response.Error);
                 Logs.Instance.NewLog(LogLevel.Error, e.Response.Error);
             }
         }
@@ -211,7 +235,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Called on a follow event, passes event info to the eventHandler
         private static void onChannelFollow(object sender, OnFollowArgs e)
         {
-            Console.WriteLine("Twitch: Follow -> " + e.DisplayName);
+            Terminal.Output("Twitch: Follow -> " + e.DisplayName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.DisplayName);
             eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
         }
@@ -219,7 +243,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Called on a bits event, passes event info to the eventHandler
         private static void onChannelBitsV2(object sender, OnBitsReceivedV2Args e)
         {
-            Console.WriteLine("Twitch: Bits -> " + e.BitsUsed);
+            Terminal.Output("Twitch: Bits -> " + e.BitsUsed);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Bits -> " + e.BitsUsed);
             eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
         }
@@ -227,7 +251,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Called on a channel redeem event, passes event info to the eventHandler
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
-            Console.WriteLine("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
+            Terminal.Output("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
             eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
         }

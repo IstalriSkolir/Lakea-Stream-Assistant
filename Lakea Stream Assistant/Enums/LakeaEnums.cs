@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lakea_Stream_Assistant.Enums
 {
-    public enum LogLevel
+    public enum LogLevel : byte
     {
         Info,
         Warning,
