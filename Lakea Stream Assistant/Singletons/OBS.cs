@@ -227,6 +227,26 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Gets the status of an source of it it is enabled or not
+        public static bool GetSourceEnabled(string source)
+        {
+            try
+            {
+                string curScene = client.GetCurrentProgramScene();
+                Terminal.Output("OBS: Getting Source State -> '" + source + "' in '" + curScene + "'");
+                Logs.Instance.NewLog(LogLevel.Info, "Getting OBS Source Stat -> '" + source + "' in '" + curScene + "'");
+                string scene = searchForSource(curScene, source);
+                int sourceID = resources.GetSourceId(source);
+                return client.GetSceneItemEnabled(scene, sourceID);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("OBS: Failed to Get Source State -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+                return false;
+            }
+        }
+
         //Will search any nested scenes in a scene for a source
         private static string searchForSource(string scene, string source)
         {

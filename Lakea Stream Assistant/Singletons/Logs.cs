@@ -1,6 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
-using System.IO;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -96,7 +95,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 if (((int)level) >= (int)logLevel)
                 {
-                    string log = DateTime.Now.ToString() + ": Log Level -> " + level + ", " + message;
+                    string log = DateTime.Now.ToString("HH:mm:ss") + ": Log Level -> " + level + ", " + message;
                     using (StreamWriter writer = new StreamWriter(currentFilePath, true))
                     {
                         writer.WriteLine(log);
