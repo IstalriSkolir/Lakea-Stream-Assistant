@@ -253,11 +253,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
-        public void newSubscription(TwitchSubscription eve)
+        public void newSubscription(TwitchPubSubSubscription eve)
         {
             try
             {
-                string id = "Twitch_Subscription_" + eve.Args.Subscriber.SubscriptionPlan.ToString();
+                string id = "Twitch_Subscription_" + eve.Args.Subscription.SubscriptionPlan.ToString();
                 if (subscriptions.ContainsKey(id))
                 {
                     EventItem item = subscriptions[id];
@@ -278,13 +278,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else if (subscriptions.Count > 0)
                 {
-                    Terminal.Output("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
-                    Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                    Terminal.Output("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
                 }
                 else
                 {
                     Terminal.Output("Lakea: No Subscription Events Configured");
-                    Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscriber.SubscriptionPlan.ToString() + ", " + eve.Args.Subscriber.DisplayName);
+                    Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
                 }
             }
             catch (Exception ex)

@@ -105,9 +105,11 @@ namespace Lakea_Stream_Assistant.Singletons
                 pubSub.OnFollow += onChannelFollow;
                 pubSub.OnBitsReceivedV2 += onChannelBitsV2;
                 pubSub.OnChannelPointsRewardRedeemed += onChannelPointsRedeemed;
+                pubSub.OnChannelSubscription += onChannelSubscription;
                 pubSub.ListenToFollows(channelID);
                 pubSub.ListenToBitsEventsV2(channelID);
                 pubSub.ListenToChannelPoints(channelID);
+                pubSub.ListenToSubscriptions(channelID);
                 pubSub.Connect();
             }
             catch (Exception ex)
@@ -168,7 +170,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
-            eventHandler.NewEvent(new TwitchSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+            eventHandler.NewEvent(new TwitchClientSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
         }
 
         //Write a message to Twitch chat
@@ -254,6 +256,14 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
             eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
+        }
+
+        //Called on a channel subscription, passes event info to the eventHandler
+        private static void onChannelSubscription(object sender, OnChannelSubscriptionArgs e)
+        {
+            Terminal.Output("Twitch: Subscription -> " + e.Subscription.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscription);
+            eventHandler.NewEvent(new TwitchPubSubSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
         }
 
         #endregion

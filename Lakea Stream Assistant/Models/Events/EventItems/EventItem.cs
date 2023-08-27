@@ -65,8 +65,6 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
             this.args = args;
         }
 
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
         public EventTarget EventTarget { get { return target; } }
         public EventGoal EventGoal { get { return goal; } }
         public string Name { get { return name; } }

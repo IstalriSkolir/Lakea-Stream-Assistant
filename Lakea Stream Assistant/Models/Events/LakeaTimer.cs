@@ -21,8 +21,6 @@ namespace Lakea_Stream_Assistant.Models.Events
             this.timerItem = timerItem;
         }
 
-        public override EventSource Source { get { return source; } }
-        public override EventType Type { get { return type; } }
         public EventItem EventItem { get { return timerItem; } }
 
         public override Dictionary<string, string> GetArgs()
