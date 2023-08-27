@@ -1,5 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 using System.Xml.Serialization;
 
 namespace Lakea_Stream_Assistant.Models.Configuration
@@ -11,7 +12,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
         {
             try
             {
-                Console.WriteLine("Lakea: Loading Configuration File...");
+                Terminal.Output("Lakea: Loading Configuration File...");
                 Config config = new Config();
                 XmlSerializer serializer = new XmlSerializer(config.GetType());
                 TextReader reader = new StreamReader(filePath);
@@ -22,7 +23,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
             catch (Exception ex)
             {
                 string fileName = Path.GetFileName(filePath);
-                Console.WriteLine("Fatal Error: Failed to Load Configuration File -> " + fileName + ", " + ex.Message);
+                Terminal.Output("Fatal Error: Failed to Load Configuration File -> " + fileName + ", " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Console.ReadLine();
                 Environment.Exit(1);

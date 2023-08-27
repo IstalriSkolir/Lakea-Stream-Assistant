@@ -1,6 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -55,7 +56,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Process Event Error -> " + ex.Message);
+                Terminal.Output("Lakea: Process Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

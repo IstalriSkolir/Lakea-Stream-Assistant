@@ -1,6 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 using System.Xml.Serialization;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
@@ -48,7 +49,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Quote Command Error -> " + ex.Message);
+                Terminal.Output("Lakea: Quote Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -130,7 +131,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             try
             {
-                Console.WriteLine("Lakea: Loading Quotes File...");
+                Terminal.Output("Lakea: Loading Quotes File...");
                 Logs.Instance.NewLog(LogLevel.Info, "Loading Quotes from File...");
                 filePath = Environment.CurrentDirectory + "\\Resources\\Quotes.xml";
                 if(File.Exists(filePath))
@@ -150,7 +151,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)             
             {
-                Console.WriteLine("Lakea: Error Initialsing Quotes -> " + ex.Message);
+                Terminal.Output("Lakea: Error Initialsing Quotes -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -169,7 +170,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Error Loading Quotes from File -> " + ex.Message);
+                Terminal.Output("Lakea: Error Loading Quotes from File -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -186,7 +187,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Error Saving Quotes to File -> " + ex.Message);
+                Terminal.Output("Lakea: Error Saving Quotes to File -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

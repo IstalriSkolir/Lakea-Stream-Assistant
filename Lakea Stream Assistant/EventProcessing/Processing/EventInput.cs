@@ -16,19 +16,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         public EventInput(ConfigEvent[] events, DefaultCommands commands)
         {
-            outputs = new EventOutputs(this);
-            passArgs = new EventPassArguments();
-            processer = new EventProcesser(outputs);
-            twitch = new TwitchFunctions(events, processer, passArgs);
-            lakea = new LakeaFunctions(events, processer, passArgs, commands);
+            this.outputs = new EventOutputs(this);
+            this.passArgs = new EventPassArguments();
+            this.processer = new EventProcesser(outputs);
+            this.twitch = new TwitchFunctions(events, processer, passArgs);
+            this.lakea = new LakeaFunctions(events, processer, passArgs, commands, this);
         }
 
         //Called on a new event, checks event type before callin relevent function
         public void NewEvent(Event eve)
         {
+            EventStats.NewEvent(eve);
             switch (eve.Type)
             {
-                case EventType.Lakea_Timer:
+                case EventType.Lakea_Timer_Start:
                     lakea.NewTimerStart();
                     break;
                 case EventType.Lakea_Callback:
@@ -36,6 +37,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     break;
                 case EventType.Lakea_Command:
                     lakea.NewCommand((LakeaCommand)eve);
+                    break;
+                case EventType.Lakea_Timer_Fired:
+                    lakea.NewTimer((LakeaTimer)eve);
                     break;
                 case EventType.Twitch_Bits:
                     twitch.NewBits((TwitchBits)eve);

@@ -1,7 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Resources;
 using Lakea_Stream_Assistant.Singletons;
-using System.Diagnostics;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.Processes
 {
@@ -20,7 +20,7 @@ namespace Lakea_Stream_Assistant.Processes
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error Loading External application -> " + app.Name + ", " + ex.Message);
+                    Terminal.Output("Error Loading External application -> " + app.Name + ", " + ex.Message);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
@@ -37,7 +37,7 @@ namespace Lakea_Stream_Assistant.Processes
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine("Error Starting Process -> " + app.Value.Name + ", " + ex.Message);
+                    Terminal.Output("Error Starting Process -> " + app.Value.Name + ", " + ex.Message);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
@@ -54,7 +54,7 @@ namespace Lakea_Stream_Assistant.Processes
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine("Error Ending Process -> " + app.Value.Name + ", " + ex.Message);
+                    Terminal.Output("Error Ending Process -> " + app.Value.Name + ", " + ex.Message);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }

@@ -2,6 +2,7 @@
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -156,10 +157,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
             });
             task.Wait();
-            //for(int i = 0; i < messageCount; i++)
-            //{
-            //    Task.Delay(i * 1000).ContinueWith(t => { Twitch.WriteToChat(args["Message" + i]); }); // Sending one message multiple times
-            //}
             if(callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
@@ -190,7 +187,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //For null events that don't require any actions
         public void NullEvent(string message)
         {
-            Console.WriteLine("Lakea: " + message);
+            Terminal.Output("Lakea: " + message);
             Logs.Instance.NewLog(LogLevel.Info, message);
         }
 

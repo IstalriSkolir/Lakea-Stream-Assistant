@@ -1,17 +1,18 @@
 ﻿namespace Lakea_Stream_Assistant.Enums
 {
-    public enum EventSource
+    public enum EventSource : byte
     {
         Base_Camp,
         Lakea,
         Twitch
     }
 
-    public enum EventType
+    public enum EventType : ushort
     {
         Lakea_Callback,
         Lakea_Command,
-        Lakea_Timer,
+        Lakea_Timer_Start,
+        Lakea_Timer_Fired,
         Twitch_Bits,
         Twitch_Command,
         Twitch_Follow,
@@ -20,7 +21,7 @@
         Twitch_Subscription
     }
 
-    public enum EventTarget
+    public enum EventTarget : byte
     {
         Null,
         Base_Camp,
@@ -28,7 +29,7 @@
         OBS
     }
 
-    public enum EventGoal
+    public enum EventGoal : ushort
     {
         Null,
         OBS_Enable_Source,

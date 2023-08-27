@@ -2,6 +2,7 @@
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -60,7 +61,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Lakea: Pass Event Argument Error -> " + ex.Message);
+                Terminal.Output("Lakea: Pass Event Argument Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;

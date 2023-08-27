@@ -5,6 +5,8 @@ using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Processes;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
+using Lakea_Stream_Assistant.Models.Tokens;
+using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant
 {
@@ -12,6 +14,7 @@ namespace Lakea_Stream_Assistant
     //Start Object
     class Program
     {
+        static KeepAliveToken keepAliveToken;
         static EventInput eventHandler;
         static ExternalProcesses externalProcesses;
 
@@ -19,17 +22,12 @@ namespace Lakea_Stream_Assistant
         static void Main(string[] args)
         {
             initiliase();
-            bool exit = false;
-            //Pauses main thread to prevent application terminating, until told by the user
-            while (!exit)
+            //Pauses main thread to prevent application terminating
+            while (keepAliveToken.IsAlive)
             {
-                string input = Console.ReadLine();
-                if ("exit".Equals(input.ToLower()))
-                {
-                    shutdown();
-                    exit = true;
-                }
+                Thread.Sleep(1000);
             }
+            shutdown();
         }
 
         #region Initiliase
@@ -37,13 +35,17 @@ namespace Lakea_Stream_Assistant
         //initiliase Lakea
         static void initiliase()
         {
+            Terminal.Output("Lakea is waking up...");
             Logs.Instance.Initiliase();
             string filePath = selectProfile();
-            Console.WriteLine("Lakea is waking up...");
+            Terminal.StartTerminalThread();
             Config config = new LoadConfig().LoadConfigFromFile(filePath);
             Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
             Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands);
+            Terminal.UpdateLogLevel(config.Settings.LogLevel);
+            Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
+            keepAliveToken = new KeepAliveToken();
+            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken, config.Twitch.StreamingChannel.UserName);        
             eventHandler = new EventInput(config.Events, lakeaCommands);
             externalProcesses = new ExternalProcesses(config.Applications);
             externalProcesses.StartAllExternalProcesses();
@@ -57,8 +59,8 @@ namespace Lakea_Stream_Assistant
             {
                 Thread.Sleep(100);
             }
-            eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer));
-            Console.WriteLine("Lakea: All set and ready to go!");
+            eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
+            Terminal.Output("Lakea: All set and ready to go!");          
             Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
         }
 
@@ -86,7 +88,7 @@ namespace Lakea_Stream_Assistant
                     Console.Clear();
                     selectProfile();
                 }
-                Console.Clear();
+                Console.WriteLine("\nStarting Terminal...");
                 return filePath;
             }
             catch(Exception ex)
@@ -142,6 +144,7 @@ namespace Lakea_Stream_Assistant
         static void shutdown()
         {
             externalProcesses.StopAllExternalProcesses();
+            Terminal.EndRefresh();
         }
 
         #endregion

@@ -104,6 +104,8 @@ public partial class ConfigSettings
 
     private string logLevelField;
 
+    private int terminalRefreshRateField;
+
     private SettingsCommands commandsField;
 
     /// <remarks/>
@@ -116,6 +118,19 @@ public partial class ConfigSettings
         set
         {
             this.logLevelField = value;
+        }
+    }
+
+    /// <remarks/>
+    public int TerminalRefreshRate
+    {
+        get
+        {
+            return this.terminalRefreshRateField;
+        }
+        set
+        {
+            this.terminalRefreshRateField = value;
         }
     }
 
@@ -144,6 +159,8 @@ public partial class SettingsCommands
 
     private bool quotesField;
 
+    private bool exitField;
+
     /// <remarks/>
     public bool Status
     {
@@ -167,6 +184,19 @@ public partial class SettingsCommands
         set
         {
             this.quotesField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool Exit
+    {
+        get
+        {
+            return this.exitField;
+        }
+        set
+        {
+            this.exitField = value;
         }
     }
 }

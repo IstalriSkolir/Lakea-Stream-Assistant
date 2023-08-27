@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Static;
 using System.IO;
 
 namespace Lakea_Stream_Assistant.Singletons
@@ -34,8 +35,6 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                //EnumConverter enums = new EnumConverter();
-                //logLevel = enums.ConvertLogLevelString(config.Settings.LogLevel);
                 currentFilePath = getCurrentFilePath();
                 firstLog = true;
             }
@@ -78,11 +77,12 @@ namespace Lakea_Stream_Assistant.Singletons
                     {
                         writer.WriteLine(log);
                     }
+                    Terminal.Log(log);
                 }
             }
             catch(Exception newEx)
             {
-                Console.WriteLine("Lakea: Error Writing Log to File -> " + newEx.Message);
+                Terminal.Output("Lakea: Error Writing Log to File -> " + newEx.Message);
             }
         }
 
@@ -101,11 +101,12 @@ namespace Lakea_Stream_Assistant.Singletons
                     {
                         writer.WriteLine(log);
                     }
+                    Terminal.Log(log);
                 }
             }
             catch (Exception newEx)
             {
-                Console.WriteLine("Lakea: Error Writing Log to File -> " + newEx.Message);
+                Terminal.Output("Lakea: Error Writing Log to File -> " + newEx.Message);
             }
         }
 
