@@ -36,6 +36,7 @@
         OBS_Disable_Source,
         OBS_Enable_Random_Source,
         OBS_Disable_Random_Source,
+        OBS_Loop_Sources,
         OBS_Change_Scene,
         Twitch_Send_Chat_Message,
         Twitch_Send_Chat_Message_List,

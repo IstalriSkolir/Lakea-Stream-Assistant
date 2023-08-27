@@ -48,6 +48,10 @@ namespace Lakea_Stream_Assistant.Static
             //Sets these two variables no to avoid potential thread clashing later
             refreshRate = 1000;
             logLevel = "Warning";
+            refreshActive = true;
+            outputUpdated = true;
+            logUpdated = true;
+            logLevelUpdated = false;
             Thread refreshThread = new Thread(initiliase);
             refreshThread.Start();
         }
@@ -79,10 +83,6 @@ namespace Lakea_Stream_Assistant.Static
         private static void initiliase()
         {
             system = new CurrentSystem();
-            refreshActive = true;
-            outputUpdated = true;
-            logUpdated = true;
-            logLevelUpdated = false;
             Console.Title = "Lakea Moonlight - Stream Assistant";
             Console.SetWindowSize(151, 40);
             Console.SetBufferSize(151, 40);
@@ -143,6 +143,7 @@ namespace Lakea_Stream_Assistant.Static
                 {
                     updateDetails();
                     updateSystemInfo();
+                    updateLogLevel();
                     updateTerminalOutput();
                     updateTerminalLog();
                     Thread.Sleep(refreshRate);

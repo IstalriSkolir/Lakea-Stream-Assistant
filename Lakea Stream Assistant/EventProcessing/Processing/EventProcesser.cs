@@ -39,6 +39,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.OBS_Disable_Random_Source:
                             outputs.SetRandomActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                             break;
+                        case EventGoal.OBS_Loop_Sources:
+                            outputs.LoopOBSSources(item.Args, item.Callback);
+                            break;
                         case EventGoal.OBS_Change_Scene:
                             outputs.ChangeOBSScene(item.Args, item.Callback);
                             break;

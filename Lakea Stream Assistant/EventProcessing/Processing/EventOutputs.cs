@@ -3,6 +3,7 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using System;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -88,6 +89,37 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     }
                 }
                 createCallback(callbackArgs, callback);
+            }
+        }
+
+        //Loop through a set of OBS sources
+        public void LoopOBSSources(Dictionary<string, string> args, Callbacks callback)
+        {
+            bool anyActive = false;
+            for (int i = 1; i <= args.Count; i++)
+            {
+                if (args.ContainsKey("Source" + i))
+                {
+                    bool enabled = OBS.GetSourceEnabled(args["Source" + i]);
+                    if (enabled)
+                    {
+                        anyActive = true;
+                        OBS.SetSourceEnabled(args["Source" + i], false);
+                        if (args.ContainsKey("Source" + (i + 1)))
+                        {
+                            OBS.SetSourceEnabled(args["Source" +  (i + 1)], true);
+                        }
+                        else
+                        {
+                            OBS.SetSourceEnabled(args["Source1"], true);
+                        }
+                        break;
+                    }
+                }
+            }
+            if (!anyActive)
+            {
+                OBS.SetSourceEnabled(args["Source1"], true);
             }
         }
 

@@ -65,6 +65,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "obsdisablesource": return EventGoal.OBS_Disable_Source;
                 case "obsenablerandomsource": return EventGoal.OBS_Enable_Random_Source;
                 case "obsdisablerandomsource": return EventGoal.OBS_Disable_Random_Source;
+                case "obsloopsources": return EventGoal.OBS_Loop_Sources;
                 case "obschangescene": return EventGoal.OBS_Change_Scene;
                 case "twitchsendchatmessage": return EventGoal.Twitch_Send_Chat_Message;
                 case "twitchsendwhispermessage": return EventGoal.Twitch_Send_Whisper_Message;
