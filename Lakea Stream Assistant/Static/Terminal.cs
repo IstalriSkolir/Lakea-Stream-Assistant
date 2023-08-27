@@ -83,11 +83,11 @@ namespace Lakea_Stream_Assistant.Static
         private static void initiliase()
         {
             system = new CurrentSystem();
+            Console.Clear();
             Console.Title = "Lakea Moonlight - Stream Assistant";
             Console.SetWindowSize(151, 40);
             Console.SetBufferSize(151, 40);
             Console.CursorVisible = false;
-            Console.Clear();
             drawBoxes();
             drawDetails();
             drawSystemInfo();

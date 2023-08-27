@@ -67,7 +67,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;   &quot;$(ProjectDir)..\Build Assistant\bin\Release\net6.0\Build Assistant.exe&quot; &quot;MoveBuildDirectory&quot;&#xD;&#xA;)" />
+    <Exec Command="FOR /F delims^=^&quot;^ tokens^=2 %25%25i in ('findstr /b /c:&quot;[assembly: AssemblyVersion(&quot;$(ProjectDir)Properties\VersionIncrementer.cs&quot;') do (set version=%25%25i)&#xD;&#xA;echo Version: %25version%25" />
   </Target>
 
 </Project>
