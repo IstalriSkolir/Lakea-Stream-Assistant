@@ -10,6 +10,7 @@ using TwitchLib.Client.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Static;
+using TwitchLib.Communication.Events;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -79,6 +80,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client.Initialize(crednetials, botChannelToJoin);
                 client.AddChatCommandIdentifier(commandIdentifier);
                 client.OnConnected += onClientConnected;
+                client.OnDisconnected += onClientDisconnected;
                 client.OnChatCommandReceived += onChatCommand;
                 client.OnRaidNotification += onRaid;
                 client.OnNewSubscriber += onSubscription;
@@ -140,6 +142,13 @@ namespace Lakea_Stream_Assistant.Singletons
             ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
 
+        private static void onClientDisconnected(object sender, OnDisconnectedEventArgs e)
+        {
+            Terminal.Output("Twitch: Client Disconnected, Attempting to Reconnect...");
+            Logs.Instance.NewLog(LogLevel.Info, "Disconnected from Twitch Client: " + e);
+            initiliaseClient();
+        }
+
         //Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
@@ -197,8 +206,9 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onPubSubServiceDisconnected(object sender, EventArgs e)
         {
             pubSubConnected = false;
-            Terminal.Output("Twitch: PubSub Disconnected");
+            Terminal.Output("Twitch: PubSub Disconnected, Attempting to Reconnect...");
             Logs.Instance.NewLog(LogLevel.Info, "PubSub Disconnected");
+            initiliasePubSub();
         }
 
         //Once connected, send auth key to verify connection
