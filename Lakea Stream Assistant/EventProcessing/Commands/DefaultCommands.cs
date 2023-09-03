@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Models.Tokens;
@@ -10,17 +11,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
     public class DefaultCommands
     {
         private QuoteCommand quotes;
-        private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commands;
-        private readonly Dictionary<string, bool> active;
+        private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commandFunctions;
+        private readonly Dictionary<string, CommandConfiguration> commandConfigs;
         KeepAliveToken keepAliveToken;
-        private string broadcaster;
 
-        public DefaultCommands(SettingsCommands commands, KeepAliveToken keepAliveToken, string broadcaster)
+        public DefaultCommands(SettingsCommands commands, KeepAliveToken keepAliveToken)
         {
             this.quotes = new QuoteCommand();
-            this.broadcaster = broadcaster;
             this.keepAliveToken = keepAliveToken;
-            this.commands = new Dictionary<string, Func<LakeaCommand, EventItem>>
+            this.commandFunctions = new Dictionary<string, Func<LakeaCommand, EventItem>>
             {
                 { "exit", exitCommand },
                 { "quote", quoteCommand },
@@ -30,21 +29,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "quotefest", quoteCommand },
                 { "status", statusCommand }
             };
-            this.active = new Dictionary<string, bool>
+            this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
-                { "exit", commands.Exit },
-                { "quote", commands.Quotes },
-                { "quotecount", commands.Quotes },
-                { "addquote", commands.Quotes },
-                { "quoteadd", commands.Quotes },
-                { "quotefest", commands.Quotes },
-                { "status", commands.Status }
+                { "exit", new CommandConfiguration("Exit", commands.Exit.Enabled, commands.Exit.ModOnly) },
+                { "quote", new CommandConfiguration("Quote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "quotecount", new CommandConfiguration("QuoteCount", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "addquote", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "quoteadd", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "quotefest", new CommandConfiguration("QuoteFest", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "status", new CommandConfiguration("Status", commands.Status.Enabled, commands.Status.ModOnly) }
             };
         }
 
         public bool CheckIfCommandIsLakeaCommand(string command)
         {
-            if (commands.ContainsKey(command)) return true;
+            if (commandFunctions.ContainsKey(command)) return true;
             else return false;
         }
 
@@ -52,16 +51,36 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             try
             {
-                string command = eve.Command.ToLower();
-                if (active[command])
+                string command = eve.Args.Command.CommandText.ToLower();
+                if (commandConfigs[command].IsEnabled)
                 {
-                    return commands[command].Invoke(eve);
+                    if (commandConfigs[command].ModOnly)
+                    {
+                        if (eve.Args.Command.ChatMessage.IsModerator || eve.Args.Command.ChatMessage.IsBroadcaster)
+                        {
+                            return commandFunctions[command].Invoke(eve);
+                        }
+                        else
+                        {
+                            Terminal.Output("Lakea: " + eve.Args.Command.CommandText + " Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
+                            Logs.Instance.NewLog(LogLevel.Warning, eve.Args.Command.CommandText + " Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
+                            Dictionary<string, string> args = new Dictionary<string, string>
+                            {
+                                { "Message", "Sorry @" + eve.Args.Command.ChatMessage.DisplayName + ", only moderators can use that command!" }
+                            };
+                            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eve.Args.Command.CommandText + " Command", "Lakea_Command_Access_Denied", args: args);
+                        }
+                    }
+                    else
+                    {
+                        return commandFunctions[command].Invoke(eve);
+                    }
                 }
                 else
                 {
-                    Terminal.Output("Lakea: Default Command " + eve.Identifier + eve.Command + " is Disabled");
-                    Logs.Instance.NewLog(LogLevel.Info, "Default Command " + eve.Identifier + eve.Command + " is Disabled");
-                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Null, EventGoal.Null, eve.Identifier + eve.Command);
+                    Terminal.Output("Lakea: Default Command " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText + " is Disabled");
+                    Logs.Instance.NewLog(LogLevel.Info, "Default Command " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText + " is Disabled");
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Null, EventGoal.Null, eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
                 }
             }
             catch (Exception ex)
@@ -85,10 +104,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         private EventItem quoteCommand(LakeaCommand eve)
         {
-            Terminal.Output("Lakea: Quote Command -> " + eve.Command);
-            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Command);
+            Terminal.Output("Lakea: Quote Command -> " + eve.Args.Command.CommandText);
+            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Args.Command.CommandText);
             Dictionary<string, string> args = quotes.NewQuote(eve);
-            if ("quotefest".Equals(eve.Command))
+            if ("quotefest".Equals(eve.Args.Command.CommandText))
             {
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
             }
@@ -100,20 +119,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         private EventItem exitCommand(LakeaCommand eve)
         {
-            Terminal.Output("Lakea: Exit Command -> " + eve.Command);
-            Logs.Instance.NewLog(LogLevel.Info, "Exit Command -> " + eve.Command);
-            if (broadcaster.Equals(eve.DisplayName))
+            Terminal.Output("Lakea: Exit Command -> " + eve.Args.Command.CommandText);
+            Logs.Instance.NewLog(LogLevel.Info, "Exit Command -> " + eve.Args.Command.CommandText);
+            if (eve.Args.Command.ChatMessage.IsBroadcaster)
             {
                 keepAliveToken.Kill();
                 return null;
             }
             else
             {
-                Terminal.Output("Lakea: Exit Command -> Access Denied, " + eve.DisplayName);
-                Logs.Instance.NewLog(LogLevel.Warning, "Exit Command -> Access Denied, " + eve.DisplayName);
+                Terminal.Output("Lakea: Exit Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Warning, "Exit Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
                 Dictionary<string, string> args = new Dictionary<string, string>
                 {
-                    { "Message", "Sorry @" + eve.DisplayName + ", only @" + broadcaster + " can use that command!" }
+                    { "Message", "Sorry @" + eve.Args.Command.ChatMessage.DisplayName + ", only @" + eve.Args.Command.ChatMessage.Channel + " can use that command!" }
                 };
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Exit Command", "Lakea_Exit_Command", args: args);
             }

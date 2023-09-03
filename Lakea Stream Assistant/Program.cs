@@ -45,7 +45,7 @@ namespace Lakea_Stream_Assistant
             Terminal.UpdateLogLevel(config.Settings.LogLevel);
             Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
             keepAliveToken = new KeepAliveToken();
-            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken, config.Twitch.StreamingChannel.UserName);        
+            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken);        
             eventHandler = new EventInput(config.Events, lakeaCommands);
             externalProcesses = new ExternalProcesses(config.Applications);
             externalProcesses.StartAllExternalProcesses();

@@ -26,14 +26,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             try
             {
                 Dictionary<string, string> quote = new Dictionary<string, string>();
-                switch (command.Command)
+                switch (command.Args.Command.CommandText)
                 {
                     case "quotecount":
                         quote.Add("Message", "We have " + quotes.Count + " quotes stored! Some of these make me wonder why mistakes I made to end up here...");
                         break;
                     case "addquote":
                     case "quoteadd":
-                        addquote(command.ArgsAsString);
+                        addquote(command.Args.Command.ArgumentsAsString);
                         quote.Add("Message", "Quote added! We now have " + quotes.Count + " quotes!");
                         break;
                     case "quote":
@@ -63,7 +63,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         private string getQuote(LakeaCommand command)
         {
-            if(command.Args.Count == 0)
+            if(command.Args.Command.ArgumentsAsList.Count == 0)
             {
                 int index = random.Next(0, quotes.Count);
                 return "Here's a random quote, '" + quotes[index] + "'";
@@ -72,7 +72,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             {
                 try
                 {
-                    int index = int.Parse(command.Args[0]);
+                    int index = int.Parse(command.Args.Command.ArgumentsAsList[0]);
                     index--;
                     if(index >= 0 && index < quotes.Count)
                     {
@@ -90,7 +90,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
                 catch (Exception ex)
                 {
-                    Logs.Instance.NewLog(LogLevel.Warning, "Failed to Parse '" + command.Args[0] + "' for Quote Index");
+                    Logs.Instance.NewLog(LogLevel.Warning, "Failed to Parse '" + command.Args.Command.ArgumentsAsList[0] + "' for Quote Index");
                     int index = random.Next(0, quotes.Count);
                     return "Couldn't figure out which quote you wanted so heres a random one instead, '" + quotes[index] + "'";
                 }
