@@ -16,11 +16,7 @@ namespace Lakea_Stream_Assistant.Models.Events
             this.args = args;
         }
 
-        public List<string> Args { get { return args.Command.ArgumentsAsList; } }
-        public string ArgsAsString { get { return args.Command.ArgumentsAsString; } }
-        public string Command { get { return args.Command.CommandText; } }
-        public char Identifier { get { return args.Command.CommandIdentifier; } }
-        public string DisplayName { get { return args.Command.ChatMessage.DisplayName; } }
+        public OnChatCommandReceivedArgs Args { get { return args; } }
 
         public override Dictionary<string, string> GetArgs()
         {
