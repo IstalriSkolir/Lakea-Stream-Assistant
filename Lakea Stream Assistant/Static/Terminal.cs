@@ -86,7 +86,7 @@ namespace Lakea_Stream_Assistant.Static
             Console.Clear();
             Console.Title = "Lakea Moonlight - Stream Assistant";
             Console.SetWindowSize(151, 40);
-            Console.SetBufferSize(151, 40);
+            Console.SetBufferSize(153, 42);
             Console.CursorVisible = false;
             drawBoxes();
             drawDetails();
