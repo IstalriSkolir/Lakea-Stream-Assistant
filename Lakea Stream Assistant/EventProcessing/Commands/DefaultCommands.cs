@@ -27,6 +27,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", quoteCommand },
                 { "quoteadd", quoteCommand },
                 { "quotefest", quoteCommand },
+                { "so", shoutOutCommand },
                 { "status", statusCommand }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
@@ -37,6 +38,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "quoteadd", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "quotefest", new CommandConfiguration("QuoteFest", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "so", new CommandConfiguration("Shout Out", commands.ShoutOut.Enabled, commands.ShoutOut.ModOnly) },
                 { "status", new CommandConfiguration("Status", commands.Status.Enabled, commands.Status.ModOnly) }
             };
         }
@@ -91,32 +93,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             return null;
         }
 
-        private EventItem statusCommand(LakeaCommand eve)
-        {
-            Terminal.Output("Lakea: Status Command -> Active");
-            Logs.Instance.NewLog(LogLevel.Info, "Status Command -> Active");
-            Dictionary<string, string> args = new Dictionary<string, string>
-            {
-                { "Message", "I'm still active, all is well Cuppa" }
-            };
-            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Status Command", "Lakea_Status_Command", args: args);
-        }
-
-        private EventItem quoteCommand(LakeaCommand eve)
-        {
-            Terminal.Output("Lakea: Quote Command -> " + eve.Args.Command.CommandText);
-            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Args.Command.CommandText);
-            Dictionary<string, string> args = quotes.NewQuote(eve);
-            if ("quotefest".Equals(eve.Args.Command.CommandText))
-            {
-                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
-            }
-            else
-            {
-                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
-            }
-        }
-
         private EventItem exitCommand(LakeaCommand eve)
         {
             Terminal.Output("Lakea: Exit Command -> " + eve.Args.Command.CommandText);
@@ -136,6 +112,49 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 };
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Exit Command", "Lakea_Exit_Command", args: args);
             }
+        }
+
+        private EventItem quoteCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Quote Command -> " + eve.Args.Command.CommandText);
+            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Args.Command.CommandText);
+            Dictionary<string, string> args = quotes.NewQuote(eve);
+            if ("quotefest".Equals(eve.Args.Command.CommandText))
+            {
+                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
+            }
+            else
+            {
+                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
+            }
+        }
+
+        private EventItem shoutOutCommand(LakeaCommand eve)
+        {
+            Dictionary<string, string> args = new Dictionary<string, string>();
+            Terminal.Output("Lakea: Shout Out Command -> " + eve.Args.Command.ArgumentsAsString);
+            if(eve.Args.Command.ArgumentsAsList.Count > 0)
+            {
+                args.Add("Message", "Hey guys, go give @" + eve.Args.Command.ArgumentsAsList[0] + " some love and support! You can find them at https://www.twitch.tv/" + eve.Args.Command.ArgumentsAsList[0]);
+            }
+            else
+            {
+                Terminal.Output("Lakea: Shout Out Command -> No User Name given to Shout Out");
+                Logs.Instance.NewLog(LogLevel.Warning, "Shout Out Command -> No User Given");
+                args.Add("Message", "You didn't tell me who to shout out @{DisplayName}! Who am I shouting out?");
+            }
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Shout Out Command", "Lakea_Shout_Out_Command", args: args);
+        }
+
+        private EventItem statusCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Status Command -> Active");
+            Logs.Instance.NewLog(LogLevel.Info, "Status Command -> Active");
+            Dictionary<string, string> args = new Dictionary<string, string>
+            {
+                { "Message", "I'm still active, all is well Cuppa" }
+            };
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Status Command", "Lakea_Status_Command", args: args);
         }
     }
 }
