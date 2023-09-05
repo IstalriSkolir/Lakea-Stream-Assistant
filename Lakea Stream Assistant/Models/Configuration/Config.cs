@@ -158,11 +158,26 @@ public partial class ConfigSettings
 public partial class SettingsCommands
 {
 
+    private CommandsShoutOut shoutOutField;
+
     private CommandsStatus statusField;
 
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    /// <remarks/>
+    public CommandsShoutOut ShoutOut
+    {
+        get
+        {
+            return this.shoutOutField;
+        }
+        set
+        {
+            this.shoutOutField = value;
+        }
+    }
 
     /// <remarks/>
     public CommandsStatus Status
@@ -200,6 +215,44 @@ public partial class SettingsCommands
         set
         {
             this.exitField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsShoutOut
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
         }
     }
 }
