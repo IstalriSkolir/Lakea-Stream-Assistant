@@ -50,6 +50,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Configurations\BadConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Configurations\Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

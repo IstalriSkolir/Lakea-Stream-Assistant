@@ -12,17 +12,25 @@ namespace Lakea_Stream_Assistant.Processes
         public ExternalProcesses(ConfigApplication[] applications)
         {
             processes = new Dictionary<string, ExternalProcess>();
-            foreach(ConfigApplication app in  applications)
+            if(applications != null)
             {
-                try
+                foreach (ConfigApplication app in applications)
                 {
-                    processes.Add(app.Name.ToLower(), new ExternalProcess(app));
+                    try
+                    {
+                        processes.Add(app.Name.ToLower(), new ExternalProcess(app));
+                    }
+                    catch (Exception ex)
+                    {
+                        Terminal.Output("Error Loading External application -> " + app.Name + ", " + ex.Message);
+                        Logs.Instance.NewLog(LogLevel.Error, ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Terminal.Output("Error Loading External application -> " + app.Name + ", " + ex.Message);
-                    Logs.Instance.NewLog(LogLevel.Error, ex);
-                }
+            }
+            else
+            {
+                Terminal.Output("No External Applications Found");
+                Logs.Instance.NewLog(LogLevel.Info, "No External Applications Found");
             }
         }
 

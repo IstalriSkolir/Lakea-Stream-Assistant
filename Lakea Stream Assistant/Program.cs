@@ -21,6 +21,7 @@ namespace Lakea_Stream_Assistant
         //Point of Entry
         static void Main(string[] args)
         {
+            Logs.Instance.Initiliase();
             initiliase();
             //Pauses main thread to prevent application terminating
             while (keepAliveToken.IsAlive)
@@ -35,33 +36,44 @@ namespace Lakea_Stream_Assistant
         //initiliase Lakea
         static void initiliase()
         {
-            Terminal.Output("Lakea is waking up...");
-            Logs.Instance.Initiliase();
             string filePath = selectProfile();
-            Terminal.StartTerminalThread();
             Config config = new LoadConfig().LoadConfigFromFile(filePath);
-            Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
-            Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-            Terminal.UpdateLogLevel(config.Settings.LogLevel);
-            Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
-            keepAliveToken = new KeepAliveToken();
-            DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken);        
-            eventHandler = new EventInput(config.Events, lakeaCommands);
-            externalProcesses = new ExternalProcesses(config.Applications);
-            externalProcesses.StartAllExternalProcesses();
-            OBS.Init(config.OBS.IP, config.OBS.Port, config.OBS.Password);
-            while (!OBS.Initiliased)
+            if(config != null)
             {
-                Thread.Sleep(100);
+                Terminal.Output("Lakea is waking up...");
+                Terminal.StartTerminalThread();
+                Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
+                Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
+                Terminal.UpdateLogLevel(config.Settings.LogLevel);
+                Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
+                keepAliveToken = new KeepAliveToken();
+                DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken);
+                eventHandler = new EventInput(config.Events, lakeaCommands);
+                externalProcesses = new ExternalProcesses(config.Applications);
+                externalProcesses.StartAllExternalProcesses();
+                OBS.Init(config.OBS.IP, config.OBS.Port, config.OBS.Password);
+                while (!OBS.Initiliased)
+                {
+                    Thread.Sleep(100);
+                }
+                Twitch.Init(config, eventHandler, lakeaCommands);
+                while (Twitch.ServicesConnected.Item1 < Twitch.ServicesConnected.Item2)
+                {
+                    Thread.Sleep(100);
+                }
+                eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
+                Terminal.Output("Lakea: All set and ready to go!");
+                Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
             }
-            Twitch.Init(config, eventHandler, lakeaCommands);
-            while (Twitch.ServicesConnected.Item1 < Twitch.ServicesConnected.Item2)
+            else
             {
-                Thread.Sleep(100);
+                Console.Clear();
+                Terminal.Output("Error loading configuration, check error log for details");
+                Console.WriteLine("Error loading configuration, check error log for details\n\nPress Enter to continue");
+                Console.ReadLine();
+                Console.Clear();
+                initiliase();
             }
-            eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
-            Terminal.Output("Lakea: All set and ready to go!");          
-            Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
         }
 
         //Lists avaliable config files and has the user select one

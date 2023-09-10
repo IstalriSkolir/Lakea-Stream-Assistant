@@ -3,6 +3,7 @@ using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
+    //Sealed class for logging events and errors that occur to file
     public sealed class Logs
     {
         private static Logs instance = null;
@@ -13,6 +14,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         Logs() {}
 
+        //Singleton so that this instance can be accessed from anywhere
         public static Logs Instance
         {
             get
@@ -30,6 +32,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Initiliase
 
+        //Initiliases the logging instance
         public void Initiliase()
         {
             try
@@ -45,7 +48,8 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        private static string getCurrentFilePath()
+        //Sets the current file path
+        private string getCurrentFilePath()
         {
             string file = "Log [" + DateTime.Now.ToString("MM/dd/yyyy") + "].txt";
             file = file.Replace("/", "-");
@@ -53,6 +57,7 @@ namespace Lakea_Stream_Assistant.Singletons
             return path;
         }
 
+        //Sets the logging level for the session instance
         public void SetErrorLogLevel(string level)
         {
             EnumConverter enums = new EnumConverter();
@@ -61,6 +66,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #endregion
 
+        //Writes new log event to file, receieves an Exception as an argument
         public void NewLog(LogLevel level, Exception ex)
         {
             try
@@ -71,7 +77,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 if (((int)level) >= (int)logLevel)
                 {
-                    string log = DateTime.Now.ToString() + ": Log Level -> " + level + ", " + ex.Message + ",\nStack Trace - " + ex.StackTrace;
+                    string log = DateTime.Now.ToString("HH:mm:ss") + ": Log Level -> " + level + ", " + ex.Message + ",\nStack Trace - " + ex.StackTrace;
                     using (StreamWriter writer = new StreamWriter(currentFilePath, true))
                     {
                         writer.WriteLine(log);
@@ -85,6 +91,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Writes new log event to file, receieves a string as an argument
         public void NewLog(LogLevel level, string message)
         {
             try
@@ -109,6 +116,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        //Checks if its the first log of this session and writes new log info to the file
         private static void firstLogMade()
         {
             firstLog = false;
@@ -126,9 +134,9 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             using (StreamWriter writer = new StreamWriter(currentFilePath, true))
             {
-                writer.WriteLine("--------------------------------------------------------------------------------");
+                writer.WriteLine("----------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 writer.WriteLine("\nNew Session Log - " + DateTime.Now.ToString("HH:mm:ss") + "\nLog Level: " + logLevel + "\n");
-                writer.WriteLine("--------------------------------------------------------------------------------");
+                writer.WriteLine("----------------------------------------------------------------------------------------------------------------------------------------------------------------");
             }
         }
     }
