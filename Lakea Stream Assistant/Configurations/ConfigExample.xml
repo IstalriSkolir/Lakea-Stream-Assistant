@@ -2,9 +2,24 @@
 <Config>
   <Settings>
     <LogLevel>Warning</LogLevel>
+    <TerminalRefreshRate>1</TerminalRefreshRate>
     <Commands>
-      <Status>true</Status>
-      <Quotes>true</Quotes>
+      <ShoutOut>
+        <Enabled>true</Enabled>
+        <ModOnly>true</ModOnly>
+      </ShoutOut>
+      <Status>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Status>
+      <Quotes>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Quotes>
+      <Exit>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Exit>
     </Commands>
   </Settings>
   <OBS>
@@ -28,12 +43,12 @@
   <Applications>
     <Application>
       <Name>Woodland Background</Name>
-      <Path>D:\Twitch\Stream Applications\Stream Background\V0.8.1\GreenScreenShit.exe</Path>
+      <Path>D:\Twitch\Stream Applications\Stream Background\V0.8.2\GreenScreenShit   .exe</Path>
       <WindowStyle>Normal</WindowStyle>
     </Application>
     <Application>
       <Name>VeadoTube</Name>
-      <Path>D:\Twitch\Stream Applications\veadotubemini-1.3c-win64-20211123\veadotube mini.exe</Path>
+      <Path>D:\Twitch\Stream Applications\veadotubemini-1.3c-win64-20211123\veadotube mini   .exe</Path>
       <WindowStyle>Normal</WindowStyle>
     </Application>
   </Applications>
@@ -55,6 +70,44 @@
           <Arg>
             <Key>Message</Key>
             <Value>Welcome to the Woodland Rangers {DisplayName}!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Twitch Tier 1 Subscription</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Subscription</Type>
+        <ID>Prime</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Thank you for using your prime sub {DisplayName}!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Twitch Tier Default</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Subscription</Type>
+        <ID>Default</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Thank you for subscribing {DisplayName}!</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>
@@ -435,22 +488,13 @@
           </Arg>
           <Arg>
             <Key>Start_Delay</Key>
-            <Value>2700</Value>
+            <Value>300</Value>
             <!-- 45 minutes -->
           </Arg>
           <Arg>
             <Key>Timer_Delay</Key>
-            <Value>2700</Value>
+            <Value>500</Value>
             <!-- 45 minutes -->
-          </Arg>
-          <Arg>
-            <Key>Timer_Value</Key>
-            <Value>2700</Value>
-            <!-- 45 minutes -->
-          </Arg>
-          <Arg>
-            <Key>First_Fire</Key>
-            <Value>false</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>
@@ -473,22 +517,13 @@
           </Arg>
           <Arg>
             <Key>Start_Delay</Key>
-            <Value>1200</Value>
+            <Value>400</Value>
             <!-- 20 minutes -->
           </Arg>
           <Arg>
             <Key>Timer_Delay</Key>
-            <Value>2700</Value>
+            <Value>700</Value>
             <!-- 45 minutes -->
-          </Arg>
-          <Arg>
-            <Key>Timer_Value</Key>
-            <Value>2700</Value>
-            <!-- 45 minutes -->
-          </Arg>
-          <Arg>
-            <Key>First_Fire</Key>
-            <Value>false</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>
@@ -511,22 +546,48 @@
           </Arg>
           <Arg>
             <Key>Start_Delay</Key>
-            <Value>4500</Value>
+            <Value>500</Value>
             <!-- 75 minutes -->
           </Arg>
           <Arg>
             <Key>Timer_Delay</Key>
-            <Value>5400</Value>
+            <Value>800</Value>
             <!-- 90 minutes -->
           </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Lakea Test OBS Source Loop</Name>
+        <Source>Lakea</Source>
+        <Type>Lakea_Timer</Type>
+        <ID>Lakea_Timer_ID_4</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>OBS_Loop_Sources</Goal>
+        <Args>
           <Arg>
-            <Key>Timer_Value</Key>
-            <Value>5400</Value>
-            <!-- 90 minutes -->
+            <Key>Start_Delay</Key>
+            <Value>8</Value>
           </Arg>
           <Arg>
-            <Key>First_Fire</Key>
-            <Value>false</Value>
+            <Key>Timer_Delay</Key>
+            <Value>5</Value>
+          </Arg>
+          <Arg>
+            <Key>Source1</Key>
+            <Value>Art 1 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source2</Key>
+            <Value>Art 2 - Image</Value>
+          </Arg>
+          <Arg>
+            <Key>Source3</Key>
+            <Value>Art 3 - Image</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>

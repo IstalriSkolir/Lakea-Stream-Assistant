@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <Settings>
+    <Commands>
+      <Status>
+        <Enabled>true</Enabled>
+      </Status>
+      <Quotes>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Quotes>
+      <Exit>
+      </Exit>
+    </Commands>
+  </Settings>
+  <Twitch>
+    <StreamingChannel>
+      <ID>1111</ID>
+      <AuthKey>{AuthKey}</AuthKey>
+    </StreamingChannel>
+    <CommandIdentifier>!</CommandIdentifier>
+  </Twitch>
+  <Events>
+    <Event>
+      <EventDetails>
+        <Name>Post Discord</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>discord</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twtch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Come join the Woodland Rangers Discord for more content and hanging out with the community! https://discord.gg/MjF9Qq25nR</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Post Backloggery</Name>
+        <Source>Twih</Source>
+        <Type>Twit_Command</Type>
+        <ID>backloggery</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Check out our games list of what we've completed and what we're yet to play here: https://backloggery.com/MateriesCoil</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Post Twitter</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>twitter</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Se_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>Follow Materies on Twitter @mcwolfranger for more HEMA and survival content! He'll also post when he's at furmeets, assuming he remembers that is!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+
+  </Events>
+</Config>

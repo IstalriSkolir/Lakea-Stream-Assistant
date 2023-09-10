@@ -382,7 +382,7 @@ public partial class ConfigOBS
 
     private string ipField;
 
-    private ushort portField;
+    private int portField;
 
     private string passwordField;
 
@@ -400,7 +400,7 @@ public partial class ConfigOBS
     }
 
     /// <remarks/>
-    public ushort Port
+    public int Port
     {
         get
         {
@@ -488,7 +488,7 @@ public partial class ConfigTwitchStreamingChannel
 
     private string userNameField;
 
-    private uint idField;
+    private int idField;
 
     private string authKeyField;
 
@@ -506,7 +506,7 @@ public partial class ConfigTwitchStreamingChannel
     }
 
     /// <remarks/>
-    public uint ID
+    public int ID
     {
         get
         {
@@ -792,7 +792,7 @@ public partial class ConfigEventEventTarget
 
     private ConfigEventEventTargetCallback callbackField;
 
-    private ushort durationField;
+    private int durationField;
 
     /// <remarks/>
     public string Target
@@ -875,7 +875,7 @@ public partial class ConfigEventEventTarget
     }
 
     /// <remarks/>
-    public ushort Duration
+    public int Duration
     {
         get
         {
@@ -935,7 +935,7 @@ public partial class ConfigEventEventTargetCallback
 
     private string eventIDField;
 
-    private byte delayField;
+    private int delayField;
 
     /// <remarks/>
     public string EventID
@@ -951,7 +951,7 @@ public partial class ConfigEventEventTargetCallback
     }
 
     /// <remarks/>
-    public byte Delay
+    public int Delay
     {
         get
         {

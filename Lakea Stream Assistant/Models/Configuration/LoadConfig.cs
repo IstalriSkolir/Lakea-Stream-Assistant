@@ -13,22 +13,29 @@ namespace Lakea_Stream_Assistant.Models.Configuration
             try
             {
                 Terminal.Output("Lakea: Loading Configuration File...");
+                Console.WriteLine("Lakea: Loading Configuration File...");
                 Config config = new Config();
                 XmlSerializer serializer = new XmlSerializer(config.GetType());
                 TextReader reader = new StreamReader(filePath);
                 config = (Config)serializer.Deserialize(reader);
                 reader.Close();
-                return config;
+                bool validConfig = new ValidateConfig().ValidateConfiguration(config);
+                if(validConfig)
+                {
+                    return config;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {
+                Console.Clear();
                 string fileName = Path.GetFileName(filePath);
-                Terminal.Output("Fatal Error: Failed to Load Configuration File -> " + fileName + ", " + ex.Message);
-                Logs.Instance.NewLog(LogLevel.Fatal, ex);
-                Console.ReadLine();
-                Environment.Exit(1);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+                return null;
             }
-            return null;
         }
     }
 }
