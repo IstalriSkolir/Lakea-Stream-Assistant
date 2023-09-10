@@ -139,14 +139,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 else
                 {
-                    if (bitAmount >= bitsOrder[i].Item1)
+                    if (bitAmount >= bitsOrder[bitsOrder.Count - 1].Item1)
                     {
                         eventFound = true;
-                        string id = bitsOrder[i].Item2;
+                        string id = bitsOrder[bitsOrder.Count - 1].Item2;
                         EventItem item = passArgs.GetEventArgs(bits[id], eve);
                         if (item != null)
                         {
-                            processer.ProcessEvent(bits[id]);
+                            processer.ProcessEvent(item);
                         }
                     }
                 }

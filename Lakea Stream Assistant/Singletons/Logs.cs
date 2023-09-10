@@ -77,7 +77,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 if (((int)level) >= (int)logLevel)
                 {
-                    string log = DateTime.Now.ToString("HH:mm:ss") + ": Log Level -> " + level + ", " + ex.Message + ",\nStack Trace - " + ex.StackTrace;
+                    string log = DateTime.Now.ToString("HH:mm:ss") + ": Log Level -> " + level + ", " + ex.GetType() + ex.Message + ",\nStack Trace - " + ex.StackTrace;
                     using (StreamWriter writer = new StreamWriter(currentFilePath, true))
                     {
                         writer.WriteLine(log);
