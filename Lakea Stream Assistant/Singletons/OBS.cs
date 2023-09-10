@@ -4,6 +4,7 @@ using Lakea_Stream_Assistant.Models.OBS;
 using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
 using OBSWebsocketDotNet.Communication;
+using Lakea_Stream_Assistant.Exceptions;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -180,9 +181,21 @@ namespace Lakea_Stream_Assistant.Singletons
                 Terminal.Output("OBS: Changing Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
                 Logs.Instance.NewLog(LogLevel.Info, "Changing OBS Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
                 string curTransition = client.GetCurrentSceneTransition().Name;
-                client.SetCurrentSceneTransition(transition);
-                client.SetCurrentProgramScene(scene);
-                Task.Delay(3000).ContinueWith(t => { client.SetCurrentSceneTransition(curTransition); });
+                if(curTransition != string.Empty && curTransition != "")
+                {
+                    client.SetCurrentSceneTransition(transition);
+                    client.SetCurrentProgramScene(scene);
+                    Task.Delay(3000).ContinueWith(t => { client.SetCurrentSceneTransition(curTransition); });
+                }
+                else
+                {
+                    throw new OBSRequestException("Couldn't get the current active transition from OBS");
+                }
+            }
+            catch (OBSRequestException ex)
+            {
+                Terminal.Output("OBS: OBSRequestException, Failed to Get Transition -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
@@ -214,11 +227,30 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 string curScene = client.GetCurrentProgramScene();
-                Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
-                Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
-                string scene = searchForSource(curScene, source);
-                int sourceID = resources.GetSourceId(source);
-                client.SetSceneItemEnabled(scene, sourceID, active);
+                if (curScene != string.Empty && curScene != "")
+                {
+                    Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
+                    Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
+                    string scene = searchForSource(curScene, source);
+                    int sourceID = resources.GetSourceId(source);
+                    if (scene != string.Empty && scene != "")
+                    {
+                        client.SetSceneItemEnabled(scene, sourceID, active);
+                    }
+                    else
+                    {
+                        throw new OBSRequestException("Couldn't find source '" + source + "' in active or child scenes");
+                    }
+                }
+                else
+                {
+                    throw new OBSRequestException("Couldn't get the current active scene from OBS");
+                }
+            }
+            catch (OBSRequestException ex)
+            {
+                Terminal.Output("OBS: OBSRequestException, Failed to Set Source Enabled -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
@@ -233,11 +265,24 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 string curScene = client.GetCurrentProgramScene();
-                Terminal.Output("OBS: Getting Source State -> '" + source + "' in '" + curScene + "'");
-                Logs.Instance.NewLog(LogLevel.Info, "Getting OBS Source Stat -> '" + source + "' in '" + curScene + "'");
-                string scene = searchForSource(curScene, source);
-                int sourceID = resources.GetSourceId(source);
-                return client.GetSceneItemEnabled(scene, sourceID);
+                if (curScene != string.Empty && curScene != "")
+                {
+                    Terminal.Output("OBS: Getting Source State -> '" + source + "' in '" + curScene + "'");
+                    Logs.Instance.NewLog(LogLevel.Info, "Getting OBS Source Stat -> '" + source + "' in '" + curScene + "'");
+                    string scene = searchForSource(curScene, source);
+                    int sourceID = resources.GetSourceId(source);
+                    return client.GetSceneItemEnabled(scene, sourceID);
+                }
+                else
+                {
+                    throw new OBSRequestException("Couldn't get the current active scene from OBS");
+                }
+            }
+            catch (OBSRequestException ex)
+            {
+                Terminal.Output("OBS: OBSRequestException, Failed to Get Source Enabled -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+                return false;
             }
             catch (Exception ex)
             {
