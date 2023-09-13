@@ -51,7 +51,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 redeems.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             case EventType.Twitch_Command:
-                                commands.Add(eve.EventDetails.ID, new EventItem(eve));
+                                commands.Add(eve.EventDetails.ID.ToLower(), new EventItem(eve));
                                 break;
                             case EventType.Twitch_Raid:
                                 raids.Add(eve.EventDetails.ID, new EventItem(eve));
@@ -189,9 +189,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                if (commands.ContainsKey(eve.Args.Command.CommandText))
+                string command = eve.Args.Command.CommandText.ToLower();
+                if (commands.ContainsKey(command))
                 {
-                    EventItem item = passArgs.GetEventArgs(commands[eve.Args.Command.CommandText], eve);
+                    EventItem item = passArgs.GetEventArgs(commands[command], eve);
                     if (item != null)
                     {
                         processer.ProcessEvent(item);

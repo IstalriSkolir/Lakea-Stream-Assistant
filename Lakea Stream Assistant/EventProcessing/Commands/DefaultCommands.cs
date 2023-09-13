@@ -3,25 +3,31 @@ using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Models.Tokens;
+using Lakea_Stream_Assistant.Processes;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
+    //This class handles default commands for Lakea
     public class DefaultCommands
     {
+        private ProcessCommand process;
         private QuoteCommand quotes;
         private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commandFunctions;
         private readonly Dictionary<string, CommandConfiguration> commandConfigs;
         KeepAliveToken keepAliveToken;
 
-        public DefaultCommands(SettingsCommands commands, KeepAliveToken keepAliveToken)
+        //Constructor takes object references, sets predefined dictionaries and command active/modonly status
+        public DefaultCommands(SettingsCommands commands, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
         {
+            this.process = new ProcessCommand(externalProcesses);
             this.quotes = new QuoteCommand();
             this.keepAliveToken = keepAliveToken;
             this.commandFunctions = new Dictionary<string, Func<LakeaCommand, EventItem>>
             {
                 { "exit", exitCommand },
+                { "process", processCommand },
                 { "quote", quoteCommand },
                 { "quotecount", quoteCommand },
                 { "addquote", quoteCommand },
@@ -33,6 +39,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
                 { "exit", new CommandConfiguration("Exit", commands.Exit.Enabled, commands.Exit.ModOnly) },
+                { "process", new CommandConfiguration("Process", commands.Process.Enabled, commands.Process.ModOnly) },
                 { "quote", new CommandConfiguration("Quote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "quotecount", new CommandConfiguration("QuoteCount", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "addquote", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
@@ -43,12 +50,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             };
         }
 
+        //Checks if a command is a default command, if not it is a custom command
         public bool CheckIfCommandIsLakeaCommand(string command)
         {
-            if (commandFunctions.ContainsKey(command)) return true;
+            if (commandFunctions.ContainsKey(command.ToLower())) return true;
             else return false;
         }
 
+        //Called when a Lakea command is received, checks if the command is enabled and modonly before call relevant function from commandFunctions dictionary
         public EventItem NewLakeaCommand(LakeaCommand eve)
         {
             try
@@ -93,6 +102,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             return null;
         }
 
+        //Checks if it was the broadcaster that called the command, then kills the keep alive token so the main thread can end the application
         private EventItem exitCommand(LakeaCommand eve)
         {
             Terminal.Output("Lakea: Exit Command -> " + eve.Args.Command.CommandText);
@@ -114,11 +124,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
         }
 
+        //Calls on the Quotes object to process the quote command before returning the output in a new EventItem object
         private EventItem quoteCommand(LakeaCommand eve)
         {
             Terminal.Output("Lakea: Quote Command -> " + eve.Args.Command.CommandText);
             Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Args.Command.CommandText);
-            Dictionary<string, string> args = quotes.NewQuote(eve);
+            Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
             if ("quotefest".Equals(eve.Args.Command.CommandText))
             {
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
@@ -129,6 +140,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
         }
 
+        //Returns a new EvenItem object that sends a shoutout message for the entered username to the Twitch chat
         private EventItem shoutOutCommand(LakeaCommand eve)
         {
             Dictionary<string, string> args = new Dictionary<string, string>();
@@ -146,6 +158,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Shout Out Command", "Lakea_Shout_Out_Command", args: args);
         }
 
+        //Returns a new EventItem that sends a message to the Twitchchat to confirm Lakea is still active
         private EventItem statusCommand(LakeaCommand eve)
         {
             Terminal.Output("Lakea: Status Command -> Active");
@@ -155,6 +168,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "Message", "I'm still active, all is well Cuppa" }
             };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Status Command", "Lakea_Status_Command", args: args);
+        }
+    
+        //Calls the Processes object to process the command before returning the output in a new EventItem object
+        private EventItem processCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Process Command -> " + eve.Args.Command.ArgumentsAsString);
+            Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " +  eve.Args.Command.ArgumentsAsString);
+            Dictionary<string, string> args = process.NewProcessCommand(eve);
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
         }
     }
 }

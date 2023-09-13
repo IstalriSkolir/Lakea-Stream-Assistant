@@ -21,7 +21,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             quotes = initiliaseQuotes();
         }
 
-        public Dictionary<string, string> NewQuote(LakeaCommand command)
+        public Dictionary<string, string> NewQuoteCommand(LakeaCommand command)
         {
             try
             {

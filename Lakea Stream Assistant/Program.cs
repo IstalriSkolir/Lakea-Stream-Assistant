@@ -47,9 +47,9 @@ namespace Lakea_Stream_Assistant
                 Terminal.UpdateLogLevel(config.Settings.LogLevel);
                 Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
                 keepAliveToken = new KeepAliveToken();
-                DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, keepAliveToken);
-                eventHandler = new EventInput(config.Events, lakeaCommands);
                 externalProcesses = new ExternalProcesses(config.Applications);
+                DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, externalProcesses, keepAliveToken);
+                eventHandler = new EventInput(config.Events, lakeaCommands);
                 externalProcesses.StartAllExternalProcesses();
                 OBS.Init(config.OBS.IP, config.OBS.Port, config.OBS.Password);
                 while (!OBS.Initiliased)
