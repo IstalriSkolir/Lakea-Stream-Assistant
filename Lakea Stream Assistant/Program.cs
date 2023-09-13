@@ -51,7 +51,7 @@ namespace Lakea_Stream_Assistant
                 DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, externalProcesses, keepAliveToken);
                 eventHandler = new EventInput(config.Events, lakeaCommands);
                 externalProcesses.StartAllExternalProcesses();
-                OBS.Init(config.OBS.IP, config.OBS.Port, config.OBS.Password);
+                OBS.Init(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password);
                 while (!OBS.Initiliased)
                 {
                     Thread.Sleep(100);

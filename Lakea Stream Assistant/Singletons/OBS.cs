@@ -5,6 +5,9 @@ using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
 using OBSWebsocketDotNet.Communication;
 using Lakea_Stream_Assistant.Exceptions;
+using OBSWebsocketDotNet.Types.Events;
+using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.Models.Events;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -12,6 +15,7 @@ namespace Lakea_Stream_Assistant.Singletons
     public sealed class OBS
     {
         public static bool Initiliased = false;
+        private static EventInput eventHandler;
         private static OBSResources resources;
         private static OBSWebsocket client;
         private static CancellationTokenSource keepAliveTokenSource;
@@ -32,10 +36,11 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initialises the connected with the passed in configuration data
-        public static void Init(string newIP, int newPort, string newPassword)
+        public static void Init(EventInput newEventHandler, string newIP, int newPort, string newPassword)
         {
             try
             {
+                eventHandler = newEventHandler;
                 ip = newIP;
                 port = newPort;
                 password = newPassword;
@@ -44,6 +49,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client = new OBSWebsocket();
                 client.Connected += onConnect;
                 client.Disconnected += onDisconnect;
+                client.CurrentProgramSceneChanged += onSceneChanged;
                 client.ConnectAsync("ws://" + ip + ":" + port, password);
             }
             catch (Exception ex)
@@ -84,7 +90,7 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("OBS: Disconnected -> " + e.DisconnectReason);
             Logs.Instance.NewLog(LogLevel.Warning, "Disconnected from OBS, " + e.DisconnectReason);
             Terminal.Output("OBS: Attempting to reconnected...");
-            Init(ip, port, password);
+            Init(eventHandler, ip, port, password);
         }
 
         //Once connected, gether source and scene information that can be referred back to later in the 'resources' object
@@ -154,6 +160,20 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             return string.Empty;
         }
+
+        #region On OBS Change
+
+        //Fired when OBS changes scene
+        private static void onSceneChanged(object sender, ProgramSceneChangedEventArgs e)
+        {
+            Terminal.Output("OBS: Scene Change -> " + e.SceneName);
+            Logs.Instance.NewLog(LogLevel.Info, "OBS Scene Change -> " + e.SceneName);
+            eventHandler.NewEvent(new OBSSceneChange(EventSource.OBS, EventType.OBS_Scene_Changed, e));
+        }
+
+        #endregion
+
+        #region Trigger OBS Change
 
         //Changes the scene to the passed in scene
         public static void ChangeScene(string scene)
@@ -313,5 +333,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             return string.Empty;
         }
+
+        #endregion
     }
 }

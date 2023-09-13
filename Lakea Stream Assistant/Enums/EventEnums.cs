@@ -3,6 +3,7 @@
     public enum EventSource : byte
     {
         Base_Camp,
+        OBS,
         Lakea,
         Twitch
     }
@@ -13,6 +14,7 @@
         Lakea_Command,
         Lakea_Timer_Start,
         Lakea_Timer_Fired,
+        OBS_Scene_Changed,
         Twitch_Bits,
         Twitch_Command,
         Twitch_Follow,

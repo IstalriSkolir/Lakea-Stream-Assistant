@@ -17,6 +17,7 @@ namespace Lakea_Stream_Assistant.Enums
             {
                 case "basecamp": return EventSource.Base_Camp;
                 case "twitch": return EventSource.Twitch;
+                case "obs": return EventSource.OBS;
                 case "lakea": return EventSource.Lakea;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventSource'");
             }
@@ -28,14 +29,15 @@ namespace Lakea_Stream_Assistant.Enums
             source = prepareString(source);
             switch (source)
             {
+                case "lakeacallback": return EventType.Lakea_Callback;
+                case "lakeatimer": return EventType.Lakea_Timer_Start;
+                case "obsscenechanged": return EventType.OBS_Scene_Changed;
                 case "twitchbits": return EventType.Twitch_Bits;
                 case "twitchcommand": return EventType.Twitch_Command;
                 case "twitchfollow": return EventType.Twitch_Follow;
                 case "twitchraid": return EventType.Twitch_Raid;
                 case "twitchredeem": return EventType.Twitch_Redeem;
                 case "twitchsubscription": return EventType.Twitch_Subscription;
-                case "lakeacallback": return EventType.Lakea_Callback;
-                case "lakeatimer": return EventType.Lakea_Timer_Start;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventType'");
             }
         }
