@@ -4,6 +4,9 @@ Code below has been generated from Config.xml, it should not be manually editted
 xml file and regenerating this structure from the editted xml. To regenerate structure, select all the code below and delete it. Then select all
 in the xml file before returning here and selecting Edit -> Paste Special -> Paste XML As Classes
 
+NOTE: For some reason, the last several changes using the above method have cause Visual Studio to produce the code in a invalid setup, changes
+have no been applied by hand until this issue is resolved
+
 */
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
@@ -158,6 +161,8 @@ public partial class ConfigSettings
 public partial class SettingsCommands
 {
 
+    private CommandsProcess processField;
+
     private CommandsShoutOut shoutOutField;
 
     private CommandsStatus statusField;
@@ -165,6 +170,19 @@ public partial class SettingsCommands
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    /// <remarks/>
+    public CommandsProcess Process
+    {
+        get
+        {
+            return this.processField;
+        }
+        set
+        {
+            this.processField = value;
+        }
+    }
 
     /// <remarks/>
     public CommandsShoutOut ShoutOut
@@ -215,6 +233,44 @@ public partial class SettingsCommands
         set
         {
             this.exitField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsProcess
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
         }
     }
 }
