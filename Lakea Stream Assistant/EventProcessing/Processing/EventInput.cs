@@ -12,6 +12,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     public class EventInput
     {
         private LakeaFunctions lakea;
+        private OBSFunctions obs;
         private TwitchFunctions twitch;
         private EventOutputs outputs;
         private EventProcesser processer;
@@ -23,10 +24,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             this.passArgs = new EventPassArguments();
             this.processer = new EventProcesser(outputs);
             this.twitch = new TwitchFunctions(events, processer, passArgs);
+            this.obs = new OBSFunctions(events, processer, passArgs);
             this.lakea = new LakeaFunctions(events, processer, passArgs, commands, this);
         }
 
-        //Called on a new event, checks event type before callin relevent function
+        //Called on a new event, checks event type before calling relevent function
         public void NewEvent(Event eve)
         {
             try
@@ -45,6 +47,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         break;
                     case EventType.Lakea_Timer_Fired:
                         lakea.NewTimer((LakeaTimer)eve);
+                        break;
+                    case EventType.OBS_Scene_Changed:
+                        obs.NewChangedScene((OBSSceneChange)eve);
                         break;
                     case EventType.Twitch_Bits:
                         twitch.NewBits((TwitchBits)eve);

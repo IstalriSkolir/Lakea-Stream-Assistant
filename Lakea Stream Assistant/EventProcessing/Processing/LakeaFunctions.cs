@@ -14,8 +14,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventProcesser processer;
         private EventPassArguments passArgs;
         private DefaultCommands commands;
-        private IDictionary<string, EventItem> callbacks;
-        private IDictionary<string, EventItem> timers;
+        private Dictionary<string, EventItem> callbacks;
+        private Dictionary<string, EventItem> timers;
 
         //Contructor stores list of events to check against when it receives a new event
         public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands, EventInput input)

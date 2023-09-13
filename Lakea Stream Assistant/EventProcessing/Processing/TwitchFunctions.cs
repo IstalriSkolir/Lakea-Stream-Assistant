@@ -11,12 +11,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     {
         private EventProcesser processer;
         private EventPassArguments passArgs;
-        private IDictionary<string, EventItem> follows;
-        private IDictionary<string, EventItem> bits;
-        private IDictionary<string, EventItem> redeems;
-        private IDictionary<string, EventItem> commands;
-        private IDictionary<string, EventItem> raids;
-        private IDictionary<string, EventItem> subscriptions;
+        private Dictionary<string, EventItem> follows;
+        private Dictionary<string, EventItem> bits;
+        private Dictionary<string, EventItem> redeems;
+        private Dictionary<string, EventItem> commands;
+        private Dictionary<string, EventItem> raids;
+        private Dictionary<string, EventItem> subscriptions;
         private List<Tuple<int, string>> bitsOrder;
 
         //Contructor stores list of events to check against when it receives a new event
