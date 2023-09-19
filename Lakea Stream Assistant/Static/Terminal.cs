@@ -2,12 +2,14 @@
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Resources;
 using Lakea_Stream_Assistant.Singletons;
+using System.Runtime.InteropServices;
 
 namespace Lakea_Stream_Assistant.Static
 {
     //Static class for writing to the console
     public sealed class Terminal
     {
+        private static Thread refreshThread;
         private static List<string> output = new List<string>();
         private static List<string> logs = new List<string>();
         private static CurrentSystem system;
@@ -17,6 +19,25 @@ namespace Lakea_Stream_Assistant.Static
         private static bool logLevelUpdated;
         private static int refreshRate;
         private static bool refreshActive;
+
+        #region Dll Imports
+
+        private const int MF_BYCOMMAND = 0x00000000;
+        private const int SC_CLOSE = 0xF060;
+        private const int SC_MINIMIZE = 0xF020;
+        private const int SC_MAXIMIZE = 0xF030;
+        private const int SC_SIZE = 0xF000;
+
+        [DllImport("user32.dll")]
+        public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+
+        #endregion
 
         #region Public Functions
 
@@ -48,11 +69,10 @@ namespace Lakea_Stream_Assistant.Static
             //Sets these two variables no to avoid potential thread clashing later
             refreshRate = 1000;
             logLevel = "Warning";
-            refreshActive = true;
             outputUpdated = true;
             logUpdated = true;
             logLevelUpdated = false;
-            Thread refreshThread = new Thread(initiliase);
+            refreshThread = new Thread(initiliase);
             refreshThread.Start();
         }
 
@@ -75,6 +95,21 @@ namespace Lakea_Stream_Assistant.Static
             refreshRate = newRefreshRate * 1000;
         }
 
+        //Resets the Terminal with a fresh thread
+        public static void ResetTerminal()
+        {
+            Task.Run(() =>
+            {
+                Output("Resetting Terminal...");
+                Logs.Instance.NewLog(LogLevel.Info, "Resetting Terminal...");
+                EndRefresh();
+                Thread.Sleep(refreshRate);
+                refreshThread = new Thread(initiliase);
+                refreshThread.Start();
+                Output("Terminal Reset");
+            });
+        }
+
         #endregion
 
         #region Initiliase
@@ -87,7 +122,21 @@ namespace Lakea_Stream_Assistant.Static
             Console.Title = "Lakea Moonlight - Stream Assistant";
             Console.SetWindowSize(151, 40);
             Console.SetBufferSize(153, 42);
+            var largestWindowX = Console.WindowWidth;
+            var largestWindowY = Console.WindowHeight;
+            Console.BufferWidth = Console.WindowWidth = largestWindowX;
+            Console.BufferHeight = Console.WindowHeight = largestWindowY;
+            IntPtr handle = GetConsoleWindow();
+            IntPtr sysMenu = GetSystemMenu(handle, false);
+            if (handle != IntPtr.Zero)
+            {
+                DeleteMenu(sysMenu, SC_CLOSE, MF_BYCOMMAND);
+                DeleteMenu(sysMenu, SC_MINIMIZE, MF_BYCOMMAND);
+                DeleteMenu(sysMenu, SC_MAXIMIZE, MF_BYCOMMAND);
+                DeleteMenu(sysMenu, SC_SIZE, MF_BYCOMMAND);
+            }
             Console.CursorVisible = false;
+            refreshActive = true;
             drawBoxes();
             drawDetails();
             drawSystemInfo();

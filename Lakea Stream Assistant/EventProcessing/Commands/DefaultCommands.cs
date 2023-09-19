@@ -33,6 +33,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", quoteCommand },
                 { "quoteadd", quoteCommand },
                 { "quotefest", quoteCommand },
+                { "resetterminal", resetTerminalCommand },
                 { "so", shoutOutCommand },
                 { "status", statusCommand }
             };
@@ -45,6 +46,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "quoteadd", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
                 { "quotefest", new CommandConfiguration("QuoteFest", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
+                { "resetterminal", new CommandConfiguration("ResetTerminal", commands.ResetTerminal.Enabled, commands.ResetTerminal.ModOnly) },
                 { "so", new CommandConfiguration("Shout Out", commands.ShoutOut.Enabled, commands.ShoutOut.ModOnly) },
                 { "status", new CommandConfiguration("Status", commands.Status.Enabled, commands.Status.ModOnly) }
             };
@@ -177,6 +179,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " +  eve.Args.Command.ArgumentsAsString);
             Dictionary<string, string> args = process.NewProcessCommand(eve);
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
+        }
+
+        //Resets the terminal with a full refresh on a new thread
+        private EventItem resetTerminalCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Reset Terminal Command -> Resetting Terminal");
+            Logs.Instance.NewLog(LogLevel.Info, "Reset Terminal COmmand -> Resetting Terminal");
+            Dictionary<string, string> args = new Dictionary<string, string>
+            {
+                { "Message", "On it, give me a moment!" }
+            };
+            Terminal.ResetTerminal();
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Reset Terminal Command", "Lakea_Reset_Terminal_Command", args: args);
         }
     }
 }

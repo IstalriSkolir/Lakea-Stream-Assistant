@@ -161,6 +161,8 @@ public partial class ConfigSettings
 public partial class SettingsCommands
 {
 
+    private CommandsResetTerminal resetTerminalField;
+
     private CommandsProcess processField;
 
     private CommandsShoutOut shoutOutField;
@@ -170,6 +172,19 @@ public partial class SettingsCommands
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    /// <remarks/>
+    public CommandsResetTerminal ResetTerminal
+    {
+        get
+        {
+            return this.resetTerminalField;
+        }
+        set
+        {
+            this.resetTerminalField = value;
+        }
+    }
 
     /// <remarks/>
     public CommandsProcess Process
@@ -233,6 +248,44 @@ public partial class SettingsCommands
         set
         {
             this.exitField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsResetTerminal
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
         }
     }
 }
