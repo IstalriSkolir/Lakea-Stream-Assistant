@@ -1,0 +1,8 @@
+NAME:IstalriSkolir
+ID:106861102
+LEVEL:1
+XP:0
+HP:20
+STR:9
+DEX:9
+CON:9

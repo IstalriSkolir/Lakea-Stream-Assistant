@@ -1,0 +1,18 @@
+Abilities:
+
+Str - Used to calculate damage dealth, 1dStr Mod + (Your level - Their level), minimum of 1
+
+Dex - Used to calculate who hits who, 1d20 + Dex Mod, whoever rolls higher strikes the other
+
+Con - Used to calculate new health, health increase every level by 1dCon Mod
+
+ability mods are calculated by ability / 3 rounded down
+
+On a level up, a creature gets 2 ability points that are randomly assigned to Str, Dex or Con. HP increases every level.
+
+Base stats at level one are:
+
+HP:20
+Str:9 (+3)
+Dex:9 (+3)
+Con:9 (+3)

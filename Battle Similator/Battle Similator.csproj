@@ -8,4 +8,36 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Creatures\Characters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Creatures\Characters\106861102.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0000-RAT.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0001-BAT.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0002-GIANT_RAT.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0003-SPIDER.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0004-SCORPION.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Creatures\Monsters\0005-SNAKE.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="XCOPY &quot;$(ProjectDir)Creatures\&quot; &quot;$(TargetDir)Creatures\&quot; /E /Y" />
+  </Target>
+
 </Project>
