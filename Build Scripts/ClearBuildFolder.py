@@ -16,7 +16,7 @@ def start():
         build_dir = current_dir + "/../Battle Similator/bin/Debug/net6.0"
     elif(app == "Battle Similator" and mode == "Release"):
         build_dir = current_dir + "/../Battle Similator/bin/Release/net6.0"
-    print(f"Clearing Directory {build_dir}")
+    print(f"Clearing Directory {build_dir}...")
     shutil.rmtree(build_dir)
 
 
