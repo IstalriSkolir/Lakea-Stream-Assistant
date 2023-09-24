@@ -1,4 +1,5 @@
 ﻿using Battle_Similator.Models.Creatures;
+using Battle_Similator.Models.Encounters;
 
 namespace Battle_Similator.Models
 {
@@ -18,7 +19,7 @@ namespace Battle_Similator.Models
             try
             {
                 string filePath = Environment.CurrentDirectory + "\\Creatures\\Characters\\" + character.ID + ".txt";
-                string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HP + 
+                string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax + 
                     "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution;
                 File.WriteAllText(filePath, characterString);
             }
@@ -70,13 +71,27 @@ namespace Battle_Similator.Models
                                 break;
                         }
                     }
-                    return new Character(props["NAME"], props["ID"], long.Parse(props["XP"]), Int32.Parse(props["LEVEL"]), Int32.Parse(props["HP"]), Int32.Parse(props["STR"]),
+                    return new Character(props["NAME"], props["ID"], Int32.Parse(props["XP"]), Int32.Parse(props["LEVEL"]), Int32.Parse(props["HP"]), Int32.Parse(props["STR"]),
                         Int32.Parse(props["DEX"]), Int32.Parse(props["CON"]));
                 }
                 else
                 {
                     return null;
                 }
+            }
+            catch(Exception)
+            {
+                Environment.Exit((int)ErrorCode.IO_Load_Error);
+                return null;
+            }
+        }
+
+        public string[] LoadMonstersByStrength(string strength)
+        {
+            try
+            {
+                string filepath = Environment.CurrentDirectory + "\\Creatures\\Monsters\\" + strength + "MONSTERS.txt";
+                return File.ReadAllLines(filepath);
             }
             catch(Exception)
             {
@@ -130,6 +145,14 @@ namespace Battle_Similator.Models
                 Environment.Exit((int)ErrorCode.IO_Load_Error);
                 return null;
             }
+        }
+
+        public void SaveResultData(EncounterResult result)
+        {
+            string filePath = Environment.CurrentDirectory + "\\BATTLERESULT.txt";
+            string resultString = "CHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID + "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" +
+                result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained;
+            File.WriteAllText(filePath, resultString);
         }
     }
 }

@@ -1,6 +1,6 @@
 Abilities:
 
-Str - Used to calculate damage dealth, 1dStr Mod + (Your level - Their level), minimum of 1
+Str - Used to calculate damage dealth, 1dStr Mod + ((Your level - Their level) / 3), minimum of 1
 
 Dex - Used to calculate who hits who, 1d20 + Dex Mod, whoever rolls higher strikes the other
 

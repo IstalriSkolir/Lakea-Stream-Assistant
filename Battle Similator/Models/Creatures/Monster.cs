@@ -2,9 +2,9 @@
 {
     public class Monster : Creature
     {
-        private long xpValue;
+        private int xpValue;
 
-        public long XPValue { get { return xpValue; } }
+        public int XPValue { get { return xpValue; } }
 
         public Monster(string name, string id, int level, int hp, int strength, int dexterity, int contitution)
         {
@@ -17,7 +17,17 @@
             this.dexterity = dexterity;
             this.constitution = contitution;
             this.xpValue = (level * 5);
+            this.isAlive = true;
             this.updateAbilityModifiers();
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            this.hp -= damage;
+            if (this.hp <= 0)
+            {
+                this.isAlive = false;
+            }
         }
     }
 }
