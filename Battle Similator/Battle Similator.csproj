@@ -40,4 +40,8 @@
     <Exec Command="XCOPY &quot;$(ProjectDir)Creatures\&quot; &quot;$(TargetDir)Creatures\&quot; /E /Y&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\ClearBuildFolder.py&quot; &quot;$(ProjectName)&quot; &quot;$(ConfigurationName)&quot;" />
+  </Target>
+
 </Project>

@@ -66,11 +66,11 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="&quot;$(DevEnvDir)TextTransform.exe&quot; -out &quot;$(ProjectDir)VersionIncrementer.cs&quot; &quot;$(ProjectDir)VersionIncrementer.tt" />
+    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\ClearBuildFolder.py&quot; &quot;$(ProjectName)&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;&quot;$(DevEnvDir)TextTransform.exe&quot; -out &quot;$(ProjectDir)VersionIncrementer.cs&quot; &quot;$(ProjectDir)VersionIncrementer.tt" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;   &quot;$(ProjectDir)..\Build Assistant\bin\Release\net6.0\Build Assistant.exe&quot; &quot;MoveBuildDirectory&quot;&#xD;&#xA;)" />
+    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\MoveSubApps.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;   &quot;$(ProjectDir)..\Build Assistant\bin\Release\net6.0\Build Assistant.exe&quot; &quot;MoveBuildDirectory&quot;&#xD;&#xA;)" />
   </Target>
 
 </Project>
