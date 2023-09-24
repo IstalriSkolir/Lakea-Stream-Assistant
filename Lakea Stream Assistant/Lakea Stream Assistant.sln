@@ -4,15 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lakea Stream Assistant", "Lakea Stream Assistant.csproj", "{2AF62D68-FE6D-424A-B37F-D433D9AAB85C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A047F097-230A-4EFB-A3CC-C82DE7CB55C1} = {A047F097-230A-4EFB-A3CC-C82DE7CB55C1}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lakea Tester", "..\Lakea Tester\Lakea Tester.csproj", "{56F8ACBA-069A-4035-A467-74185E169B55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build Assistant", "..\Build Assistant\Build Assistant.csproj", "{A047F097-230A-4EFB-A3CC-C82DE7CB55C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battle Similator", "..\Battle Similator\Battle Similator.csproj", "{C875BE9D-CDAB-4280-94F4-C2BA257BB1CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battle Similator", "..\Battle Similator\Battle Similator.csproj", "{C875BE9D-CDAB-4280-94F4-C2BA257BB1CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +23,6 @@ Global
 		{56F8ACBA-069A-4035-A467-74185E169B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F8ACBA-069A-4035-A467-74185E169B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56F8ACBA-069A-4035-A467-74185E169B55}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A047F097-230A-4EFB-A3CC-C82DE7CB55C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A047F097-230A-4EFB-A3CC-C82DE7CB55C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A047F097-230A-4EFB-A3CC-C82DE7CB55C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A047F097-230A-4EFB-A3CC-C82DE7CB55C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C875BE9D-CDAB-4280-94F4-C2BA257BB1CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C875BE9D-CDAB-4280-94F4-C2BA257BB1CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C875BE9D-CDAB-4280-94F4-C2BA257BB1CC}.Release|Any CPU.ActiveCfg = Release|Any CPU

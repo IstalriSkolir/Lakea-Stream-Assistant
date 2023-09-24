@@ -70,7 +70,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\MoveSubApps.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;   &quot;$(ProjectDir)..\Build Assistant\bin\Release\net6.0\Build Assistant.exe&quot; &quot;MoveBuildDirectory&quot;&#xD;&#xA;)" />
+    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\MoveSubApps.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;   python &quot;$(SolutionDir)..\Build Scripts\MoveBuildToOutput.py&quot; &#xD;&#xA;)" />
   </Target>
 
 </Project>
