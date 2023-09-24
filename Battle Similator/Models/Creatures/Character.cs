@@ -2,9 +2,10 @@
 {
     public class Character : Creature
     {
-        private long xp;
+        private int xp;
+        private int nextLevel;
 
-        public long XP { get { return xp; } }
+        public int XP { get { return xp; } }
 
         public Character(string name, string id)
         {
@@ -17,10 +18,12 @@
             this.strength = 9;
             this.dexterity = 9;
             this.constitution = 9;
+            this.isAlive = true;
             this.updateAbilityModifiers();
+            this.calculateNextLevel();
         }
 
-        public Character(string name, string id, long xp, int level, int hp, int strength, int dexterity, int contitution)
+        public Character(string name, string id, int xp, int level, int hp, int strength, int dexterity, int contitution)
         {
             this.name = name;
             this.id = id;
@@ -31,12 +34,76 @@
             this.strength = strength;
             this.dexterity = dexterity;
             this.constitution = contitution;
+            this.isAlive = true;
             this.updateAbilityModifiers();
+            this.calculateNextLevel();
         }
 
-        public void IncreaseXP(long value)
+        public override void TakeDamage(int damage)
         {
-            this.xp += value;
+            this.hp -= damage;
+            if (this.hp <= 0)
+            {
+                this.isAlive = false;
+                death();
+            }
+        }
+
+        public void IncreaseXP(int value)
+        {
+            xp += value;
+            if(xp >= nextLevel)
+            {
+                levelUp();
+            }
+        }
+
+        private void calculateNextLevel()
+        {
+            nextLevel = 0;
+            for(int count = 1; count <= level; count++)
+            {
+                nextLevel += count * 30;
+            }
+        }
+
+        private void levelUp()
+        {
+            Random rand = new Random();
+            level++;
+            for(int point = 0; point < 2; point++)
+            {
+                int ran = rand.Next(0, 3);
+                switch(ran)
+                {
+                    case 0:
+                        strength++;
+                        break;
+                    case 1:
+                        dexterity++;
+                        break;
+                    case 2:
+                        constitution++;
+                        break;
+                }
+                updateAbilityModifiers();
+                hpMax += rand.Next(1, ConstitutionMod);
+            }
+            calculateNextLevel();
+        }
+
+        private void death()
+        {
+            level = 1;
+            xp = 450;
+            hpMax = 20;
+            strength = 9;
+            dexterity = 9;
+            constitution = 9;
+            for(int count = 0; count < 4; count++)
+            {
+                levelUp();
+            }
         }
     }
 }

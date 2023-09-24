@@ -1,5 +1,8 @@
 ﻿public enum ErrorCode
 {
-    IO_Save_Error = 1,
-    IO_Load_Error = 2
+    No_Args_Given = 1,
+    Not_Enough_Args = 2,
+    Invalid_Args = 3,
+    IO_Save_Error = 4,
+    IO_Load_Error = 5
 }

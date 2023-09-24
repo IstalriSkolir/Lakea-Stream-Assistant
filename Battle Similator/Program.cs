@@ -1,21 +1,32 @@
-﻿using Battle_Similator.Models;
-using Battle_Similator.Models.Creatures;
+﻿using Battle_Similator.Models.Encounters;
 
 namespace Battle_Similator
 {
     internal class Program
     {
-        private static IO io; 
-
         static void Main(string[] args)
         {
-            io = new IO();
-            //Character character = new Character("IstalriSkolir", "106861102");
-            //io.SaveCharacterData(character);
-            Character character = io.LoadCharacterData("106861102");
-            Monster monster1 = io.LoadMonsterData("0000-Rat");
-            Monster monster2 = io.LoadMonsterData("0003-Spider");
-            Monster monster3 = io.LoadMonsterData("0005-Snake");
+            if(args.Length == 0)
+            {
+                Environment.Exit((int)ErrorCode.No_Args_Given);
+            }
+            else if(args.Length < 3)
+            {
+                Environment.Exit((int)ErrorCode.Not_Enough_Args);
+            }
+            else
+            {
+                switch(args[0])
+                {
+                    case "WEAKMONSTER":
+                        MonsterEncounter weakMonster = new MonsterEncounter();
+                        weakMonster.Start("WEAK", args[1], args[2]);
+                        break;
+                    default:
+                        Environment.Exit((int)ErrorCode.Invalid_Args);
+                        break;
+                }
+            }
         }
     }
 }
