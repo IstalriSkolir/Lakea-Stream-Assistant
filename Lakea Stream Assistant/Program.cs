@@ -52,15 +52,7 @@ namespace Lakea_Stream_Assistant
                 eventHandler = new EventInput(config.Events, lakeaCommands);
                 externalProcesses.StartAllExternalProcesses();
                 OBS.Init(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password);
-                while (!OBS.Initiliased)
-                {
-                    Thread.Sleep(100);
-                }
                 Twitch.Init(config, eventHandler, lakeaCommands);
-                while (Twitch.ServicesConnected.Item1 < Twitch.ServicesConnected.Item2)
-                {
-                    Thread.Sleep(100);
-                }
                 eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
                 Terminal.Output("Lakea: All set and ready to go!");
                 Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
