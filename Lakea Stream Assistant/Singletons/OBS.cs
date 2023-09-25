@@ -14,7 +14,6 @@ namespace Lakea_Stream_Assistant.Singletons
     //Singleton that connects to OBS and manages calls via the OBS Web Socket library
     public sealed class OBS
     {
-        public static bool Initiliased = false;
         private static EventInput eventHandler;
         private static OBSResources resources;
         private static OBSWebsocket client;
@@ -36,7 +35,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initialises the connected with the passed in configuration data
-        public static void Init(EventInput newEventHandler, string newIP, int newPort, string newPassword)
+        public static async void Init(EventInput newEventHandler, string newIP, int newPort, string newPassword)
         {
             try
             {
@@ -81,7 +80,6 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
             }, keepAliveToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
             getResources();
-            Initiliased = true;
         }
 
         //If OBS disconnects, then reconnect to OBS

@@ -17,7 +17,6 @@ namespace Lakea_Stream_Assistant.Singletons
     //Sealed class for Twitch Integration
     public sealed class Twitch
     {
-        public static Tuple<int, int> ServicesConnected = Tuple.Create(0, 2);
         private static DefaultCommands lakeaCommands;
         private static EventInput eventHandler;
         private static TwitchPubSub pubSub;
@@ -36,7 +35,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initiliases the Singleton by connecting to Twitch with the settings in the config object
-        public static void Init(Config config, EventInput newEventsObj, DefaultCommands commands)
+        public static async void Init(Config config, EventInput newEventsObj, DefaultCommands commands)
         {
             try
             {
@@ -139,7 +138,6 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Terminal.Output("Twitch: Client Connected");
             Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch Client...");
-            ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
         }
 
         private static void onClientDisconnected(object sender, OnDisconnectedEventArgs e)
@@ -235,7 +233,6 @@ namespace Lakea_Stream_Assistant.Singletons
                 pubSubConnected = true;
                 Terminal.Output("Twitch: Auth Key Accepted");
                 Logs.Instance.NewLog(LogLevel.Info, "PubSub Auth Key Accepted");
-                ServicesConnected = Tuple.Create(ServicesConnected.Item1 + 1, ServicesConnected.Item2);
             }
             else
             {
