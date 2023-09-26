@@ -24,6 +24,18 @@ namespace Battle_Similator
                         MonsterEncounter weakMonster = new MonsterEncounter(io);
                         weakMonster.Start("WEAK", args[2], args[3]);
                         break;
+                    case "NORMALMONSTER":
+                        MonsterEncounter normalMonster = new MonsterEncounter(io);
+                        normalMonster.Start("NORMAL", args[2], args[3]);
+                        break;
+                    case "HARDMONSTER":
+                        MonsterEncounter hardMonster = new MonsterEncounter(io);
+                        hardMonster.Start("HARD", args[2], args[3]);
+                        break;
+                    case "RANDOMMONSTER":
+                        MonsterEncounter randomMonster = new MonsterEncounter(io);
+                        randomMonster.Start("RANDOM", args[2], args[3]);
+                        break;
                     default:
                         Environment.Exit((int)ErrorCode.Invalid_Args);
                         break;

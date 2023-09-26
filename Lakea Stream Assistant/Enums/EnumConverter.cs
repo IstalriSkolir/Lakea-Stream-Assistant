@@ -65,6 +65,9 @@ namespace Lakea_Stream_Assistant.Enums
             {
                 case "null": return EventGoal.Null;
                 case "battlesimulatorweakmonster": return EventGoal.Battle_Simulator_Weak_Monster;
+                case "battlesimulatornormalmonster": return EventGoal.Battle_Simulator_Normal_Monster;
+                case "battlesimulatorhardmonster": return EventGoal.Battle_Simulator_Hard_Monster;
+                case "battlesimulatorrandommonster": return EventGoal.Battle_Simulator_Random_Monster;
                 case "obsenablesource": return EventGoal.OBS_Enable_Source;
                 case "obsdisablesource": return EventGoal.OBS_Disable_Source;
                 case "obsenablerandomsource": return EventGoal.OBS_Enable_Random_Source;

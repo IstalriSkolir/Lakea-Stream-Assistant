@@ -38,6 +38,9 @@
     {
         Null,
         Battle_Simulator_Weak_Monster,
+        Battle_Simulator_Normal_Monster,
+        Battle_Simulator_Hard_Monster,
+        Battle_Simulator_Random_Monster,
         OBS_Enable_Source,
         OBS_Disable_Source,
         OBS_Enable_Random_Source,

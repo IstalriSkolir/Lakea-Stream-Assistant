@@ -33,7 +33,7 @@ def start():
 
 def enter_name_and_level():
     global name, level
-    name = input("Enter monster name: ")
+    name = input("\nEnter monster name: ")
     level = get_numeric_input("Enter monster level: ")
 
 def generate_abilities():
@@ -70,7 +70,9 @@ def save_monster_data():
     global name, level, hp, st, de, co
     monster_id = get_monster_id()
     name = name.upper()
-    with open(monster_id + "-" + name + ".txt", 'w') as f:
+    file_name = monster_id + "-" + name
+    update_monster_lists(file_name)
+    with open(file_name + ".txt", 'w') as f:
         f.write(f"NAME:{name}\n")
         f.write(f"ID:{monster_id}\n")
         f.write(f"LEVEL:{level}\n")
@@ -78,6 +80,24 @@ def save_monster_data():
         f.write(f"STR:{st}\n")
         f.write(f"DEX:{de}\n")
         f.write(f"CON:{co}")
+
+def update_monster_lists(monster_file_name):
+    global level
+    list_file_name = ""
+    if(level > 5 and level <= 15):
+        list_file_name = "WEAKMONSTERS.txt"
+    elif(level > 15 and level <= 30):
+        list_file_name = "NORMALMONSTERS.txt"
+    elif(level > 30 and level <= 50):
+        list_file_name = "HARDMONSTERS.txt"
+    else:
+        list_file_name = "MISCMONSTERS.txt"
+    if(os.path.exists(list_file_name)):
+        file = open(list_file_name, "a")
+        file.write("\n" + monster_file_name)
+    else:
+        with open(list_file_name, 'w') as f:
+            f.write(monster_file_name)
 
 def get_monster_id():
     all_files = os.listdir()
