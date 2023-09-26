@@ -8,13 +8,14 @@ using System.Globalization;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 {
+    //This class handles the calls to the Battle Simulator Application
     public class BattleManager
     {
         private EventInput eventInput;
         private ProcessStartInfo battleSimInfo;
         private Process battleSim;
-        private bool active;
 
+        //Constructor sets the path and other properties for the Battle Simulator Application
         public BattleManager(EventInput eventInput)
         {
             this.eventInput = eventInput;
@@ -24,9 +25,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             battleSim.StartInfo = battleSimInfo;
             battleSim.EnableRaisingEvents = true;
             battleSim.Exited += battleSimulatorExited;
-            active = false;
         }
 
+        //Call the Battle SImulator to run a monster encounter passing in monster strength and user data
         public void MonsterBattle(string monsterStrength, string accountNumber, string displayName)
         {
             try
@@ -43,7 +44,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        private void battleSimulatorExited(object sender, System.EventArgs e)
+        //When Battle Simulator finishes, read the results file and send results to Twitch
+        private void battleSimulatorExited(object sender, EventArgs e)
         {
             Terminal.Output("Lakea: Battle Simulator Ended");
             Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
@@ -66,6 +68,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
+        //Reads the BATTLERESULT.txt file and returns data in a dictionary
         private Dictionary<string, string> loadBattleResult()
         {
             try

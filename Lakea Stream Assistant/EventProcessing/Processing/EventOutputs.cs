@@ -225,6 +225,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         public void BattleMonster(Dictionary<string, string> args, string monsterStrength ,Callbacks callback)
         {
             battleManager.MonsterBattle(monsterStrength, args["AccountID"], args["DisplayName"]);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
         }
 
         #endregion
