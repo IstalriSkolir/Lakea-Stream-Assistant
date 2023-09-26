@@ -28,7 +28,8 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "Months", args.Subscription.Months.ToString() },
                 { "StreakMonths", args.Subscription.StreakMonths.ToString() },
                 { "CumulativeMonths", args.Subscription.CumulativeMonths.ToString() },
-                { "SubMessage", args.Subscription.SubMessage.Message }
+                { "SubMessage", args.Subscription.SubMessage.Message },
+                { "AccountID", args.Subscription.UserId }
             };
             return subscriptionArgs;
         }

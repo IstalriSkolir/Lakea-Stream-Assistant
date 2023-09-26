@@ -5,12 +5,21 @@ namespace Battle_Similator.Models
 {
     public class IO
     {
-        public IO()
+        string path;
+
+        public IO(string config)
         {
-            string path = Environment.CurrentDirectory + "\\Creatures\\Characters";
-            if (!Directory.Exists(path))
+            if(config == "LAKEA")
             {
-                Directory.CreateDirectory(path);
+                path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\";
+            }
+            else if(config == "DEBUG")
+            {
+                path = Environment.CurrentDirectory + "\\Creatures\\";
+            }
+            else
+            {
+                Environment.Exit((int)ErrorCode.Invalid_Args);
             }
         }
 
@@ -18,7 +27,7 @@ namespace Battle_Similator.Models
         {
             try
             {
-                string filePath = Environment.CurrentDirectory + "\\Creatures\\Characters\\" + character.ID + ".txt";
+                string filePath = path + "Characters\\" + character.ID + ".txt";
                 string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax + 
                     "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution;
                 File.WriteAllText(filePath, characterString);
@@ -33,7 +42,7 @@ namespace Battle_Similator.Models
         {
             try
             {
-                string filePath = Environment.CurrentDirectory + "\\Creatures\\Characters\\" + id + ".txt";
+                string filePath = path + "Characters\\" + id + ".txt";
                 if(File.Exists(filePath))
                 {
                     string[] lines = File.ReadAllLines(filePath);
@@ -90,7 +99,7 @@ namespace Battle_Similator.Models
         {
             try
             {
-                string filepath = Environment.CurrentDirectory + "\\Creatures\\Monsters\\" + strength + "MONSTERS.txt";
+                string filepath = path + "Monsters\\" + strength + "MONSTERS.txt";
                 return File.ReadAllLines(filepath);
             }
             catch(Exception)
@@ -104,7 +113,7 @@ namespace Battle_Similator.Models
         {
             try
             {
-                string filePath = Environment.CurrentDirectory + "\\Creatures\\Monsters\\" + id + ".txt";
+                string filePath = path + "Monsters\\" + id + ".txt";
                 string[] lines = File.ReadAllLines(filePath);
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (string line in lines)
@@ -149,9 +158,9 @@ namespace Battle_Similator.Models
 
         public void SaveResultData(EncounterResult result)
         {
-            string filePath = Environment.CurrentDirectory + "\\BATTLERESULT.txt";
-            string resultString = "CHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID + "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" +
-                result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained;
+            string filePath = path + "..\\BATTLERESULT.txt";
+            string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
+                "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained;
             File.WriteAllText(filePath, resultString);
         }
     }

@@ -26,7 +26,8 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "IsModerator", args.Subscriber.IsModerator.ToString() },
                 { "IsSubscriber", args.Subscriber.IsSubscriber.ToString() },
                 { "IsPartner", args.Subscriber.IsPartner.ToString() },
-                { "SubscriptionPlan", args.Subscriber.SubscriptionPlanName }
+                { "SubscriptionPlan", args.Subscriber.SubscriptionPlanName },
+                { "AccountID", args.Subscriber.UserId }
             };
             return redeemArgs;
         }

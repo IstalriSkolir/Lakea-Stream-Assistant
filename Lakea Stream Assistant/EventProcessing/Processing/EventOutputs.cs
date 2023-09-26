@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Battle_Simulator;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
@@ -10,12 +11,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     //This class handles the outputs that are triggered from events
     public class EventOutputs
     {
+        private BattleManager battleManager;
         private EventInput handleEvents;
         private Random random = new Random();
 
         public EventOutputs(EventInput handleEvents)
         {
             this.handleEvents = handleEvents;
+            this.battleManager = new BattleManager(handleEvents);
         }
 
         #region OBS Outputs
@@ -212,6 +215,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     callbackArgs.Add(arg.Key, arg.Value);
                 }
             }
+        }
+
+        #endregion
+
+        #region Battle Simulator
+
+        //Function to call battle manager for a monster encounter
+        public void BattleMonster(Dictionary<string, string> args, string monsterStrength ,Callbacks callback)
+        {
+            battleManager.MonsterBattle(monsterStrength, args["AccountID"], args["DisplayName"]);
         }
 
         #endregion

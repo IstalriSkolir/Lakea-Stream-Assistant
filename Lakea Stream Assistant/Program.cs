@@ -22,7 +22,7 @@ namespace Lakea_Stream_Assistant
         static void Main(string[] args)
         {
             Logs.Instance.Initiliase();
-            initiliase();
+            initiliase(args);
             //Pauses main thread to prevent application terminating
             while (keepAliveToken.IsAlive)
             {
@@ -34,11 +34,20 @@ namespace Lakea_Stream_Assistant
         #region Initiliase
 
         //initiliase Lakea
-        static void initiliase()
+        static void initiliase(string[] args = null)
         {
-            string filePath = selectProfile();
-            Config config = new LoadConfig().LoadConfigFromFile(filePath);
-            if(config != null)
+            Config config;
+            string filePath;
+            if(args.Length == 0)
+            {
+                filePath = selectProfile();
+            }
+            else
+            {
+                filePath = Environment.CurrentDirectory + "\\Configurations\\" + args[0];
+            }
+            config = new LoadConfig().LoadConfigFromFile(filePath);
+            if (config != null)
             {
                 Terminal.Output("Lakea is waking up...");
                 Terminal.StartTerminalThread();

@@ -6,9 +6,9 @@ namespace Battle_Similator.Models.Encounters
     {
         private IO io;
 
-        public MonsterEncounter()
+        public MonsterEncounter(IO io)
         {
-            io = new IO();
+            this.io = io;
         }
 
         public void Start(string monsterStrength, string characterID, string characterName)
@@ -22,7 +22,7 @@ namespace Battle_Similator.Models.Encounters
         {
             Monster monster = getMonster(monsterStrength);
             Character character = getCharacter(characterID, characterName);
-            return new Encounter(character, monster);
+            return new Encounter(character, monster, monsterStrength + "MONSTER");
         }
 
         private Monster getMonster(string strength)

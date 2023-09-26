@@ -3,6 +3,7 @@
     public enum EventSource : byte
     {
         Base_Camp,
+        Battle_Simulator,
         OBS,
         Lakea,
         Twitch
@@ -10,6 +11,7 @@
 
     public enum EventType : ushort
     {
+        Battle_Simulator_Encounter,
         Lakea_Callback,
         Lakea_Command,
         Lakea_Timer_Start,
@@ -27,6 +29,7 @@
     {
         Null,
         Base_Camp,
+        Battle_Simulator,
         Twitch,
         OBS
     }
@@ -34,6 +37,7 @@
     public enum EventGoal : ushort
     {
         Null,
+        Battle_Simulator_Weak_Monster,
         OBS_Enable_Source,
         OBS_Disable_Source,
         OBS_Enable_Random_Source,

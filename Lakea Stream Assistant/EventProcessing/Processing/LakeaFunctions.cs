@@ -122,6 +122,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
+        //When a event comes from one of the supporting apps, pass it through to the EventProcessor
+        public void NewSupportingApplicationEvent(EventItem eve)
+        {
+            try
+            {
+                processer.ProcessEvent(eve);
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Lakea: Supporting Application Event Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
         //When a timer event is fired, process the event item it carries
         public void NewTimer(LakeaTimer eve)
         {

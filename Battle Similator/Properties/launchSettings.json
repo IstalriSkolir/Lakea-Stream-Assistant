@@ -2,7 +2,7 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"WEAKMONSTER\"\r\n\"106861102\"\r\n\"IstalriSkolir\""
+      "commandLineArgs": "\"DEBUG\"\r\n\"WEAKMONSTER\"\r\n\"106861102\"\r\n\"IstalriSkolir\""
     }
   }
 }

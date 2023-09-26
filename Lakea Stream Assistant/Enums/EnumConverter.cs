@@ -50,6 +50,7 @@ namespace Lakea_Stream_Assistant.Enums
             {
                 case "null": return EventTarget.Null;
                 case "basecamp": return EventTarget.Base_Camp;
+                case "battlesimulator": return EventTarget.Battle_Simulator;
                 case "twitch": return EventTarget.Twitch;
                 case "obs": return EventTarget.OBS;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventTarget'");
@@ -63,6 +64,7 @@ namespace Lakea_Stream_Assistant.Enums
             switch (source)
             {
                 case "null": return EventGoal.Null;
+                case "battlesimulatorweakmonster": return EventGoal.Battle_Simulator_Weak_Monster;
                 case "obsenablesource": return EventGoal.OBS_Enable_Source;
                 case "obsdisablesource": return EventGoal.OBS_Disable_Source;
                 case "obsenablerandomsource": return EventGoal.OBS_Enable_Random_Source;
