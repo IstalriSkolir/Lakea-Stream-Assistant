@@ -30,7 +30,8 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "IsPartner", args.Command.ChatMessage.IsPartner.ToString() },
                 { "IsVip", args.Command.ChatMessage.IsVip.ToString() },
                 { "DisplayName", args.Command.ChatMessage.DisplayName },
-                { "ChatMessage", args.Command.ChatMessage.Message }
+                { "ChatMessage", args.Command.ChatMessage.Message },
+                { "AccountID", args.Command.ChatMessage.UserId }
             };
             for (int i = 0; i < args.Command.ArgumentsAsList.Count; i++)
             {

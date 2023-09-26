@@ -23,6 +23,7 @@ namespace Lakea_Stream_Assistant.Models.Events
             Dictionary<string, string> redeemArgs = new Dictionary<string, string>
             {
                 { "DisplayName", args.RewardRedeemed.Redemption.User.DisplayName },
+                { "AccountID", args.RewardRedeemed.Redemption.User.Id },
                 { "RedeemTitle", args.RewardRedeemed.Redemption.Reward.Title },
                 { "RedeemCost", args.RewardRedeemed.Redemption.Reward.Cost.ToString() }
             };

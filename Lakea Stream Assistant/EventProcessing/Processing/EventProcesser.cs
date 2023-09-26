@@ -27,6 +27,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.Null:
                             outputs.NullEvent("Null Event -> " + item.Name);
                             break;
+                        case EventGoal.Battle_Simulator_Weak_Monster:
+                            outputs.BattleMonster(item.Args, "WEAKMONSTER", item.Callback);
+                            break;
                         case EventGoal.OBS_Disable_Source:
                             outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);
                             break;

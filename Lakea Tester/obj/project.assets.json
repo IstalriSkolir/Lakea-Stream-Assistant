@@ -2299,10 +2299,21 @@
           }
         }
       },
+      "Battle Similator/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Battle Similator.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Battle Similator.dll": {}
+        }
+      },
       "Lakea Stream Assistant/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "Battle Similator": "1.0.0",
           "System.Diagnostics.PerformanceCounter": "7.0.0",
           "System.Management": "7.0.2",
           "TwitchLib": "3.5.3",
@@ -8612,6 +8623,11 @@
         "websocket.client.4.4.43.nupkg.sha512",
         "websocket.client.nuspec"
       ]
+    },
+    "Battle Similator/1.0.0": {
+      "type": "project",
+      "path": "../Battle Similator/Battle Similator.csproj",
+      "msbuildProject": "../Battle Similator/Battle Similator.csproj"
     },
     "Lakea Stream Assistant/1.0.0": {
       "type": "project",

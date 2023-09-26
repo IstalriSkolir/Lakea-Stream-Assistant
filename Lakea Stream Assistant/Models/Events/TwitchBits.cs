@@ -26,7 +26,8 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "IsAnonymous", args.IsAnonymous.ToString() },
                 { "DisplayName", args.UserName },
                 { "ChannelName", args.ChannelName },
-                { "ChatMessage", args.ChatMessage }
+                { "ChatMessage", args.ChatMessage },
+                { "AccountID", args.UserId }
             };
             return bitsArgs;
         }

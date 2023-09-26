@@ -26,7 +26,8 @@ namespace Lakea_Stream_Assistant.Models.Events
         {
             Dictionary<string, string> followArgs = new Dictionary<string, string>
             {
-                { "DisplayName", args.DisplayName }
+                { "DisplayName", args.DisplayName },
+                { "AccountID", args.UserId },
             };
             return followArgs;
         }

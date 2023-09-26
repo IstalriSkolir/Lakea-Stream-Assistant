@@ -7,12 +7,14 @@ namespace Battle_Similator.Models.Encounters
         private Character character;
         private Monster monster;
         private Random random;
+        private string encounterType;
 
-        public Encounter(Character character, Monster monster)
+        public Encounter(Character character, Monster monster, string encounterType)
         {
             this.character = character;
             this.monster = monster;
             random = new Random();
+            this.encounterType = encounterType;
         }
 
         public EncounterResult Run()
@@ -46,11 +48,11 @@ namespace Battle_Similator.Models.Encounters
             if(character.IsAlive)
             {
                 character.IncreaseXP(monster.XPValue);
-                return new EncounterResult(character, monster, character.ID, monster.XPValue);
+                return new EncounterResult(character, monster, encounterType, character.ID, monster.XPValue);
             }
             else
             {
-                return new EncounterResult(character, monster, monster.Name, 0);
+                return new EncounterResult(character, monster, encounterType, monster.ID, 0);
             }
         }
 

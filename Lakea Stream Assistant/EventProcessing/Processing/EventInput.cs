@@ -2,7 +2,7 @@
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
-using Lakea_Stream_Assistant.Processes;
+using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 
@@ -36,6 +36,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 EventStats.NewEvent(eve);
                 switch (eve.Type)
                 {
+                    case EventType.Battle_Simulator_Encounter:
+                        lakea.NewSupportingApplicationEvent((EventItem)eve);
+                        break;
                     case EventType.Lakea_Timer_Start:
                         lakea.NewTimerStart();
                         break;
