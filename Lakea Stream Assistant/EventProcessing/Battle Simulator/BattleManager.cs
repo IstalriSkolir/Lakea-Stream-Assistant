@@ -1,4 +1,5 @@
-﻿using Lakea_Stream_Assistant.Enums;
+﻿using Battle_Similator;
+using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
@@ -53,10 +54,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
-                Terminal.Output("Lakea: Starting Battle Simulator -> " + accountNumber + ", " + displayName + ", " + monsterStrength);
-                Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + accountNumber + ", " + displayName + ", " + monsterStrength);
-                battleSimInfo.Arguments = "\"LAKEA\" \"" + monsterStrength + "\" \"" + accountNumber + "\" \"" + displayName + "\"";
-                battleSim.Start();
+                Dictionary<string,string> character = fileParser.GetCharacterData(accountNumber, displayName);
+                int level = Int32.Parse(character["LEVEL"]);
+                if(level >= 5)
+                {
+                    Terminal.Output("Lakea: Starting Battle Simulator -> " + accountNumber + ", " + displayName + ", " + monsterStrength);
+                    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + accountNumber + ", " + displayName + ", " + monsterStrength);
+                    battleSimInfo.Arguments = "\"LAKEA\" \"" + monsterStrength + "\" \"" + accountNumber + "\" \"" + displayName + "\"";
+                    battleSim.Start();
+                }
+                else
+                {
+                    Dictionary<string, string> args = new Dictionary<string, string>
+                    {
+                        { "Message", "Your not a high enough level yet @" + displayName + "! Train with me some more before you get yourself killed!" }
+                    };
+                    eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+                }
             }
             catch (Exception ex)
             {
@@ -68,24 +82,34 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         //When Battle Simulator finishes, read the results file and send results to Twitch
         private void battleSimulatorExited(object sender, EventArgs e)
         {
-            Terminal.Output("Lakea: Battle Simulator Ended");
-            Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
-            Dictionary<string, string> results = fileParser.GetBattleData();
-            if(results.Count> 0)
+            Process process = (Process)sender;
+            int exitCode = process.ExitCode;
+            if (exitCode != 0)
             {
-                Dictionary<string, string> args = new Dictionary<string, string>();
-                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-                string monster = results["MONSTER_NAME"].Replace("_", " ");
-                monster = textInfo.ToTitleCase(monster.ToLower());
-                if (results["WINNER"].Equals(results["CHARACTER_ID"]))
+                Terminal.Output("Lakea: Battle Simulator Error");
+                Logs.Instance.NewLog(LogLevel.Error, "Battle Simulator Error Code -> " + exitCode + ", " + (ErrorCode)exitCode);
+            }
+            else
+            {
+                Terminal.Output("Lakea: Battle Simulator Ended");
+                Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
+                Dictionary<string, string> results = fileParser.GetBattleData();
+                if (results.Count > 0)
                 {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought a " + monster + " and won! They gained " + results["XP_GAINED"] + "XP!");
+                    Dictionary<string, string> args = new Dictionary<string, string>();
+                    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                    string monster = results["MONSTER_NAME"].Replace("_", " ");
+                    monster = textInfo.ToTitleCase(monster.ToLower());
+                    if (results["WINNER"].Equals(results["CHARACTER_ID"]))
+                    {
+                        args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought a " + monster + " and won! They gained " + results["XP_GAINED"] + "XP!");
+                    }
+                    else if (results["WINNER"].Equals(results["MONSTER_ID"]))
+                    {
+                        args.Add("Message", "@" + results["CHARACTER_NAME"] + " died while fighting a " + monster + "! They should have trained with me more!");
+                    }
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
                 }
-                else if (results["WINNER"].Equals(results["MONSTER_ID"]))
-                {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " died while fighting a " + monster + "! They should have trained with me more!");
-                }
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Weak_Monster", args: args));
             }
         }
     }
