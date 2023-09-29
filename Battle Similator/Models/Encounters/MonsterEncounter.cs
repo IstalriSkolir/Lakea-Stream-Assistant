@@ -21,7 +21,7 @@ namespace Battle_Similator.Models.Encounters
         private Encounter preEncounter(string monsterStrength, string characterID, string characterName)
         {
             Monster monster = getMonster(monsterStrength);
-            Character character = getCharacter(characterID, characterName);
+            Character character = io.LoadCharacterData(characterID, characterName);
             return new Encounter(character, monster, monsterStrength + "MONSTER");
         }
 
@@ -34,23 +34,10 @@ namespace Battle_Similator.Models.Encounters
             return io.LoadMonsterData(id);
         }
 
-        private Character getCharacter(string id, string name)
-        {
-            Character character = io.LoadCharacterData(id);
-            if (character != null)
-            {
-                return character;
-            }
-            else
-            {
-                return new Character(name, id);
-            }
-        }
-
         private void postEncounter(EncounterResult result)
         {
             io.SaveCharacterData(result.Character);
-            io.SaveResultData(result);
+            io.SaveBattleResultData(result);
         }
     }
 }

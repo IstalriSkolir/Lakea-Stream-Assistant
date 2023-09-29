@@ -19,7 +19,7 @@ namespace Battle_Similator.Models
             }
             else
             {
-                Environment.Exit((int)ErrorCode.Invalid_Args);
+                Environment.Exit((int)ExitCode.Invalid_Args);
             }
         }
 
@@ -34,11 +34,11 @@ namespace Battle_Similator.Models
             }
             catch (Exception)
             {
-                Environment.Exit((int)ErrorCode.IO_Save_Error);
+                Environment.Exit((int)ExitCode.IO_Save_Error);
             }
         }
 
-        public Character LoadCharacterData(string id)
+        public Character LoadCharacterData(string id, string name)
         {
             try
             {
@@ -85,12 +85,12 @@ namespace Battle_Similator.Models
                 }
                 else
                 {
-                    return null;
+                    return new Character(name, id);
                 }
             }
             catch(Exception)
             {
-                Environment.Exit((int)ErrorCode.IO_Load_Error);
+                Environment.Exit((int)ExitCode.IO_Load_Error);
                 return null;
             }
         }
@@ -104,7 +104,7 @@ namespace Battle_Similator.Models
             }
             catch(Exception)
             {
-                Environment.Exit((int)ErrorCode.IO_Load_Error);
+                Environment.Exit((int)ExitCode.IO_Load_Error);
                 return null;
             }
         }
@@ -151,17 +151,26 @@ namespace Battle_Similator.Models
             }
             catch (Exception)
             {
-                Environment.Exit((int)ErrorCode.IO_Load_Error);
+                Environment.Exit((int)ExitCode.IO_Load_Error);
                 return null;
             }
         }
 
-        public void SaveResultData(EncounterResult result)
+        public void SaveBattleResultData(EncounterResult result)
         {
             string filePath = path + "..\\BATTLERESULT.txt";
             string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
-                "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained;
+                "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained + 
+                "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
             File.WriteAllText(filePath, resultString);
+        }
+
+        public void SaveTrainingResultData(Character character, int xpGained, bool levelUp)
+        {
+            string filePath = path + "..\\TRAININGRESULT.txt";
+            string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nXP_GAINED:" + xpGained + "\nLEVEL_UP:" + 
+                levelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + character.Level;
+            File.WriteAllText (filePath, resultString);
         }
     }
 }

@@ -12,6 +12,7 @@
     public enum EventType : ushort
     {
         Battle_Simulator_Encounter,
+        Battle_Simulator_Training,
         Lakea_Callback,
         Lakea_Command,
         Lakea_Timer_Start,
@@ -38,6 +39,7 @@
     {
         Null,
         Battle_Simulator_Character_Sheet,
+        Battle_Simulator_Character_Training,
         Battle_Simulator_Weak_Monster,
         Battle_Simulator_Normal_Monster,
         Battle_Simulator_Hard_Monster,

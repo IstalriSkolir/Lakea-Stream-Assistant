@@ -231,6 +231,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
+        //Function to call the Battle Manager to train a character
+        public void TrainCharacter(Dictionary<string, string> args, Callbacks callback)
+        {
+            battleManager.TrainCharacter(args["AccountID"], args["DisplayName"]);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
+        }
+
         //Function to call the Battle Manager for a monster encounter
         public void BattleMonster(Dictionary<string, string> args, string monsterStrength, Callbacks callback)
         {
