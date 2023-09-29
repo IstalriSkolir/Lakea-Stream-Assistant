@@ -27,6 +27,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.Null:
                             outputs.NullEvent("Null Event -> " + item.Name);
                             break;
+                        case EventGoal.Battle_Simulator_Character_Sheet:
+                            outputs.GetCharacterSheet(item.Args, item.Callback);
+                            break;
                         case EventGoal.Battle_Simulator_Weak_Monster:
                             outputs.BattleMonster(item.Args, "WEAKMONSTER", item.Callback);
                             break;

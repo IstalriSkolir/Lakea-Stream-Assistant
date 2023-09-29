@@ -221,8 +221,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Battle Simulator
 
-        //Function to call battle manager for a monster encounter
-        public void BattleMonster(Dictionary<string, string> args, string monsterStrength ,Callbacks callback)
+        //Function to call the Battle Manager to get a characters information
+        public void GetCharacterSheet(Dictionary<string, string> args, Callbacks callback)
+        {
+            Dictionary<string, string> messageArgs = battleManager.GetCharacterSheet(args["AccountID"], args["DisplayName"]);
+            if(messageArgs != null)
+            {
+                SendTwitchChatMessage(messageArgs, callback);
+            }
+        }
+
+        //Function to call the Battle Manager for a monster encounter
+        public void BattleMonster(Dictionary<string, string> args, string monsterStrength, Callbacks callback)
         {
             battleManager.MonsterBattle(monsterStrength, args["AccountID"], args["DisplayName"]);
             if (callback != null)

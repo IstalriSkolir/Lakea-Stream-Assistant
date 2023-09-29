@@ -37,6 +37,7 @@
     public enum EventGoal : ushort
     {
         Null,
+        Battle_Simulator_Character_Sheet,
         Battle_Simulator_Weak_Monster,
         Battle_Simulator_Normal_Monster,
         Battle_Simulator_Hard_Monster,
