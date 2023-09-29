@@ -49,13 +49,16 @@
             }
         }
 
-        public void IncreaseXP(int value)
+        public bool IncreaseXP(int value)
         {
+            bool leveledUp = false;
             xp += value;
             if(xp >= nextLevel)
             {
                 levelUp();
+                leveledUp = true;
             }
+            return leveledUp;
         }
 
         private void calculateNextLevel()

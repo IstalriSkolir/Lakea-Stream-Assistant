@@ -29,6 +29,8 @@ namespace Lakea_Stream_Assistant.Enums
             source = prepareString(source);
             switch (source)
             {
+                case "battlesimulatorencounter": return EventType.Battle_Simulator_Encounter;
+                case "battlesimulatortraining": return EventType.Battle_Simulator_Training;
                 case "lakeacallback": return EventType.Lakea_Callback;
                 case "lakeatimer": return EventType.Lakea_Timer_Start;
                 case "obsscenechanged": return EventType.OBS_Scene_Changed;
@@ -65,6 +67,7 @@ namespace Lakea_Stream_Assistant.Enums
             {
                 case "null": return EventGoal.Null;
                 case "battlesimulatorcharactersheet": return EventGoal.Battle_Simulator_Character_Sheet;
+                case "battlesimulatorcharactertraining": return EventGoal.Battle_Simulator_Character_Training;
                 case "battlesimulatorweakmonster": return EventGoal.Battle_Simulator_Weak_Monster;
                 case "battlesimulatornormalmonster": return EventGoal.Battle_Simulator_Normal_Monster;
                 case "battlesimulatorhardmonster": return EventGoal.Battle_Simulator_Hard_Monster;
