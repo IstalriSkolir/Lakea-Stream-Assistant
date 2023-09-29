@@ -64,6 +64,7 @@ namespace Lakea_Stream_Assistant.Enums
             switch (source)
             {
                 case "null": return EventGoal.Null;
+                case "battlesimulatorcharactersheet": return EventGoal.Battle_Simulator_Character_Sheet;
                 case "battlesimulatorweakmonster": return EventGoal.Battle_Simulator_Weak_Monster;
                 case "battlesimulatornormalmonster": return EventGoal.Battle_Simulator_Normal_Monster;
                 case "battlesimulatorhardmonster": return EventGoal.Battle_Simulator_Hard_Monster;
