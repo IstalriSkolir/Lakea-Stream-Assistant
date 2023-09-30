@@ -16,18 +16,22 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private ProcessStartInfo battleSimInfo;
         private Process battleSim;
         private BattleFileParser fileParser;
+        private List<string> queue;
+        private bool active;
 
         //Constructor sets the path and other properties for the Battle Simulator Application
         public BattleManager(EventInput eventInput)
         {
             this.eventInput = eventInput;
             this.fileParser = new BattleFileParser();
-            battleSimInfo = new ProcessStartInfo("\"" + Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Battle Similator.exe\"");
-            battleSimInfo.CreateNoWindow = true;
-            battleSim = new Process();
-            battleSim.StartInfo = battleSimInfo;
-            battleSim.EnableRaisingEvents = true;
-            battleSim.Exited += battleSimulatorExited;
+            this.queue = new List<string>();
+            this.active = false;
+            this.battleSimInfo = new ProcessStartInfo("\"" + Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Battle Similator.exe\"");
+            this.battleSimInfo.CreateNoWindow = true;
+            this.battleSim = new Process();
+            this.battleSim.StartInfo = battleSimInfo;
+            this.battleSim.EnableRaisingEvents = true;
+            this.battleSim.Exited += battleSimulatorExited;
         }
 
         //Get the character sheet of a user
@@ -61,36 +65,52 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 
         #region Run Battle Simulator
 
-        //Call the Batlte Simulator to run another type of event passing in the event type and user data
+        //Add an event to the Battle Sim Queue
         public void Other(string eve, string accountID, string displayName)
         {
             try
             {
-                Terminal.Output("Lakea: Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
-                Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
-                battleSimInfo.Arguments = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
-                battleSim.Start();
+                string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
+                queue.Add(item);
+                if (!active)
+                {
+                    runBattleSimulator();
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Terminal.Output("Lakea: Train Character Error -> " + ex.Message);
+                Terminal.Output("Lakea: Train Item Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            //try
+            //{
+            //    Terminal.Output("Lakea: Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
+            //    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
+            //    battleSimInfo.Arguments = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
+            //    battleSim.Start();
+            //}
+            //catch(Exception ex)
+            //{
+            //    Terminal.Output("Lakea: Train Character Error -> " + ex.Message);
+            //    Logs.Instance.NewLog(LogLevel.Error, ex);
+            //}
         }
 
-        //Call the Battle Simulator to run an encounter passing in the encounter type and user data
+        //Add a battle to the Battle Sim Queue
         public void Battle(string type, string accountID, string displayName)
         {
             try
             {
-                Dictionary<string,string> character = fileParser.GetCharacterData(accountID, displayName);
+                Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
                 int level = Int32.Parse(character["LEVEL"]);
                 if(level >= 5)
                 {
-                    Terminal.Output("Lakea: Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
-                    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
-                    battleSimInfo.Arguments = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
-                    battleSim.Start();
+                    string item = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
+                    queue.Add(item);
+                    if(!active)
+                    {
+                        runBattleSimulator();
+                    }
                 }
                 else
                 {
@@ -103,7 +123,52 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Battle Simulator Error -> " + type + ", " + ex.Message);
+                Terminal.Output("Lakea: Battle Item Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            //try
+            //{
+            //    Dictionary<string,string> character = fileParser.GetCharacterData(accountID, displayName);
+            //    int level = Int32.Parse(character["LEVEL"]);
+            //    if(level >= 5)
+            //    {
+            //        Terminal.Output("Lakea: Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
+            //        Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
+            //        battleSimInfo.Arguments = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
+            //        battleSim.Start();
+            //    }
+            //    else
+            //    {
+            //        Dictionary<string, string> args = new Dictionary<string, string>
+            //        {
+            //            { "Message", "Your not a high enough level yet @" + displayName + "! Train with me some more before you get yourself killed!" }
+            //        };
+            //        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Terminal.Output("Lakea: Battle Simulator Error -> " + type + ", " + ex.Message);
+            //    Logs.Instance.NewLog(LogLevel.Error, ex);
+            //}
+        }
+
+        //Run the Battle Simulator
+        private void runBattleSimulator()
+        {
+            try
+            {
+                active = true;
+                string parameters = queue[0];
+                queue.RemoveAt(0);
+                Terminal.Output("Lakea: Starting Battle Simulator -> " + parameters);
+                Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + parameters);
+                battleSimInfo.Arguments = parameters;
+                battleSim.Start();
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Battle Simulator Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -120,6 +185,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             Terminal.Output("Lakea: Battle Simulator Ended");
             Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
             Dictionary<string, string> results = fileParser.GetResultData();
+            if(queue.Count > 0)
+            {
+                runBattleSimulator();
+            }
+            else
+            {
+                active = false;
+            }
             switch (exitCode)
             {
                 case 0:

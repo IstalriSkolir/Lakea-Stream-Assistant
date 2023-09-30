@@ -261,12 +261,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Function to call the Battle Manager for a character reset
-        public void CharacterReset(Dictionary<string, string> args, Callbacks callback)
-        {
-
-        }
-
         #endregion
 
         //For null events that don't require any actions

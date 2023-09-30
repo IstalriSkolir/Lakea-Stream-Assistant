@@ -1,15 +1,15 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
+using Lakea_Stream_Assistant.Static;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
+using TwitchLib.Client.Events;
 using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
-using TwitchLib.Client.Events;
-using Lakea_Stream_Assistant.EventProcessing.Processing;
-using Lakea_Stream_Assistant.EventProcessing.Commands;
-using Lakea_Stream_Assistant.Static;
 using TwitchLib.Communication.Events;
 
 namespace Lakea_Stream_Assistant.Singletons
