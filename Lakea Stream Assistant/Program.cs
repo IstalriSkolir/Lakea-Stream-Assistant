@@ -38,7 +38,7 @@ namespace Lakea_Stream_Assistant
         {
             Config config;
             string filePath;
-            if(args.Length == 0)
+            if(args == null || args.Length == 0)
             {
                 filePath = selectProfile();
             }

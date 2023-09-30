@@ -232,9 +232,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //Function to call the Battle Manager to train a character
-        public void TrainCharacter(Dictionary<string, string> args, Callbacks callback)
+        public void OtherBattleSimEvent(Dictionary<string, string> args, Callbacks callback)
         {
-            battleManager.TrainCharacter(args["AccountID"], args["DisplayName"]);
+            battleManager.Other(args["Type"], args["AccountID"], args["DisplayName"]);
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
@@ -247,9 +247,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //Function to call the Battle Manager for a monster encounter
-        public void BattleMonster(Dictionary<string, string> args, string monsterStrength, Callbacks callback)
+        public void Battle(Dictionary<string, string> args, Callbacks callback)
         {
-            battleManager.MonsterBattle(monsterStrength, args["AccountID"], args["DisplayName"]);
+            battleManager.Battle(args["Type"], args["AccountID"], args["DisplayName"]);
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
@@ -259,6 +259,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 createCallback(callbackArgs, callback);
             }
+        }
+
+        //Function to call the Battle Manager for a character reset
+        public void CharacterReset(Dictionary<string, string> args, Callbacks callback)
+        {
+
         }
 
         #endregion
