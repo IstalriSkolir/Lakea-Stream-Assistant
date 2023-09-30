@@ -95,9 +95,17 @@ def update_monster_lists(monster_file_name):
     if(os.path.exists(list_file_name)):
         file = open(list_file_name, "a")
         file.write("\n" + monster_file_name)
+        file.close()
     else:
         with open(list_file_name, 'w') as f:
             f.write(monster_file_name)
+    if(os.path.exists("RANDOMMONSTERS.txt")):
+        file2 = open("RANDOMMONSTERS.txt", "a")
+        file2.write("\n" + monster_file_name)
+        file2.close()
+    else:
+        with open("RANDOMMONSTER.txt", 'w') as f:
+            file2.write(monster_file_name)            
 
 def get_monster_id():
     all_files = os.listdir()

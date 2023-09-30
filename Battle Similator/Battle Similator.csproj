@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="XCOPY &quot;$(ProjectDir)Creatures\&quot; &quot;$(TargetDir)Creatures\&quot; /E /Y&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
+    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\MoveBattleEntities.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
