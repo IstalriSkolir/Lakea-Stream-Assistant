@@ -30,20 +30,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.Battle_Simulator_Character_Sheet:
                             outputs.GetCharacterSheet(item.Args, item.Callback);
                             break;
-                        case EventGoal.Battle_Simulator_Character_Training:
-                            outputs.TrainCharacter(item.Args, item.Callback);
+                        case EventGoal.Battle_Simulator_Encounter:
+                            outputs.Battle(item.Args, item.Callback);
                             break;
-                        case EventGoal.Battle_Simulator_Weak_Monster:
-                            outputs.BattleMonster(item.Args, "WEAKMONSTER", item.Callback);
-                            break;
-                        case EventGoal.Battle_Simulator_Normal_Monster:
-                            outputs.BattleMonster(item.Args, "NORMALMONSTER", item.Callback);
-                            break;
-                        case EventGoal.Battle_Simulator_Hard_Monster:
-                            outputs.BattleMonster(item.Args, "HARDMONSTER", item.Callback);
-                            break;
-                        case EventGoal.Battle_Simulator_Random_Monster:
-                            outputs.BattleMonster(item.Args, "RANDOMMONSTER", item.Callback);
+                        case EventGoal.Battle_Simulator_Nonencounter:
+                            outputs.OtherBattleSimEvent(item.Args, item.Callback);
                             break;
                         case EventGoal.OBS_Disable_Source:
                             outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);

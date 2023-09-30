@@ -154,43 +154,58 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         }
 
         //Load the battle results from a file into a dictionary
-        public Dictionary<string, string> GetBattleData()
+        public Dictionary<string, string> GetResultData()
         {
             try
             {
-                string[] resultsArray = File.ReadAllLines(resultPath + "BATTLERESULT.txt");
+                string[] resultsArray = File.ReadAllLines(resultPath + "RESULT.txt");
                 Dictionary<string, string> resultsDict = new Dictionary<string, string>();
                 foreach (string result in resultsArray)
                 {
                     string[] parts = result.Split(":");
                     switch (parts[0])
                     {
-                        case "ENCOUNTER_TYPE":
-                            resultsDict.Add("ENCOUNTER_TYPE", parts[1]);
+                        case "CHARACTER_CON":
+                            resultsDict.Add("CHARACTER_CON", parts[1]);
                             break;
-                        case "CHARACTER_NAME":
-                            resultsDict.Add("CHARACTER_NAME", parts[1]);
+                        case "CHARACTER_DEX":
+                            resultsDict.Add("CHARACTER_DEX", parts[1]);
+                            break;
+                        case "CHARACTER_HP":
+                            resultsDict.Add("CHARACTER_HP", parts[1]);
                             break;
                         case "CHARACTER_ID":
                             resultsDict.Add("CHARACTER_ID", parts[1]);
                             break;
-                        case "MONSTER_NAME":
-                            resultsDict.Add("MONSTER_NAME", parts[1]);
+                        case "CHARACTER_LEVEL":
+                            resultsDict.Add("CHARACTER_LEVEL", parts[1]);
+                            break;
+                        case "CHARACTER_NAME":
+                            resultsDict.Add("CHARACTER_NAME", parts[1]);
+                            break;
+                        case "CHARACTER_STR":
+                            resultsDict.Add("CHARACTER_STR", parts[1]);
+                            break;
+                        case "CHARACTER_XP":
+                            resultsDict.Add("CHARACTER_XP", parts[1]);
+                            break;
+                        case "ENCOUNTER_TYPE":
+                            resultsDict.Add("ENCOUNTER_TYPE", parts[1]);
+                            break;
+                        case "LEVEL_UP":
+                            resultsDict.Add("LEVEL_UP", parts[1]);
                             break;
                         case "MONSTER_ID":
                             resultsDict.Add("MONSTER_ID", parts[1]);
+                            break;
+                        case "MONSTER_NAME":
+                            resultsDict.Add("MONSTER_NAME", parts[1]);
                             break;
                         case "WINNER":
                             resultsDict.Add("WINNER", parts[1]);
                             break;
                         case "XP_GAINED":
                             resultsDict.Add("XP_GAINED", parts[1]);
-                            break;
-                        case "LEVEL_UP":
-                            resultsDict.Add("LEVEL_UP", parts[1]);
-                            break;
-                        case "CHARACTER_LEVEL":
-                            resultsDict.Add("CHARACTER_LEVEL", parts[1]);
                             break;
                         default:
                             Terminal.Output("Lakea: Unrecognised Property in Battle Results -> " + result);
@@ -203,48 +218,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             catch (Exception ex)
             {
                 Terminal.Output("Lakea: Battle Result Load Error -> " + ex.Message);
-                Logs.Instance.NewLog(LogLevel.Error, ex);
-                return new Dictionary<string, string>();
-            }
-        }
-
-        public Dictionary<string,string> GetTrainingData()
-        {
-            try
-            {
-                string[] resultsArray = File.ReadAllLines(resultPath + "TRAININGRESULT.txt");
-                Dictionary<string, string> resultsDict = new Dictionary<string, string>();
-                foreach (string result in resultsArray)
-                {
-                    string[] parts = result.Split(":");
-                    switch (parts[0])
-                    {
-                        case "CHARACTER_NAME":
-                            resultsDict.Add("CHARACTER_NAME", parts[1]);
-                            break;
-                        case "CHARACTER_ID":
-                            resultsDict.Add("CHARACTER_ID", parts[1]);
-                            break;
-                        case "XP_GAINED":
-                            resultsDict.Add("XP_GAINED", parts[1]);
-                            break;
-                        case "LEVEL_UP":
-                            resultsDict.Add("LEVEL_UP", parts[1]);
-                            break;
-                        case "CHARACTER_LEVEL":
-                            resultsDict.Add("CHARACTER_LEVEL", parts[1]);
-                            break;
-                        default:
-                            Terminal.Output("Lakea: Unrecognised Property in Training Results -> " + result);
-                            Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Property in Training Results -> " + result);
-                            break;
-                    }
-                }
-                return resultsDict;
-            }
-            catch(Exception ex)
-            {
-                Terminal.Output("Lakea: Training Result Load Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
                 return new Dictionary<string, string>();
             }

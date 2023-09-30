@@ -158,7 +158,7 @@ namespace Battle_Similator.Models
 
         public void SaveBattleResultData(EncounterResult result)
         {
-            string filePath = path + "..\\BATTLERESULT.txt";
+            string filePath = path + "..\\RESULT.txt";
             string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
                 "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained + 
                 "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
@@ -167,10 +167,19 @@ namespace Battle_Similator.Models
 
         public void SaveTrainingResultData(Character character, int xpGained, bool levelUp)
         {
-            string filePath = path + "..\\TRAININGRESULT.txt";
+            string filePath = path + "..\\RESULT.txt";
             string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nXP_GAINED:" + xpGained + "\nLEVEL_UP:" + 
                 levelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + character.Level;
             File.WriteAllText (filePath, resultString);
+        }
+
+        public void SaveResetData(Character character)
+        {
+            string filePath = path + "..\\RESULT.txt";
+            string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nCHARACTER_LEVEL:" + character.Level + "\nCHARACTER_XP:" +
+                character.XP + "\nCHARACTER_HP:" + character.HPMax + "\nCHARACTER_STR:" + character.Strength + "\nCHARACTER_DEX:" + character.Dexterity +
+                "\nCHARACTER_CON:" + character.Constitution;
+            File.WriteAllText(filePath , resultString);
         }
     }
 }

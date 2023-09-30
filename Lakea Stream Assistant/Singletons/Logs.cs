@@ -123,7 +123,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (!Directory.Exists(Environment.CurrentDirectory + "\\Logs"))
             {
                 Directory.CreateDirectory(Environment.CurrentDirectory + "\\Logs\\");
-                File.Create(currentFilePath);
+                File.Create(currentFilePath).Dispose();
             }
             else
             {

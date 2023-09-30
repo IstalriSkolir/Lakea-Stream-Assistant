@@ -47,8 +47,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 int dexMod = Int32.Parse(character["DEX"]) / 3;
                 int conMod = Int32.Parse(character["CON"]) / 3;
                 args.Add("Message", "@" + displayName + " -> LEVEL: " + character["LEVEL"] + ", XP: " + character["XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " +
-                    character["HP"] + ", STR: " + character["STR"] + "(+" + strMod + ")" + ", DEX: " + character["DEX"] + "(+" + dexMod + ")" + ", CON: " +
-                    character["CON"] + "(+" + conMod + ")");
+                    character["HP"] + ", STR: " + character["STR"] + "(+" + strMod + "), DEX: " + character["DEX"] + "(+" + dexMod + "), CON: " + character["CON"] +
+                    "(+" + conMod + ")");
                 return args;
             }
             catch (Exception ex) 
@@ -61,14 +61,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 
         #region Run Battle Simulator
 
-        //Train a Character to gain XP
-        public void TrainCharacter(string accountID, string displayName)
+        //Call the Batlte Simulator to run another type of event passing in the event type and user data
+        public void Other(string eve, string accountID, string displayName)
         {
             try
             {
-                Terminal.Output("Lakea: Starting Battle Simulator -> CHARACTERTRAINING , " + accountID + ", " + displayName);
-                Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> CHARACTERTRAINING, " + accountID + ", " + displayName);
-                battleSimInfo.Arguments = "\"LAKEA\" \"CHARACTERTRAINING\" \"" + accountID + "\" \"" + displayName + "\"";
+                Terminal.Output("Lakea: Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
+                battleSimInfo.Arguments = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
                 battleSim.Start();
             }
             catch(Exception ex)
@@ -78,8 +78,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        //Call the Battle Simulator to run a monster encounter passing in monster strength and user data
-        public void MonsterBattle(string monsterStrength, string accountID, string displayName)
+        //Call the Battle Simulator to run an encounter passing in the encounter type and user data
+        public void Battle(string type, string accountID, string displayName)
         {
             try
             {
@@ -87,9 +87,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 int level = Int32.Parse(character["LEVEL"]);
                 if(level >= 5)
                 {
-                    Terminal.Output("Lakea: Starting Battle Simulator -> " + monsterStrength + ", " + accountID + ", " + displayName);
-                    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + monsterStrength + ", " + accountID + ", " + displayName);
-                    battleSimInfo.Arguments = "\"LAKEA\" \"" + monsterStrength + "\" \"" + accountID + "\" \"" + displayName + "\"";
+                    Terminal.Output("Lakea: Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
+                    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
+                    battleSimInfo.Arguments = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
                     battleSim.Start();
                 }
                 else
@@ -103,7 +103,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Battle Simulator Error -> " + ex.Message);
+                Terminal.Output("Lakea: Battle Simulator Error -> " + type + ", " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -117,15 +117,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             Process process = (Process)sender;
             int exitCode = process.ExitCode;
+            Terminal.Output("Lakea: Battle Simulator Ended");
+            Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
+            Dictionary<string, string> results = fileParser.GetResultData();
             switch (exitCode)
             {
                 case 0:
                     break;
                 case (int)ExitCode.Character_Training:
-                    trainingEnded();
+                    trainingEnded(results);
                     break;
                 case (int)ExitCode.Monster_Battle:
-                    monsterBattleEnded();
+                    monsterBattleEnded(results);
+                    break;
+                case (int)ExitCode.Character_Reset:
+                    characterResetEnded(results);
                     break;
                 default:
                     Terminal.Output("Lakea: Battle Simulator Error");
@@ -135,11 +141,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         }
 
         //Read the training results and send them to Twitch
-        private void trainingEnded()
+        private void trainingEnded(Dictionary<string, string> results)
         {
-            Terminal.Output("Lakea: Battle Simulator Ended");
-            Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
-            Dictionary<string, string> results = fileParser.GetTrainingData();
             if(results.Count > 0)
             {
                 Dictionary<string, string> args = new Dictionary<string, string>();
@@ -149,16 +152,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     message = message.Substring(0, message.Length - 1) + ", they've reached level " + results["CHARACTER_LEVEL"] + "!";
                 }
                 args.Add("Message", message);
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Training, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Training", "Battle_Simulator_Training", args: args));
+                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Training", "Battle_Simulator_Training", args: args));
             }
         }
 
         //Read the battle results and send them to Twitch
-        private void monsterBattleEnded()
+        private void monsterBattleEnded(Dictionary<string, string> results)
         {
-            Terminal.Output("Lakea: Battle Simulator Ended");
-            Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
-            Dictionary<string, string> results = fileParser.GetBattleData();
             if (results.Count > 0)
             {
                 Dictionary<string, string> args = new Dictionary<string, string>();
@@ -179,6 +179,29 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " died while fighting a " + monster + "! They should have trained with me more!");
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+            }
+        }
+
+        //Read the reset results and send them to Twitch
+        private void characterResetEnded(Dictionary<string, string> results)
+        {
+            if(results.Count > 0)
+            {
+                Dictionary<string, string> args = new Dictionary<string, string>();
+                int level = Int32.Parse(results["CHARACTER_LEVEL"]);
+                int nextLevel = 0;
+                for (int count = 1; count <= level; count++)
+                {
+                    nextLevel += count * 30;
+                }
+                int strMod = Int32.Parse(results["CHARACTER_STR"]) / 3;
+                int dexMod = Int32.Parse(results["CHARACTER_DEX"]) / 3;
+                int conMod = Int32.Parse(results["CHARACTER_CON"]) / 3;
+                string message = "@" + results["CHARACTER_NAME"] + " is starting their training afresh! LEVEL: " + results["CHARACTER_LEVEL"] + ", XP: " +
+                    results["CHARACTER_XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " + results["CHARACTER_HP"] + ", STR: " + results["CHARACTER_STR"] + "(+" +
+                    strMod + "), DEX: " + results["CHARACTER_DEX"] + "(+" + dexMod + "), CON: " + results["CHARACTER_CON"] + "(+" + conMod + ")";
+                args.Add("Message", message);
+                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
             }
         }
 

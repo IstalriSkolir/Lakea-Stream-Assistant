@@ -1,6 +1,6 @@
 ﻿using Battle_Similator.Models;
 using Battle_Similator.Models.Encounters;
-using Battle_Similator.Models.Training;
+using Battle_Similator.Models.Misc;
 
 namespace Battle_Similator
 {
@@ -45,6 +45,11 @@ namespace Battle_Similator
                         MonsterEncounter randomMonster = new MonsterEncounter(io);
                         randomMonster.Start("RANDOM", args[2], args[3]);
                         exitCode((int)ExitCode.Monster_Battle);
+                        break;
+                    case "CHARACTERRESET":
+                        CharacterReset characterReset = new CharacterReset(io);
+                        characterReset.Start(args[2], args[3]);
+                        exitCode((int)ExitCode.Character_Reset);
                         break;
                     default:
                         Environment.Exit((int)ExitCode.Invalid_Args);

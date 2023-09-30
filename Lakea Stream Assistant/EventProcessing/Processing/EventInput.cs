@@ -36,10 +36,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 EventStats.NewEvent(eve);
                 switch (eve.Type)
                 {
-                    case EventType.Battle_Simulator_Training:
-                        lakea.NewSupportingApplicationEvent((EventItem)eve);
-                        break;
                     case EventType.Battle_Simulator_Encounter:
+                    case EventType.Battle_Simulator_Nonencounter:
                         lakea.NewSupportingApplicationEvent((EventItem)eve);
                         break;
                     case EventType.Lakea_Timer_Start:

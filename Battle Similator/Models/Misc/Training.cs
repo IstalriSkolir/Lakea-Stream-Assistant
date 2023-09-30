@@ -1,6 +1,6 @@
 ﻿using Battle_Similator.Models.Creatures;
 
-namespace Battle_Similator.Models.Training
+namespace Battle_Similator.Models.Misc
 {
     public class Training
     {
