@@ -26,7 +26,7 @@
         <Name>Post Discord</Name>
         <Source>Twitch</Source>
         <Type>Twitch_Command</Type>
-        <ID>discord</ID>
+        <ID>1111</ID>
       </EventDetails>
       <EventTarget>
         <Target>Twtch</Target>
@@ -45,7 +45,7 @@
         <Name>Post Backloggery</Name>
         <Source>Twih</Source>
         <Type>Twit_Command</Type>
-        <ID>backloggery</ID>
+        <ID>1111</ID>
       </EventDetails>
       <EventTarget>
         <Target>Twitch</Target>

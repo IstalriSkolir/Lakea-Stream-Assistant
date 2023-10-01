@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Lakea Stream Assistant": {
-      "commandName": "Project",
-      "commandLineArgs": "Config.xml"
+      "commandName": "Project"
     }
   }
 }
