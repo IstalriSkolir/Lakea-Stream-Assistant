@@ -1,5 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Exceptions;
+using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
 using System.IO;
 using System.Reflection;
@@ -10,6 +11,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
     public class ValidateConfig
     {
         private EnumConverter enums;
+        private List<string> ids;
         private List<string> enumStrings;
         private List<string> nullableOrZero;
         private List<string> errors;
@@ -19,6 +21,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
         public ValidateConfig()
         {
             enums = new EnumConverter();
+            ids = new List<string>();
             enumStrings = new List<string>
             {
                 "Source",
@@ -111,6 +114,10 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                         {
                             checkEnums(obj, property, path);
                         }
+                        else if ("ID".Equals(property.Name))
+                        {
+                            checkIDList(obj, property, path);
+                        }
                     }
                     else if (property.PropertyType == typeof(int) && (int)property.GetValue(obj) == 0 && !nullableOrZero.Contains(property.Name))
                     {
@@ -122,6 +129,10 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                     }
                     else if (property.PropertyType.Assembly.FullName.Contains("Lakea Stream Assistant") && property.GetType().GetProperties().Length > 0)
                     {
+                        if ("Callback".Equals(property.Name))
+                        {
+                            checkForCallbackLoop((ConfigEventEventTargetCallback)property.GetValue(obj), path);
+                        }
                         checkObjectAndChildren(property.GetValue(obj), path + "." + property.Name, property.Name);
                     }
                 }
@@ -157,6 +168,27 @@ namespace Lakea_Stream_Assistant.Models.Configuration
             {
                 errorFound(path + "." + property.Name + " could not be parsed into Enum type");
             }
+        }
+
+        //Check that each ID is unique and isn't duplicated
+        private void checkIDList(object obj, PropertyInfo property, string path)
+        {
+            string id = (string)property.GetValue(obj);
+            if (ids.Contains(id))
+            {
+                errorFound(path + "." + property.Name + " has ID that already exists: " + id);
+            }
+            else
+            { 
+                ids.Add(id);
+            }
+        }
+
+        //Todo
+        //Check for Callback loop
+        private void checkForCallbackLoop(ConfigEventEventTargetCallback callback, string path)
+        {
+
         }
 
         //Sets the validaty of the config to false and adds an error messages to the error list
