@@ -76,11 +76,14 @@ namespace Lakea_Stream_Assistant.Enums
                 case "obsloopsources": return EventGoal.OBS_Loop_Sources;
                 case "obschangescene": return EventGoal.OBS_Change_Scene;
                 case "twitchsendchatmessage": return EventGoal.Twitch_Send_Chat_Message;
+                case "twitchsendchatmessagelist": return EventGoal.Twitch_Send_Chat_Message_List;
+                case "twitchsendrandomchatmessage": return EventGoal.Twitch_Send_Random_Chat_Message;
                 case "twitchsendwhispermessage": return EventGoal.Twitch_Send_Whisper_Message;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventGoal'");
             }
         }
-
+        //Twitch_Send_Chat_Message_List,
+        //Twitch_Send_Random_Chat_Message,
         #endregion
 
         #region Lakea Enums

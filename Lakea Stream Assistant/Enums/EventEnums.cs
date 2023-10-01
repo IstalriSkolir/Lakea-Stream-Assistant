@@ -49,6 +49,7 @@
         OBS_Change_Scene,
         Twitch_Send_Chat_Message,
         Twitch_Send_Chat_Message_List,
+        Twitch_Send_Random_Chat_Message,
         Twitch_Send_Whisper_Message
     }
 }
