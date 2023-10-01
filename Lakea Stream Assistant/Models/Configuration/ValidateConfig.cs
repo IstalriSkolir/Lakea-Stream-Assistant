@@ -131,7 +131,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                     {
                         if ("Callback".Equals(property.Name))
                         {
-                            checkForCallbackLoop((Callbacks)property.GetValue(obj), path);
+                            checkForCallbackLoop((ConfigEventEventTargetCallback)property.GetValue(obj), path);
                         }
                         checkObjectAndChildren(property.GetValue(obj), path + "." + property.Name, property.Name);
                     }
@@ -186,7 +186,7 @@ namespace Lakea_Stream_Assistant.Models.Configuration
 
         //Todo
         //Check for Callback loop
-        private void checkForCallbackLoop(Callbacks callback, string path)
+        private void checkForCallbackLoop(ConfigEventEventTargetCallback callback, string path)
         {
 
         }
