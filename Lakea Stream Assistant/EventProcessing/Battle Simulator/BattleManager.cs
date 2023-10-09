@@ -181,6 +181,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                         break;
                 }
             }
+            else
+            {
+                active = false;
+            }
         }
 
         //Read the training results and send them to Twitch
