@@ -1,8 +1,8 @@
 Abilities:
 
-Str - Used to calculate damage dealth, 1dStr Mod + ((Your level - Their level) / 3), minimum of 1
+Str - Used to calculate damage dealt, total = math.round(1dStrMod * (math.sqrt(strikerlevel / defenderlevel)))
 
-Dex - Used to calculate who hits who, 1d20 + Dex Mod, whoever rolls higher strikes the other
+Dex - Used to calculate who hits who, range = Dex1 + Dex2, ran = 1drange, if ran < Dex1 then Dex1 hits, else Dex2 hits
 
 Con - Used to calculate new health, health increase every level by 1dCon Mod
 

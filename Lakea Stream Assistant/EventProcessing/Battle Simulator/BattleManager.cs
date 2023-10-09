@@ -1,11 +1,11 @@
-﻿using Lakea_Stream_Assistant.Enums;
+﻿using Battle_Similator.Models.Creatures;
+using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection.Emit;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 {
@@ -32,6 +32,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             this.battleSim.StartInfo = battleSimInfo;
             this.battleSim.EnableRaisingEvents = true;
             this.battleSim.Exited += battleSimulatorExited;
+            Other("ENVIRONMENTRESET", "NA", "NA");
         }
 
         //Get the character sheet of a user
@@ -82,18 +83,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 Terminal.Output("Lakea: Train Item Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
-            //try
-            //{
-            //    Terminal.Output("Lakea: Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
-            //    Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + eve + ", " + accountID + ", " + displayName);
-            //    battleSimInfo.Arguments = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
-            //    battleSim.Start();
-            //}
-            //catch(Exception ex)
-            //{
-            //    Terminal.Output("Lakea: Train Character Error -> " + ex.Message);
-            //    Logs.Instance.NewLog(LogLevel.Error, ex);
-            //}
         }
 
         //Add a battle to the Battle Sim Queue
@@ -126,31 +115,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 Terminal.Output("Lakea: Battle Item Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
-            //try
-            //{
-            //    Dictionary<string,string> character = fileParser.GetCharacterData(accountID, displayName);
-            //    int level = Int32.Parse(character["LEVEL"]);
-            //    if(level >= 5)
-            //    {
-            //        Terminal.Output("Lakea: Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
-            //        Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + type + ", " + accountID + ", " + displayName);
-            //        battleSimInfo.Arguments = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
-            //        battleSim.Start();
-            //    }
-            //    else
-            //    {
-            //        Dictionary<string, string> args = new Dictionary<string, string>
-            //        {
-            //            { "Message", "Your not a high enough level yet @" + displayName + "! Train with me some more before you get yourself killed!" }
-            //        };
-            //        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Terminal.Output("Lakea: Battle Simulator Error -> " + type + ", " + ex.Message);
-            //    Logs.Instance.NewLog(LogLevel.Error, ex);
-            //}
         }
 
         //Run the Battle Simulator
@@ -182,34 +146,40 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             Process process = (Process)sender;
             int exitCode = process.ExitCode;
-            Terminal.Output("Lakea: Battle Simulator Ended");
-            Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
-            Dictionary<string, string> results = fileParser.GetResultData();
-            if(queue.Count > 0)
+            if(exitCode != 0)
             {
-                runBattleSimulator();
-            }
-            else
-            {
-                active = false;
-            }
-            switch (exitCode)
-            {
-                case 0:
-                    break;
-                case (int)ExitCode.Character_Training:
-                    trainingEnded(results);
-                    break;
-                case (int)ExitCode.Monster_Battle:
-                    monsterBattleEnded(results);
-                    break;
-                case (int)ExitCode.Character_Reset:
-                    characterResetEnded(results);
-                    break;
-                default:
-                    Terminal.Output("Lakea: Battle Simulator Error");
-                    Logs.Instance.NewLog(LogLevel.Error, "Battle Simulator Error Code -> " + exitCode + ", " + (ExitCode)exitCode);
-                    break;
+                Terminal.Output("Lakea: Battle Simulator Ended");
+                Logs.Instance.NewLog(LogLevel.Info, "Battle Simulator Ended");
+                Dictionary<string, string> results = fileParser.GetResultData();
+                if (queue.Count > 0)
+                {
+                    runBattleSimulator();
+                }
+                else
+                {
+                    active = false;
+                }
+                switch (exitCode)
+                {
+                    case 0:
+                        break;
+                    case (int)ExitCode.Character_Training:
+                        trainingEnded(results);
+                        break;
+                    case (int)ExitCode.Monster_Battle:
+                        monsterBattleEnded(results);
+                        break;
+                    case (int)ExitCode.Boss_Battle:
+                        bossBattleEnded(results);
+                        break;
+                    case (int)ExitCode.Character_Reset:
+                        characterResetEnded(results);
+                        break;
+                    default:
+                        Terminal.Output("Lakea: Battle Simulator Error");
+                        Logs.Instance.NewLog(LogLevel.Error, "Battle Simulator Error Code -> " + exitCode + ", " + (ExitCode)exitCode);
+                        break;
+                }
             }
         }
 
@@ -252,6 +222,39 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " died while fighting a " + monster + "! They should have trained with me more!");
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+            }
+        }
+
+        //Read the boss battle results and process the events
+        private void bossBattleEnded(Dictionary<string, string> results)
+        {
+            if(results.Count > 0)
+            {
+                Dictionary<string, string> args = new Dictionary<string, string>();
+                TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                string boss = results["MONSTER_NAME"].Replace("_", " ");
+                boss = textInfo.ToTitleCase(boss.ToLower());
+                string eventName = "";
+                string eventID = "";
+                if ("TRUE".Equals(results["ALL_BOSSES_BEATEN"]))
+                {
+                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! All the bosses have been defeated!");
+                    eventID = "All_Bosses_Defeated";
+                    eventName = "All Bosses Defeated";
+                }
+                else if ("TRUE".Equals(results["BOSS_BEATEN"]))
+                {
+                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
+                    eventID = "Boss_Defeated";
+                    eventName = "Boss Defeated";
+                }
+                else
+                {
+                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
+                    eventID = "Boss_Battle_Ended";
+                    eventName = "Boss Battle Ended";
+                }
+                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
             }
         }
 

@@ -1,6 +1,7 @@
-﻿using Battle_Similator.Models;
-using Battle_Similator.Models.Encounters;
-using Battle_Similator.Models.Misc;
+﻿using Battle_Similator.Models.Encounters;
+using Battle_Similator.Models.NonEncounter;
+using Battle_Similator.Models.NonEncounters;
+using Battle_Similator.Models.Resources;
 
 namespace Battle_Similator
 {
@@ -12,7 +13,7 @@ namespace Battle_Similator
             {
                 Environment.Exit((int)ExitCode.No_Args_Given);
             }
-            else if(args.Length < 4)
+            else if(args.Length < 4 && args[1] != "ENVIRONMENTRESET")
             {
                 Environment.Exit((int)ExitCode.Not_Enough_Args);
             }
@@ -21,6 +22,11 @@ namespace Battle_Similator
                 IO io = new IO(args[0]);
                 switch(args[1])
                 {
+                    case "ENVIRONMENTRESET":
+                        EnvironmentReset reset = new EnvironmentReset(io, args[0]);
+                        reset.Start();
+                        exitCode(0);
+                        break;
                     case "CHARACTERTRAINING":
                         Training trainer = new Training(io);
                         trainer.Start(args[2], args[3]);
@@ -45,6 +51,11 @@ namespace Battle_Similator
                         MonsterEncounter randomMonster = new MonsterEncounter(io);
                         randomMonster.Start("RANDOM", args[2], args[3]);
                         exitCode((int)ExitCode.Monster_Battle);
+                        break;
+                    case "BOSSBATTLE":
+                        BossEncounter bossEncounter = new BossEncounter(io, args[0]);
+                        bossEncounter.Start(args[2], args[3]);
+                        exitCode((int)ExitCode.Boss_Battle);
                         break;
                     case "CHARACTERRESET":
                         CharacterReset characterReset = new CharacterReset(io);

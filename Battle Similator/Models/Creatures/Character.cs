@@ -4,8 +4,10 @@
     {
         private int xp;
         private int nextLevel;
+        private bool resetOnDeath = true;
 
         public int XP { get { return xp; } }
+        public bool ResetOnDeath { get { return resetOnDeath; } set { resetOnDeath = value; } }
 
         public Character(string name, string id)
         {
@@ -44,7 +46,6 @@
             this.hp -= damage;
             if (this.hp <= 0)
             {
-                this.isAlive = false;
                 death();
             }
         }
@@ -97,15 +98,19 @@
 
         private void death()
         {
-            level = 1;
-            xp = 450;
-            hpMax = 20;
-            strength = 9;
-            dexterity = 9;
-            constitution = 9;
-            for(int count = 0; count < 4; count++)
+            isAlive = false;
+            if (resetOnDeath)
             {
-                levelUp();
+                level = 1;
+                xp = 450;
+                hpMax = 20;
+                strength = 9;
+                dexterity = 9;
+                constitution = 9;
+                for (int count = 0; count < 4; count++)
+                {
+                    levelUp();
+                }
             }
         }
     }
