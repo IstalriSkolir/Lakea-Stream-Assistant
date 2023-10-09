@@ -4,6 +4,22 @@
     <LogLevel>Warning</LogLevel>
     <TerminalRefreshRate>1</TerminalRefreshRate>
     <Commands>
+      <Exit>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Exit>
+      <Process>
+        <Enabled>true</Enabled>
+        <ModOnly>true</ModOnly>
+      </Process>
+      <Quotes>
+        <Enabled>true</Enabled>
+        <ModOnly>false</ModOnly>
+      </Quotes>
+      <ResetTerminal>
+        <Enabled>true</Enabled>
+        <ModOnly>true</ModOnly>
+      </ResetTerminal>
       <ShoutOut>
         <Enabled>true</Enabled>
         <ModOnly>true</ModOnly>
@@ -12,14 +28,6 @@
         <Enabled>true</Enabled>
         <ModOnly>false</ModOnly>
       </Status>
-      <Quotes>
-        <Enabled>true</Enabled>
-        <ModOnly>false</ModOnly>
-      </Quotes>
-      <Exit>
-        <Enabled>true</Enabled>
-        <ModOnly>false</ModOnly>
-      </Exit>
     </Commands>
   </Settings>
   <OBS>
@@ -160,7 +168,7 @@
           </Arg>
           <Arg>
             <Key>BitsAmount</Key>
-            <Value>100</Value>
+            <Value>2</Value>
           </Arg>
         </Args>
         <Callback>
@@ -571,11 +579,11 @@
         <Args>
           <Arg>
             <Key>Start_Delay</Key>
-            <Value>8</Value>
+            <Value>8000</Value>
           </Arg>
           <Arg>
             <Key>Timer_Delay</Key>
-            <Value>5</Value>
+            <Value>5000</Value>
           </Arg>
           <Arg>
             <Key>Source1</Key>
@@ -759,6 +767,181 @@
         <Duration>0</Duration>
       </EventTarget>
     </Event>
+    <Event>
+      <EventDetails>
+        <Name>Random Twitch Message</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>randommessage</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Random_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message1</Key>
+            <Value>Test 1</Value>
+          </Arg>
+          <Arg>
+            <Key>Message2</Key>
+            <Value>Test 2</Value>
+          </Arg>
+          <Arg>
+            <Key>Message3</Key>
+            <Value>Test 3</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Weak Monster</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>weakmonster</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Encounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>WEAKMONSTER</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Normal Monster</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>normalmonster</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Encounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>NORMALMONSTER</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Hard Monster</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>hardmonster</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Encounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>HARDMONSTER</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Random Monster</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>randommonster</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Encounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>RANDOMMONSTER</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Boss Battle</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>bossbattle</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Encounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>BOSSBATTLE</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Character Sheet</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>character</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>battlesimulatorcharactersheet</Goal>
+        <Args>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Character Training</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>train</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Nonencounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>CHARACTERTRAINING</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+    <Event>
+      <EventDetails>
+        <Name>Battle Simulator Character Reset</Name>
+        <Source>Twitch</Source>
+        <Type>Twitch_Command</Type>
+        <ID>characterreset</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Battle_Simulator</Target>
+        <Goal>Battle_Simulator_Nonencounter</Goal>
+        <Args>
+          <Arg>
+            <Key>Type</Key>
+            <Value>CHARACTERRESET</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
 
     <!--Twitch Raid Events-->
 
@@ -795,6 +978,28 @@
           <Arg>
             <Key>Message</Key>
             <Value>We're being Wuffer raided by {RaiderCount} wuffers! Welcome them all in!</Value>
+          </Arg>
+        </Args>
+        <Duration>0</Duration>
+      </EventTarget>
+    </Event>
+
+    <!--OBS Events-->
+
+    <Event>
+      <EventDetails>
+        <Name>OBS Changed Scene</Name>
+        <Source>OBS</Source>
+        <Type>OBS_Scene_Changed</Type>
+        <ID>Materies POV</ID>
+      </EventDetails>
+      <EventTarget>
+        <Target>Twitch</Target>
+        <Goal>Twitch_Send_Chat_Message</Goal>
+        <Args>
+          <Arg>
+            <Key>Message</Key>
+            <Value>I know when OBS is changing scene!</Value>
           </Arg>
         </Args>
         <Duration>0</Duration>

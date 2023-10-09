@@ -94,6 +94,10 @@
                 hpMax += rand.Next(1, ConstitutionMod);
             }
             calculateNextLevel();
+            if(xp >= nextLevel)
+            {
+                levelUp();
+            }
         }
 
         private void death()
