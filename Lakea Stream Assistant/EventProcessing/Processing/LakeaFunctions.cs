@@ -16,6 +16,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private DefaultCommands commands;
         private Dictionary<string, EventItem> callbacks;
         private Dictionary<string, EventItem> timers;
+        private Dictionary<string, EventItem> applications;
 
         //Contructor stores list of events to check against when it receives a new event
         public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
@@ -26,6 +27,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             this.commands = commands;
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
+            applications = new Dictionary<string, EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -42,6 +44,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 break;
                             case EventType.Lakea_Timer_Start:
                                 timers.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Battle_Simulator_Encounter:
+                            case EventType.Battle_Simulator_Nonencounter:
+                                applications.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
@@ -127,7 +133,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                processer.ProcessEvent(eve);
+                if (applications.ContainsKey(eve.ID))
+                {
+                    EventItem item = passArgs.GetEventArgs(applications[eve.ID], eve);
+                    if (item != null)
+                    {
+                        processer.ProcessEvent(item);
+                    }
+                }
+                else
+                {
+                    processer.ProcessEvent(eve);
+                }
             }
             catch(Exception ex)
             {

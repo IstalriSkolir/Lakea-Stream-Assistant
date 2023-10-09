@@ -2302,6 +2302,9 @@
       "Battle Similator/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "System.Drawing.Common": "7.0.0"
+        },
         "compile": {
           "bin/placeholder/Battle Similator.dll": {}
         },

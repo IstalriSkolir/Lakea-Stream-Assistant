@@ -1,6 +1,7 @@
 ﻿using Battle_Similator.Models.Creatures;
+using Battle_Similator.Models.Resources;
 
-namespace Battle_Similator.Models.Misc
+namespace Battle_Similator.Models.NonEncounters
 {
     public class Training
     {
@@ -18,8 +19,10 @@ namespace Battle_Similator.Models.Misc
             Character character = io.LoadCharacterData(characterID, characterName);
             int xpGained = (random.Next(1, 7) * 5) + ((character.Level / 2) * 5);
             bool levelUp = character.IncreaseXP(xpGained);
+            string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nXP_GAINED:" + xpGained + "\nLEVEL_UP:" +
+                levelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + character.Level;
             io.SaveCharacterData(character);
-            io.SaveTrainingResultData(character, xpGained, levelUp);
+            io.SaveResultData(resultString);
         }
     }
 }

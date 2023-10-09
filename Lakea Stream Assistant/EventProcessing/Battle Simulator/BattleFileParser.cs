@@ -158,13 +158,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
-                string[] resultsArray = File.ReadAllLines(resultPath + "RESULT.txt");
+                string[] resultsArray = File.ReadAllLines(resultPath + "Output\\RESULT.txt");
                 Dictionary<string, string> resultsDict = new Dictionary<string, string>();
                 foreach (string result in resultsArray)
                 {
                     string[] parts = result.Split(":");
                     switch (parts[0])
                     {
+                        case "BOSS_BEATEN":
+                            resultsDict.Add("BOSS_BEATEN", parts[1]);
+                            break;
+                        case "ALL_BOSSES_BEATEN":
+                            resultsDict.Add("ALL_BOSSES_BEATEN", parts[1]);
+                            break;
                         case "CHARACTER_CON":
                             resultsDict.Add("CHARACTER_CON", parts[1]);
                             break;

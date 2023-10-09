@@ -6,13 +6,13 @@
 
         public int XPValue { get { return xpValue; } }
 
-        public Monster(string name, string id, int level, int hp, int strength, int dexterity, int contitution)
+        public Monster(string name, string id, int level, int hp, int hpMax, int strength, int dexterity, int contitution)
         {
             this.name = name;
             this.id = id;
             this.level = level;
             this.hp = hp;
-            this.hpMax = hp;
+            this.hpMax = hpMax;
             this.strength = strength;
             this.dexterity = dexterity;
             this.constitution = contitution;

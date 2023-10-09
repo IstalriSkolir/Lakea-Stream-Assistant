@@ -1,7 +1,6 @@
 ﻿using Battle_Similator.Models.Creatures;
-using Battle_Similator.Models.Encounters;
 
-namespace Battle_Similator.Models
+namespace Battle_Similator.Models.Resources
 {
     public class IO
     {
@@ -9,11 +8,11 @@ namespace Battle_Similator.Models
 
         public IO(string config)
         {
-            if(config == "LAKEA")
+            if (config == "LAKEA")
             {
                 path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\";
             }
-            else if(config == "DEBUG")
+            else if (config == "DEBUG")
             {
                 path = Environment.CurrentDirectory + "\\Creatures\\";
             }
@@ -23,12 +22,14 @@ namespace Battle_Similator.Models
             }
         }
 
+        #region Character Data
+
         public void SaveCharacterData(Character character)
         {
             try
             {
                 string filePath = path + "Characters\\" + character.ID + ".txt";
-                string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax + 
+                string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax +
                     "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution;
                 File.WriteAllText(filePath, characterString);
             }
@@ -43,14 +44,14 @@ namespace Battle_Similator.Models
             try
             {
                 string filePath = path + "Characters\\" + id + ".txt";
-                if(File.Exists(filePath))
+                if (File.Exists(filePath))
                 {
                     string[] lines = File.ReadAllLines(filePath);
                     Dictionary<string, string> props = new Dictionary<string, string>();
-                    foreach(string line in lines)
+                    foreach (string line in lines)
                     {
                         string[] parts = line.Split(":");
-                        switch(parts[0])
+                        switch (parts[0])
                         {
                             case "NAME":
                                 props.Add("NAME", parts[1]);
@@ -80,20 +81,24 @@ namespace Battle_Similator.Models
                                 break;
                         }
                     }
-                    return new Character(props["NAME"], props["ID"], Int32.Parse(props["XP"]), Int32.Parse(props["LEVEL"]), Int32.Parse(props["HP"]), Int32.Parse(props["STR"]),
-                        Int32.Parse(props["DEX"]), Int32.Parse(props["CON"]));
+                    return new Character(props["NAME"], props["ID"], int.Parse(props["XP"]), int.Parse(props["LEVEL"]), int.Parse(props["HP"]), int.Parse(props["STR"]),
+                        int.Parse(props["DEX"]), int.Parse(props["CON"]));
                 }
                 else
                 {
                     return new Character(name, id);
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Environment.Exit((int)ExitCode.IO_Load_Error);
                 return null;
             }
         }
+
+        #endregion
+
+        #region Monster Data
 
         public string[] LoadMonstersByStrength(string strength)
         {
@@ -102,24 +107,86 @@ namespace Battle_Similator.Models
                 string filepath = path + "Monsters\\" + strength + "MONSTERS.txt";
                 return File.ReadAllLines(filepath);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Environment.Exit((int)ExitCode.IO_Load_Error);
                 return null;
             }
         }
 
-        public Monster LoadMonsterData(string id)
+        public string[] LoadBossList()
         {
             try
             {
-                string filePath = path + "Monsters\\" + id + ".txt";
+                string filepath = path + "Bosses\\BOSSLIST.txt";
+                return File.ReadAllLines(filepath);
+            }
+            catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Load_Error);
+                return null;
+            }
+        }
+
+        public bool CurrentBossFileExists()
+        {
+            try
+            {
+                return File.Exists(path + "Bosses\\CURRENTBOSS.txt");
+            }
+            catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Load_Error);
+                return false;
+            }
+        }
+
+        public Dictionary<string, string> LoadBossProfilePicturePaths()
+        {
+            try
+            {
+                string[] pathsArray = File.ReadAllLines(path + "Bosses\\BOSSPROFILEPICPATHS.txt");
+                Dictionary<string, string> pathsDict = new Dictionary<string, string>();
+                foreach (string path in pathsArray)
+                {
+                    string[] parts = path.Split(":", 2);
+                    pathsDict.Add(parts[0], parts[1]);
+                }
+                return pathsDict;
+            }
+            catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Load_Error);
+                return null;
+            }
+        }
+
+        public void SaveCurrentBossData(Monster boss)
+        {
+            try
+            {
+                string filePath = path + "Bosses\\CURRENTBOSS.txt";
+                string bossString = "NAME:" + boss.Name + "\nID:" + boss.ID + "\nLEVEL:" + boss.Level + "\nCURRENT_HP:" + boss.HP + "\nMAX_HP:" + boss.HPMax +
+                    "\nSTR:" + boss.Strength + "\nDEX:" + boss.Dexterity + "\nCON:" + boss.Constitution;
+                File.WriteAllText(filePath, bossString);
+            }
+            catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Save_Error);
+            }
+        }
+
+        public Monster LoadNPCData(string type, string id)
+        {
+            try
+            {
+                string filePath = path + type + "\\" + id + ".txt";
                 string[] lines = File.ReadAllLines(filePath);
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (string line in lines)
                 {
                     string[] parts = line.Split(":");
-                    switch(parts[0])
+                    switch (parts[0])
                     {
                         case "NAME":
                             props.Add("NAME", parts[1]);
@@ -132,6 +199,12 @@ namespace Battle_Similator.Models
                             break;
                         case "HP":
                             props.Add("HP", parts[1]);
+                            break;
+                        case "CURRENT_HP":
+                            props.Add("CURRENT_HP", parts[1]);
+                            break;
+                        case "MAX_HP":
+                            props.Add("MAX_HP", parts[1]);
                             break;
                         case "STR":
                             props.Add("STR", parts[1]);
@@ -146,8 +219,16 @@ namespace Battle_Similator.Models
                             break;
                     }
                 }
-                return new Monster(props["NAME"], props["ID"], Int32.Parse(props["LEVEL"]), Int32.Parse(props["HP"]), Int32.Parse(props["STR"]), Int32.Parse(props["DEX"]),
-                    Int32.Parse(props["CON"]));
+                if ("Bosses".Equals(type))
+                {
+                    return new Monster(props["NAME"], props["ID"], int.Parse(props["LEVEL"]), int.Parse(props["CURRENT_HP"]), int.Parse(props["MAX_HP"]),
+                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]));
+                }
+                else
+                {
+                    return new Monster(props["NAME"], props["ID"], int.Parse(props["LEVEL"]), int.Parse(props["HP"]), int.Parse(props["HP"]),
+                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]));
+                }
             }
             catch (Exception)
             {
@@ -156,30 +237,23 @@ namespace Battle_Similator.Models
             }
         }
 
-        public void SaveBattleResultData(EncounterResult result)
+        #endregion
+
+        #region NonCreature Data
+
+        public void SaveResultData(string result)
         {
-            string filePath = path + "..\\RESULT.txt";
-            string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
-                "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained + 
-                "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
-            File.WriteAllText(filePath, resultString);
+            try
+            {
+                string filePath = path + "..\\Output\\RESULT.txt";
+                File.WriteAllText(filePath, result);
+            }
+            catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Save_Error);
+            }
         }
 
-        public void SaveTrainingResultData(Character character, int xpGained, bool levelUp)
-        {
-            string filePath = path + "..\\RESULT.txt";
-            string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nXP_GAINED:" + xpGained + "\nLEVEL_UP:" + 
-                levelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + character.Level;
-            File.WriteAllText (filePath, resultString);
-        }
-
-        public void SaveResetData(Character character)
-        {
-            string filePath = path + "..\\RESULT.txt";
-            string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nCHARACTER_LEVEL:" + character.Level + "\nCHARACTER_XP:" +
-                character.XP + "\nCHARACTER_HP:" + character.HPMax + "\nCHARACTER_STR:" + character.Strength + "\nCHARACTER_DEX:" + character.Dexterity +
-                "\nCHARACTER_CON:" + character.Constitution;
-            File.WriteAllText(filePath , resultString);
-        }
+        #endregion
     }
 }

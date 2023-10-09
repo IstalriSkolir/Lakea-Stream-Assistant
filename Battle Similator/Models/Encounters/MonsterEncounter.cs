@@ -1,4 +1,5 @@
 ﻿using Battle_Similator.Models.Creatures;
+using Battle_Similator.Models.Resources;
 
 namespace Battle_Similator.Models.Encounters
 {
@@ -20,8 +21,8 @@ namespace Battle_Similator.Models.Encounters
 
         private Encounter preEncounter(string monsterStrength, string characterID, string characterName)
         {
-            Monster monster = getMonster(monsterStrength);
             Character character = io.LoadCharacterData(characterID, characterName);
+            Monster monster = getMonster(monsterStrength);
             return new Encounter(character, monster, monsterStrength + "MONSTER");
         }
 
@@ -31,13 +32,16 @@ namespace Battle_Similator.Models.Encounters
             Random random = new Random();
             int index = random.Next(0, monsters.Length);
             string id = monsters[index];
-            return io.LoadMonsterData(id);
+            return io.LoadNPCData("Monsters", id);
         }
 
         private void postEncounter(EncounterResult result)
         {
+            string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
+                "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained +
+                "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
+            io.SaveResultData(resultString);
             io.SaveCharacterData(result.Character);
-            io.SaveBattleResultData(result);
         }
     }
 }
