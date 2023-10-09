@@ -7,12 +7,16 @@ namespace Lakea_Stream_Assistant.Models.Events
     public sealed class EventStats
     {
         private static uint baseCampEventCount = 0;
+        private static uint battleSimulatorEventCount = 0;
         private static uint lakeaEventCount = 0;
+        private static uint obsEventCount = 0;
         private static uint twitchEventCount = 0;
         private static uint totalEventCount = 0;
 
         public static uint BaseCampEventCount { get { return baseCampEventCount; } }
+        public static uint BattleSimulatorEventCount { get { return battleSimulatorEventCount; } }
         public static uint LakeaEventCount { get { return lakeaEventCount; } }
+        public static uint OBSEventCount {  get { return obsEventCount; } }
         public static uint TwitchEventCount { get {  return twitchEventCount; } }
         public static uint TotalEventCount { get { return totalEventCount; } }
 
@@ -22,7 +26,9 @@ namespace Lakea_Stream_Assistant.Models.Events
             switch (eve.Source)
             {
                 case EventSource.Base_Camp: incrementBaseCampEventCount(); break;
+                case EventSource.Battle_Simulator: incrementBattleSimulatorEventCount(); break;
                 case EventSource.Lakea: incrementLakeaEventCount(); break;
+                case EventSource.OBS: incrementOBSEventCount(); break;
                 case EventSource.Twitch: incrementTwitchEventCount(); break;
             }
         }
@@ -34,10 +40,24 @@ namespace Lakea_Stream_Assistant.Models.Events
             incrementTotalEventCount();
         }
 
+        //Increment the counter for Battle Simulator Events
+        private static void incrementBattleSimulatorEventCount()
+        {
+            battleSimulatorEventCount++;
+            incrementTotalEventCount();
+        }
+
         //Increment the counter for Lakea Events
         private static void incrementLakeaEventCount()
         {
             lakeaEventCount++;
+            incrementTotalEventCount();
+        }
+
+        //Increment the counter for OBS Events
+        private static void incrementOBSEventCount()
+        {
+            obsEventCount++;
             incrementTotalEventCount();
         }
 

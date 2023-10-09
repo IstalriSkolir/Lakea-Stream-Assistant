@@ -162,9 +162,11 @@ namespace Lakea_Stream_Assistant.Static
             writeText("Twitch PubSub ->", 2, 6);
             writeText("Events:", 2, 10);
             writeText("Twitch ->", 2, 12);
-            writeText("Lakea  ->", 2, 13);
-            writeText("Camp   ->", 2, 14);
-            writeText("Total  ->", 2, 15);
+            writeText("OBS    ->", 2, 13);
+            writeText("Lakea  ->", 2, 14);
+            writeText("Camp   ->", 2, 15);
+            writeText("Battle ->", 2, 16);
+            writeText("Total  ->", 2, 17);
         }
 
         //Write System Info to the console
@@ -200,7 +202,7 @@ namespace Lakea_Stream_Assistant.Static
             }
             catch (ThreadAbortException ex)
             {
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -220,9 +222,11 @@ namespace Lakea_Stream_Assistant.Static
             if(twitchPubSub) { writeText("Connected   ", 19, 6, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 6, ConsoleColor.Red); }
             writeText(EventStats.TwitchEventCount.ToString(), 12, 12, ConsoleColor.Cyan);
-            writeText(EventStats.LakeaEventCount.ToString(), 12, 13, ConsoleColor.Cyan);
-            writeText(EventStats.BaseCampEventCount.ToString(), 12, 14, ConsoleColor.Cyan);
-            writeText(EventStats.TotalEventCount.ToString(), 12, 15, ConsoleColor.Cyan);
+            writeText(EventStats.OBSEventCount.ToString(), 12, 13, ConsoleColor.Cyan);
+            writeText(EventStats.LakeaEventCount.ToString(), 12, 14, ConsoleColor.Cyan);
+            writeText(EventStats.BaseCampEventCount.ToString(), 12, 15, ConsoleColor.Cyan);
+            writeText(EventStats.BattleSimulatorEventCount.ToString(), 12, 16, ConsoleColor.Cyan);
+            writeText(EventStats.TotalEventCount.ToString(), 12, 17, ConsoleColor.Cyan);
         }
 
         //Updates system information values
