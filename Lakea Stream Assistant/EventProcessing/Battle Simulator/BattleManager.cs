@@ -48,10 +48,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 {
                     nextLevel += count * 30;
                 }
+                int xpNeeded = nextLevel - Int32.Parse(character["XP"]);
                 int strMod = Int32.Parse(character["STR"]) / 3;
                 int dexMod = Int32.Parse(character["DEX"]) / 3;
                 int conMod = Int32.Parse(character["CON"]) / 3;
-                args.Add("Message", "@" + displayName + " -> LEVEL: " + character["LEVEL"] + ", XP: " + character["XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " +
+                args.Add("Message", "@" + displayName + " -> LEVEL: " + character["LEVEL"] + ", XP: " + character["XP"] + ", XP_NEEDED: " + xpNeeded + ", HP: " +
                     character["HP"] + ", STR: " + character["STR"] + "(+" + strMod + "), DEX: " + character["DEX"] + "(+" + dexMod + "), CON: " + character["CON"] +
                     "(+" + conMod + ")");
                 return args;
