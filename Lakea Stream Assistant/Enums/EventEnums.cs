@@ -18,6 +18,7 @@
         Lakea_Timer_Start,
         Lakea_Timer_Fired,
         OBS_Scene_Changed,
+        OBS_Source_Active_Status,
         Twitch_Bits,
         Twitch_Command,
         Twitch_Follow,

@@ -1,6 +1,5 @@
 ﻿using OBSWebsocketDotNet;
 using OBSWebsocketDotNet.Types;
-using Lakea_Stream_Assistant.Models.OBS;
 using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
 using OBSWebsocketDotNet.Communication;
@@ -8,6 +7,7 @@ using Lakea_Stream_Assistant.Exceptions;
 using OBSWebsocketDotNet.Types.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.Resources.OBS;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -49,6 +49,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client.Connected += onConnect;
                 client.Disconnected += onDisconnect;
                 client.CurrentProgramSceneChanged += onSceneChanged;
+                client.SceneItemEnableStateChanged += onSourceActivityChanged;
                 client.ConnectAsync("ws://" + ip + ":" + port, password);
             }
             catch (Exception ex)
@@ -106,15 +107,20 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 Terminal.Output("OBS: Fetching Sources...");
                 Logs.Instance.NewLog(LogLevel.Info, "Fetching OBS Sources...");
-                IDictionary<string, int> sourceDict = new Dictionary<string, int>();
+                Dictionary<string, int> sourceIDDict = new Dictionary<string, int>();
+                Dictionary<int, string> sourceNameDict = new Dictionary<int, string>();
                 foreach (var scene in scenes)
                 {
                     var sceneSources = client.GetSceneItemList(scene.Name);
                     foreach (var source in sceneSources)
                     {
-                        if (!sourceDict.ContainsKey(source.SourceName))
+                        if (!sourceIDDict.ContainsKey(source.SourceName))
                         {
-                            sourceDict.Add(source.SourceName, source.ItemId);
+                            sourceIDDict.Add(source.SourceName, source.ItemId);
+                        }
+                        if (!sourceNameDict.ContainsKey(source.ItemId))
+                        {
+                            sourceNameDict.Add(source.ItemId, source.SourceName);
                         }
                     }
                 }
@@ -128,7 +134,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 }
                 Terminal.Output("OBS: Initialising Resources...");
                 Logs.Instance.NewLog(LogLevel.Info, "Initialising OBS Resources...");
-                resources = new OBSResources(sceneList, sourceDict, transitionNames);
+                resources = new OBSResources(sceneList, sourceIDDict, sourceNameDict,transitionNames);
                 Terminal.Output("OBS: Initialised OBS Resources");
                 Logs.Instance.NewLog(LogLevel.Info, "Initialised OBS Resources");
             }
@@ -167,6 +173,15 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("OBS: Scene Change -> " + e.SceneName);
             Logs.Instance.NewLog(LogLevel.Info, "OBS Scene Change -> " + e.SceneName);
             eventHandler.NewEvent(new OBSSceneChange(EventSource.OBS, EventType.OBS_Scene_Changed, e));
+        }
+
+        //Fired when a OBS source becomes active/inactive
+        private static void onSourceActivityChanged(object sender, SceneItemEnableStateChangedEventArgs e)
+        {
+            string sourceName = resources.GetSourceName(e.SceneItemId);
+            Terminal.Output("OBS: Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
+            Logs.Instance.NewLog(LogLevel.Info, "OBS Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
+            eventHandler.NewEvent(new OBSSourceActive(EventSource.OBS, EventType.OBS_Source_Active_Status, e, sourceName));
         }
 
         #endregion

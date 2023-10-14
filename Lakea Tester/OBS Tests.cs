@@ -1,4 +1,4 @@
-using Lakea_Stream_Assistant.Models.OBS;
+using Lakea_Stream_Assistant.Models.Resources.OBS;
 
 namespace Lakea_Tester
 {

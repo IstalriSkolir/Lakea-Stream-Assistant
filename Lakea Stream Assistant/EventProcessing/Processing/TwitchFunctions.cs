@@ -6,7 +6,7 @@ using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
-    // Functions for handling Twitch Events
+    //Functions for handling Twitch Events
     public class TwitchFunctions
     {
         private EventProcesser processer;
