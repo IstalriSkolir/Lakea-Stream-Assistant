@@ -1,6 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
-using Lakea_Stream_Assistant.Models.Resources;
+using Lakea_Stream_Assistant.Models.Resources.Lakea;
 using Lakea_Stream_Assistant.Singletons;
 using System.Runtime.InteropServices;
 

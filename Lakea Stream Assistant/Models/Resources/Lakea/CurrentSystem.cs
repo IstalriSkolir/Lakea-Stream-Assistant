@@ -1,4 +1,4 @@
-﻿namespace Lakea_Stream_Assistant.Models.Resources
+﻿namespace Lakea_Stream_Assistant.Models.Resources.Lakea
 {
     public class CurrentSystem
     {
@@ -15,7 +15,7 @@
         public string ProcessorSpeed { get { return info.ProcessorSpeed; } }
         public int ProcessorCount { get { return info.ProcessorCount; } }
         public int SystemMemory { get { return info.SystemMemory; } }
-        
+
         public string GetCPUUsage()
         {
             int cpu = diagnostics.GetCurrentCPUUsage();

@@ -55,6 +55,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     case EventType.OBS_Scene_Changed:
                         obs.NewChangedScene((OBSSceneChange)eve);
                         break;
+                    case EventType.OBS_Source_Active_Status:
+                        obs.NewSourceActiveStatus((OBSSourceActive)eve);
+                        break;
                     case EventType.Twitch_Bits:
                         twitch.NewBits((TwitchBits)eve);
                         break;

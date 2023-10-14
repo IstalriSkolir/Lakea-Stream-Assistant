@@ -1,7 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using System.Diagnostics;
 
-namespace Lakea_Stream_Assistant.Models.Resources
+namespace Lakea_Stream_Assistant.Models.Resources.Lakea
 {
     //This class stores information about a external application and controls it running
     public class ExternalProcess

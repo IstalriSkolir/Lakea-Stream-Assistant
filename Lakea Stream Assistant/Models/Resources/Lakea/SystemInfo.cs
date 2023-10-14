@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
-namespace Lakea_Stream_Assistant.Models.Resources
+namespace Lakea_Stream_Assistant.Models.Resources.Lakea
 {
     public class SystemInfo
     {
@@ -26,8 +26,8 @@ namespace Lakea_Stream_Assistant.Models.Resources
         }
 
         public string ProcessorName { get { return processorName; } }
-        public string ProcessorSpeed { get {  return processorSpeed; } }
-        public int ProcessorCount { get {  return processorCount; } }
+        public string ProcessorSpeed { get { return processorSpeed; } }
+        public int ProcessorCount { get { return processorCount; } }
         public int SystemMemory { get { return systemMemory; } }
     }
 }
