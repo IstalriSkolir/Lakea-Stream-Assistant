@@ -6,7 +6,7 @@
 
         public int XPValue { get { return xpValue; } }
 
-        public Monster(string name, string id, int level, int hp, int hpMax, int strength, int dexterity, int contitution)
+        public Monster(string name, string id, int level, int hp, int hpMax, int strength, int dexterity, int contitution, int xpValue)
         {
             this.name = name;
             this.id = id;
@@ -16,7 +16,7 @@
             this.strength = strength;
             this.dexterity = dexterity;
             this.constitution = contitution;
-            this.xpValue = level * 20;
+            this.xpValue = xpValue;
             this.isAlive = true;
             this.updateAbilityModifiers();
         }

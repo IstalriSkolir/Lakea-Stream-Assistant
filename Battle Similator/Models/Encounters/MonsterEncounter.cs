@@ -1,5 +1,6 @@
 ﻿using Battle_Similator.Models.Creatures;
 using Battle_Similator.Models.Resources;
+using System.Threading;
 
 namespace Battle_Similator.Models.Encounters
 {
@@ -37,6 +38,11 @@ namespace Battle_Similator.Models.Encounters
 
         private void postEncounter(EncounterResult result)
         {
+            if (result.Winner.Equals(result.Character.ID))
+            {
+                bool levelUp = result.Character.IncreaseXP(result.Monster.XPValue);
+                result.LevelUp = levelUp;
+            }
             string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
                 "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained +
                 "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;

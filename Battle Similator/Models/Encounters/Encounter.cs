@@ -34,8 +34,7 @@ namespace Battle_Similator.Models.Encounters
             }
             if (character.IsAlive)
             {
-                bool levelup = character.IncreaseXP(monster.XPValue);
-                return new EncounterResult(character, monster, encounterType, character.ID, monster.XPValue, levelup);
+                return new EncounterResult(character, monster, encounterType, character.ID, monster.XPValue);
             }
             else
             {

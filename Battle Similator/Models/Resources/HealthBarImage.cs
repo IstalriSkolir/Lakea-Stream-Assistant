@@ -45,19 +45,26 @@ namespace Battle_Similator.Models.Resources
 
         public void GenerateHealthBarImage(Monster boss)
         {
-            Bitmap healthBar = new Bitmap(imageWidth, imageHeight);
-            Graphics graphics = createGraphicsObject(healthBar);
-            Image profilePic = getProfileImage(boss.ID);
-            Image borderImage = getBorderImage();
-            float fillAmount = calculateFillAmount(boss.HP, boss.HPMax);
-            graphics = drawBackgroundGradient(graphics);
-            graphics = drawHealthBar(graphics, fillAmount);
-            graphics.DrawImage(borderImage, borderXPos, borderYPos);
-            graphics.DrawImage(profilePic, profileXPos, profileYPos);
-            graphics = drawNameAndLevel(graphics, boss);
-            healthBar.Save(path + "\\CurrentBossHealthBar.png");
-            graphics.Dispose();
-            healthBar.Dispose();
+            try
+            {
+                Bitmap healthBar = new Bitmap(imageWidth, imageHeight);
+                Graphics graphics = createGraphicsObject(healthBar);
+                Image profilePic = getProfileImage(boss.ID);
+                Image borderImage = getBorderImage();
+                float fillAmount = calculateFillAmount(boss.HP, boss.HPMax);
+                graphics = drawBackgroundGradient(graphics);
+                graphics = drawHealthBar(graphics, fillAmount);
+                graphics.DrawImage(borderImage, borderXPos, borderYPos);
+                graphics.DrawImage(profilePic, profileXPos, profileYPos);
+                graphics = drawNameAndLevel(graphics, boss);
+                healthBar.Save(path + "\\CurrentBossHealthBar.png");
+                graphics.Dispose();
+                healthBar.Dispose();
+            }
+            catch
+            {
+
+            }
         }
 
         private Graphics createGraphicsObject(Bitmap image)

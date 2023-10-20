@@ -16,9 +16,9 @@ namespace Battle_Similator.Models.Encounters
         public string EncounterType { get { return encounterType; } }
         public string Winner { get { return winner; } }
         public int XPGained { get { return xpGained; } }
-        public bool LevelUp { get { return levelUp; } }
+        public bool LevelUp { get { return levelUp; } set { levelUp = value; } }
 
-        public EncounterResult(Character character, Monster monster, string encounterType, string winner, int xpGained, bool levelUp)
+        public EncounterResult(Character character, Monster monster, string encounterType, string winner, int xpGained, bool levelUp = false)
         {
             this.character = character;
             this.monster = monster;

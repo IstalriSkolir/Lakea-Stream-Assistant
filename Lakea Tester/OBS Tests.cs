@@ -10,12 +10,14 @@ namespace Lakea_Tester
         public OBS_Tests() 
         {
             List<string> scenes = new List<string>() { "Scene 1", "Scene 2", "Scene 3" };
-            IDictionary<string, int> sourceIDs = new Dictionary<string, int>();
+            Dictionary<string, int> sourceIDs = new Dictionary<string, int>();
+            Dictionary<int, string> sourceNames = new Dictionary<int, string>();
             for(int i = 1; i < 11; i++)
             {
                 sourceIDs.Add("Item " + i, i);
+                sourceNames.Add(i, "Item " + i);
             }
-            resources = new OBSResources(scenes, sourceIDs, scenes);
+            resources = new OBSResources(scenes, sourceIDs, sourceNames, scenes);
         }
 
         [TestMethod]
@@ -26,6 +28,16 @@ namespace Lakea_Tester
             Assert.AreEqual(5, resources.GetSourceId("Item 5"));
             Assert.AreEqual(8, resources.GetSourceId("Item 8"));
             Assert.AreEqual(10, resources.GetSourceId("Item 10"));
+        }
+
+        [TestMethod]
+        public void TestResourcesGetItemName()
+        {
+            Assert.AreEqual("Item 2", resources.GetSourceName(2));
+            Assert.AreEqual("Item 4", resources.GetSourceName(4));
+            Assert.AreEqual("Item 6", resources.GetSourceName(6));
+            Assert.AreEqual("Item 7", resources.GetSourceName(7));
+            Assert.AreEqual("Item 9", resources.GetSourceName(9));
         }
     }
 }

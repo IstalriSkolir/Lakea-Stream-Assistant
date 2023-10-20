@@ -145,3 +145,8 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\w
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\BadConfig.xml
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.deps.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.runtimeconfig.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.exe
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.pdb
