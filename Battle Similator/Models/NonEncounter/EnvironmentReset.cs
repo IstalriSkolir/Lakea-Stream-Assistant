@@ -37,6 +37,10 @@ namespace Battle_Similator.Models.NonEncounter
             {
                 File.Delete(path + "Creatures\\Bosses\\CURRENTBOSS.txt");
             }
+            if(File.Exists(path + "Creatures\\Bosses\\CURRENTBOSSFIGHTERS.txt"))
+            {
+                io.DeleteCurrentBossFighters();
+            }
             string[] bosses = io.LoadBossList();
             Monster firstBoss = io.LoadNPCData("Bosses", bosses[0]);
             healthBar.GenerateHealthBarImage(firstBoss);

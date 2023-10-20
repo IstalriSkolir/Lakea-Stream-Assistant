@@ -72,12 +72,14 @@ namespace Battle_Similator.Models.Encounters
                     Monster nextBoss = io.LoadNPCData("Bosses", nextBossString);
                     io.SaveCurrentBossData(nextBoss);
                 }
+                distributeXP(result.Character.ID, result.Monster.XPValue);
             }
             else
             {
                 bossBeaten += "FALSE";
                 allBossesBeaten += "FALSE";
                 io.SaveCurrentBossData(result.Monster);
+                io.AppendCurrentBossFighters(result.Character.ID);
             }
             string resultsString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + 
                 result.Character.ID + "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" +
@@ -85,6 +87,28 @@ namespace Battle_Similator.Models.Encounters
             io.SaveResultData(resultsString);
             io.SaveCharacterData(result.Character);
             healthBar.GenerateHealthBarImage(result.Monster);
+        }
+
+        private void distributeXP(string id, int totalXP)
+        {
+            string[] fightersArray = io.LoadCurrentBossFighters();
+            List<string> fighters = new List<string> { id };
+            foreach(string fighter in fightersArray)
+            {
+                if (!fighters.Contains(fighter))
+                {
+                    fighters.Add(fighter);
+                }
+            }
+            int xpGain = totalXP / fighters.Count;
+            xpGain += 5 - (xpGain % 5);
+            foreach(string fighter in fighters)
+            {
+                Character character = io.LoadCharacterData(fighter);
+                character.IncreaseXP(xpGain);
+                io.SaveCharacterData(character);
+            }
+            io.DeleteCurrentBossFighters();
         }
     }
 }

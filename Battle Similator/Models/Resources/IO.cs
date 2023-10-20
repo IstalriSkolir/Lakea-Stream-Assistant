@@ -39,7 +39,7 @@ namespace Battle_Similator.Models.Resources
             }
         }
 
-        public Character LoadCharacterData(string id, string name)
+        public Character LoadCharacterData(string id, string name = "")
         {
             try
             {
@@ -222,12 +222,12 @@ namespace Battle_Similator.Models.Resources
                 if ("Bosses".Equals(type))
                 {
                     return new Monster(props["NAME"], props["ID"], int.Parse(props["LEVEL"]), int.Parse(props["CURRENT_HP"]), int.Parse(props["MAX_HP"]),
-                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]));
+                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]), int.Parse(props["LEVEL"]) * 60);
                 }
                 else
                 {
                     return new Monster(props["NAME"], props["ID"], int.Parse(props["LEVEL"]), int.Parse(props["HP"]), int.Parse(props["HP"]),
-                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]));
+                        int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]), int.Parse(props["LEVEL"]) * 20);
                 }
             }
             catch (Exception)
@@ -249,6 +249,46 @@ namespace Battle_Similator.Models.Resources
                 File.WriteAllText(filePath, result);
             }
             catch (Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Save_Error);
+            }
+        }
+
+        public void AppendCurrentBossFighters(string id)
+        {
+            try
+            {
+                string filePath = path + "Bosses\\CURRENTBOSSFIGHTERS.txt";
+                File.AppendAllText(filePath, id + "\n");
+            }
+            catch(Exception ex)
+            {
+                Environment.Exit((int)ExitCode.IO_Save_Error);
+            }
+        }
+
+        public string[] LoadCurrentBossFighters()
+        {
+            try
+            {
+                string filePath = path + "Bosses\\CURRENTBOSSFIGHTERS.txt";
+                return File.ReadAllLines(filePath);
+            }
+            catch(Exception ex )
+            {
+                Environment.Exit((int)ExitCode.IO_Load_Error);
+                return null;
+            }
+        }
+
+        public void DeleteCurrentBossFighters()
+        {
+            try
+            {
+                string filePath = path + "Bosses\\CURRENTBOSSFIGHTERS.txt";
+                File.Delete(filePath);
+            }
+            catch
             {
                 Environment.Exit((int)ExitCode.IO_Save_Error);
             }
