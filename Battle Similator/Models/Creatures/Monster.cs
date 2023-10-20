@@ -16,7 +16,7 @@
             this.strength = strength;
             this.dexterity = dexterity;
             this.constitution = contitution;
-            this.xpValue = (level * 5);
+            this.xpValue = level * 20;
             this.isAlive = true;
             this.updateAbilityModifiers();
         }
