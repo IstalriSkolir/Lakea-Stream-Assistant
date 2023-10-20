@@ -258,7 +258,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                string id = "Twitch_Subscription_" + eve.Args.Subscription.SubscriptionPlan.ToString();
+                string id = "Twitch_Subscription_";
+                if(eve.Args.Subscription.IsGift ==  true)
+                {
+                    id += "Gifted";
+                }
+                else
+                {
+                    id += eve.Args.Subscription.SubscriptionPlan.ToString();
+                }
                 if (subscriptions.ContainsKey(id))
                 {
                     EventItem item = subscriptions[id];
