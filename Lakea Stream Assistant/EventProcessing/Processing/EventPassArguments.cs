@@ -13,6 +13,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
+                if(eve.GetArgs() == null)
+                {
+                    return storedItem;
+                }
                 if (!checkEventForArgs(storedItem))
                 {
                     Dictionary<string, string> currentEveArgs = storedItem.GetArgs();

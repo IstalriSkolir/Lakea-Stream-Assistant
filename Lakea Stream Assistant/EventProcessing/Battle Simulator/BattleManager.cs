@@ -18,6 +18,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private BattleFileParser fileParser;
         private List<string> queue;
         private bool active;
+        private bool bossesFirstFight;
 
         //Constructor sets the path and other properties for the Battle Simulator Application
         public BattleManager(EventInput eventInput)
@@ -26,6 +27,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             this.fileParser = new BattleFileParser();
             this.queue = new List<string>();
             this.active = false;
+            this.bossesFirstFight = true;
             this.battleSimInfo = new ProcessStartInfo("\"" + Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Battle Similator.exe\"");
             this.battleSimInfo.CreateNoWindow = true;
             this.battleSim = new Process();
@@ -128,6 +130,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 queue.RemoveAt(0);
                 Terminal.Output("Lakea: Starting Battle Simulator -> " + parameters);
                 Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + parameters);
+                if (parameters.Contains("BOSSBATTLE") && bossesFirstFight)
+                {
+                    bossesFirstFight = false;
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_First_Battle"));
+                    Thread.Sleep(5000);
+                }
                 battleSimInfo.Arguments = parameters;
                 battleSim.Start();
             }
@@ -244,20 +252,24 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 if ("TRUE".Equals(results["ALL_BOSSES_BEATEN"]))
                 {
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! All the bosses have been defeated!");
-                    eventID = "All_Bosses_Defeated";
-                    eventName = "All Bosses Defeated";
+                    eventID = "All_Bosses_Defeated_Message";
+                    eventName = "All Bosses Defeated Message";
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "All Bosses Defeated", "All_Bosses_Defeated"));
                 }
                 else if ("TRUE".Equals(results["BOSS_BEATEN"]))
                 {
+                    bossesFirstFight = true;
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
-                    eventID = "Boss_Defeated";
-                    eventName = "Boss Defeated";
+                    eventID = "Boss_Defeated_Message";
+                    eventName = "Boss Defeated Message";
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_Defeated"));
                 }
                 else
                 {
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
-                    eventID = "Boss_Battle_Ended";
-                    eventName = "Boss Battle Ended";
+                    eventID = "Boss_Battle_Ended_Message";
+                    eventName = "Boss Battle Ended Message";
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Battle Ended", "Boss_Battle_Ended"));
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
             }

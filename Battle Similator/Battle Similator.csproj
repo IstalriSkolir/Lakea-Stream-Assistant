@@ -21,6 +21,12 @@
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resources\BossHealthBarBorder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\CopyBattleEntities.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
   </Target>

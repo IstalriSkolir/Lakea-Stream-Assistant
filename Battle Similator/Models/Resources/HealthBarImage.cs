@@ -35,11 +35,11 @@ namespace Battle_Similator.Models.Resources
             barYPos = imageHeight - (barHeight + borderThickness - buffer);
             if (config == "LAKEA")
             {
-                path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Resources\\";
+                path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator";
             }
             else if (config == "DEBUG")
             {
-                path = Environment.CurrentDirectory + "\\Resources\\";
+                path = Environment.CurrentDirectory;
             }
         }
 
@@ -57,7 +57,7 @@ namespace Battle_Similator.Models.Resources
                 graphics.DrawImage(borderImage, borderXPos, borderYPos);
                 graphics.DrawImage(profilePic, profileXPos, profileYPos);
                 graphics = drawNameAndLevel(graphics, boss);
-                healthBar.Save(path + "\\CurrentBossHealthBar.png");
+                healthBar.Save(path + "\\Output\\CurrentBossHealthBar.png");
                 graphics.Dispose();
                 healthBar.Dispose();
             }
@@ -97,7 +97,7 @@ namespace Battle_Similator.Models.Resources
         {
             try
             {
-                return Image.FromFile(path + "\\BossHealthBarBorder.png");
+                return Image.FromFile(path + "\\Resources\\BossHealthBarBorder.png");
             }
             catch (Exception ex)
             {
