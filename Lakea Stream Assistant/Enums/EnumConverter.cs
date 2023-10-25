@@ -16,6 +16,7 @@ namespace Lakea_Stream_Assistant.Enums
             switch (source)
             {
                 case "basecamp": return EventSource.Base_Camp;
+                case "battlesimulator": return EventSource.Battle_Simulator;
                 case "twitch": return EventSource.Twitch;
                 case "obs": return EventSource.OBS;
                 case "lakea": return EventSource.Lakea;

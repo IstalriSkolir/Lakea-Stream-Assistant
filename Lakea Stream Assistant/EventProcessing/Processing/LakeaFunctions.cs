@@ -34,7 +34,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 try
                 {
                     EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
-                    if (source == EventSource.Lakea)
+                    if (source == EventSource.Lakea || source == EventSource.Battle_Simulator)
                     {
                         EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
                         switch (type)
@@ -62,7 +62,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
             }
-
             this.input = input;
         }
 
@@ -141,7 +140,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         processer.ProcessEvent(item);
                     }
                 }
-                else
+                else if(eve.EventGoal != EventGoal.Null)
                 {
                     processer.ProcessEvent(eve);
                 }
