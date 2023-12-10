@@ -109,6 +109,8 @@ public partial class ConfigSettings
 
     private int terminalRefreshRateField;
 
+    private string pythonExePath;
+
     private SettingsCommands commandsField;
 
     /// <remarks/>
@@ -134,6 +136,19 @@ public partial class ConfigSettings
         set
         {
             this.terminalRefreshRateField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string PythonExePath
+    {
+        get
+        {
+            return this.pythonExePath;
+        }
+        set
+        {
+            this.pythonExePath = value;
         }
     }
 

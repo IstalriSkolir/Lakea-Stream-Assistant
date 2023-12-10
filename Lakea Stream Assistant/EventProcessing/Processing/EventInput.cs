@@ -18,14 +18,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventProcesser processer;
         private EventPassArguments passArgs;
 
-        public EventInput(ConfigEvent[] events, DefaultCommands commands)
+        public EventInput(Config config, DefaultCommands commands)
         {
-            this.outputs = new EventOutputs(this);
+            this.outputs = new EventOutputs(this, config.Settings);
             this.passArgs = new EventPassArguments();
             this.processer = new EventProcesser(outputs);
-            this.twitch = new TwitchFunctions(events, processer, passArgs);
-            this.obs = new OBSFunctions(events, processer, passArgs);
-            this.lakea = new LakeaFunctions(events, processer, passArgs, commands, this);
+            this.twitch = new TwitchFunctions(config.Events, processer, passArgs);
+            this.obs = new OBSFunctions(config.Events, processer, passArgs);
+            this.lakea = new LakeaFunctions(config.Events, processer, passArgs, commands, this);
         }
 
         //Called on a new event, checks event type before calling relevent function
