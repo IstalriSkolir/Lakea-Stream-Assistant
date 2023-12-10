@@ -1,5 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Battle_Simulator;
+using Lakea_Stream_Assistant.EventProcessing.Misc;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
@@ -13,12 +14,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     {
         private BattleManager battleManager;
         private EventInput handleEvents;
+        private PythonScripts pythonScripts;
         private Random random = new Random();
 
-        public EventOutputs(EventInput handleEvents)
+        public EventOutputs(EventInput handleEvents, ConfigSettings settings)
         {
             this.handleEvents = handleEvents;
             this.battleManager = new BattleManager(handleEvents);
+            this.pythonScripts = new PythonScripts(settings.PythonExePath);
         }
 
         #region OBS Outputs
@@ -297,12 +300,31 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #endregion
 
+        #region Miscellaneous
+
+        //Call Python object to run a python script
+        public void RunPythonScript(Dictionary<string, string> args, Callbacks callback)
+        {
+            pythonScripts.RunPythonScript(args);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
+        }
+
         //For null events that don't require any actions
         public void NullEvent(string message)
         {
             Terminal.Output("Lakea: " + message);
             Logs.Instance.NewLog(LogLevel.Info, message);
         }
+
+        #endregion
 
         //Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(Dictionary<string, string> args, Callbacks callback)

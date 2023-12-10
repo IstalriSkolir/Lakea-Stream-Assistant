@@ -58,7 +58,7 @@ namespace Lakea_Stream_Assistant
                 keepAliveToken = new KeepAliveToken();
                 externalProcesses = new ExternalProcesses(config.Applications);
                 DefaultCommands lakeaCommands = new DefaultCommands(config.Settings.Commands, externalProcesses, keepAliveToken);
-                eventHandler = new EventInput(config.Events, lakeaCommands);
+                eventHandler = new EventInput(config, lakeaCommands);
                 externalProcesses.StartAllExternalProcesses();
                 OBS.Init(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password);
                 Twitch.Init(config, eventHandler, lakeaCommands);

@@ -32,6 +32,7 @@
         Null,
         Base_Camp,
         Battle_Simulator,
+        Python,
         Twitch,
         OBS
     }
@@ -48,6 +49,7 @@
         OBS_Disable_Random_Source,
         OBS_Loop_Sources,
         OBS_Change_Scene,
+        Python_Run_Script,
         Twitch_Send_Chat_Message,
         Twitch_Send_Chat_Message_List,
         Twitch_Send_Random_Chat_Message,
