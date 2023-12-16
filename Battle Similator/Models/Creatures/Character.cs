@@ -106,15 +106,12 @@
             if (resetOnDeath)
             {
                 level = 1;
-                xp = 450;
+                xp = 300;
                 hpMax = 20;
                 strength = 9;
                 dexterity = 9;
                 constitution = 9;
-                for (int count = 0; count < 4; count++)
-                {
-                    levelUp();
-                }
+                levelUp();
             }
         }
     }

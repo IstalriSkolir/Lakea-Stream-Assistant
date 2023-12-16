@@ -151,3 +151,4 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Sim
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.pdb
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\BossHealthBarBorder.png
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Python\TestPython.py
