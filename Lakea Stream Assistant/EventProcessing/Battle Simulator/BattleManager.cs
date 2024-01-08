@@ -19,6 +19,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private List<string> queue;
         private bool active;
         private bool bossesFirstFight;
+        private int bossCount;
 
         //Constructor sets the path and other properties for the Battle Simulator Application
         public BattleManager(EventInput eventInput)
@@ -28,6 +29,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             this.queue = new List<string>();
             this.active = false;
             this.bossesFirstFight = true;
+            this.bossCount = 1;
             this.battleSimInfo = new ProcessStartInfo("\"" + Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Battle Similator.exe\"");
             this.battleSimInfo.CreateNoWindow = true;
             this.battleSim = new Process();
@@ -133,7 +135,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 if (parameters.Contains("BOSSBATTLE") && bossesFirstFight)
                 {
                     bossesFirstFight = false;
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_First_Battle"));
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_" + bossCount + "_First_Battle"));
                     Thread.Sleep(5000);
                 }
                 battleSimInfo.Arguments = parameters;
@@ -262,7 +264,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
                     eventID = "Boss_Defeated_Message";
                     eventName = "Boss Defeated Message";
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_Defeated"));
+                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_" + bossCount + "_Defeated"));
+                    bossCount++;
                 }
                 else
                 {
