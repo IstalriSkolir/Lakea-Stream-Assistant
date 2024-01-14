@@ -34,7 +34,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 Task.Delay(duration * 1000).ContinueWith(t => SetActiveOBSSource(args, duration, !active, null, true));
             }
-            if (callback != null)
+            if (callback != null && !invoked)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>
                 {
