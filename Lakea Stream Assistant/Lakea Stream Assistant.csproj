@@ -63,6 +63,9 @@
     <None Update="Configurations\ConfigExample.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Configurations\Lakea Profile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Python\TestPython.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

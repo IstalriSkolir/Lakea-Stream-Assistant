@@ -22,7 +22,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         {
             try
             {
-                Terminal.Output("Lakea: Running Python Script: " + args["Script"] + ".py");
+                Terminal.Output("Lakea: Running Python Script -> " + args["Script"] + ".py");
+                Logs.Instance.NewLog(LogLevel.Info, "Running Python Script -> " + args["Script"]);
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = pythonPath;
                 startInfo.Arguments = "\"" + scriptFolder + args["Script"] + ".py\"";
