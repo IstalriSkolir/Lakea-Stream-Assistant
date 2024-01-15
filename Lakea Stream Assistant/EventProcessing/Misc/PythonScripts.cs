@@ -24,9 +24,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             {
                 Terminal.Output("Lakea: Running Python Script -> " + args["Script"] + ".py");
                 Logs.Instance.NewLog(LogLevel.Info, "Running Python Script -> " + args["Script"]);
+                string argsString = getScriptArguments(args);
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = pythonPath;
-                startInfo.Arguments = "\"" + scriptFolder + args["Script"] + ".py\"";
+                startInfo.Arguments = "\"" + scriptFolder + args["Script"] + ".py\" + " + argsString;
                 Process process = Process.Start(startInfo);
                 Processes.Add(process);
             }
@@ -35,6 +36,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 Terminal.Output("Lakea: Python Script Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+        }
+
+        private string getScriptArguments(Dictionary<string, string> args)
+        {
+            string argsString = "";
+            foreach(string key in  args.Keys)
+            {
+                if (key.Contains("Arg"))
+                {
+                    argsString += " \"" + args[key] + "\"";
+                }
+            }
+            return argsString;
         }
     }
 }
