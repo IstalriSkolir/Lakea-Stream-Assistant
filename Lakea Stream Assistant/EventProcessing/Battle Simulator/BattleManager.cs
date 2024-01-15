@@ -76,6 +76,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
+                if(eve == "CHARACTERRESET")
+                {
+                    Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
+                    int level = Int32.Parse(character["LEVEL"]);
+                    if(level < 5)
+                    {
+                        Dictionary<string, string> args = new Dictionary<string, string>
+                        {
+                            { "Message", "Your not a high enough level yet @" + displayName + ", you can't reset until you're level 5!" }
+                        };
+                        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Failed_Character_Reset", args: args));
+                        return;
+                    }
+                }
                 string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
                 queue.Add(item);
                 if (!active)
