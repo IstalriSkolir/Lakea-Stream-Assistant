@@ -17,6 +17,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> callbacks;
         private Dictionary<string, EventItem> timers;
         private Dictionary<string, EventItem> applications;
+        private List<EventItem> startupEvents;
 
         //Contructor stores list of events to check against when it receives a new event
         public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
@@ -28,6 +29,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
             applications = new Dictionary<string, EventItem>();
+            startupEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -49,6 +51,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             case EventType.Battle_Simulator_Nonencounter:
                                 applications.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
+                            case EventType.Lakea_Start_Up:
+                                startupEvents.Add(new EventItem(eve));
+                                break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
                                 Logs.Instance.NewLog(LogLevel.Warning, new Exception("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type));
@@ -63,6 +68,30 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
             }
             this.input = input;
+        }
+
+        //When Lakea finishes setting up, run all start up events in config
+        public void NewStartup(EventItem eve)
+        {
+            try
+            {
+                if(startupEvents.Count > 0)
+                {
+                    foreach(EventItem storedItem in startupEvents)
+                    {
+                        EventItem item = passArgs.GetEventArgs(storedItem, eve);
+                        if(item != null)
+                        {
+                            processer.ProcessEvent(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Startup Event Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
         }
 
         //When a callback event is triggered, checks dictionary for event before triggering the events effect

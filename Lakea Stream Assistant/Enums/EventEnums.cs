@@ -15,6 +15,7 @@
         Battle_Simulator_Nonencounter,
         Lakea_Callback,
         Lakea_Command,
+        Lakea_Start_Up,
         Lakea_Timer_Start,
         Lakea_Timer_Fired,
         OBS_Scene_Changed,
