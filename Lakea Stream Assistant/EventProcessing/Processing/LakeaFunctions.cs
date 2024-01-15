@@ -18,6 +18,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> timers;
         private Dictionary<string, EventItem> applications;
         private List<EventItem> startupEvents;
+        private List<EventItem> shutdownEvents;
 
         //Contructor stores list of events to check against when it receives a new event
         public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
@@ -30,6 +31,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             timers = new Dictionary<string, EventItem>();
             applications = new Dictionary<string, EventItem>();
             startupEvents = new List<EventItem>();
+            shutdownEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -53,6 +55,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 break;
                             case EventType.Lakea_Start_Up:
                                 startupEvents.Add(new EventItem(eve));
+                                break;
+                            case EventType.Lakea_Exit:
+                                shutdownEvents.Add(new EventItem(eve));
                                 break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
@@ -90,6 +95,30 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             catch (Exception ex)
             {
                 Terminal.Output("Lakea: Startup Event Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
+        //When Lakea shuts down, run all exit events in config
+        public void NewExit(EventItem eve)
+        {
+            try
+            {
+                if(shutdownEvents.Count > 0)
+                {
+                    foreach(EventItem storedItem in shutdownEvents)
+                    {
+                        EventItem item = passArgs.GetEventArgs(storedItem, eve);
+                        if(item != null)
+                        {
+                            processer.ProcessEvent(item);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Lakea: Exit Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }

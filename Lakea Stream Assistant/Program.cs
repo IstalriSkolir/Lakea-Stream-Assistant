@@ -159,6 +159,7 @@ namespace Lakea_Stream_Assistant
         static void shutdown()
         {
             externalProcesses.StopAllExternalProcesses();
+            eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit"));
             Terminal.EndRefresh();
         }
 
