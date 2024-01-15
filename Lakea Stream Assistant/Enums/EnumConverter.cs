@@ -33,6 +33,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "battlesimulatorencounter": return EventType.Battle_Simulator_Encounter;
                 case "battlesimulatornonencounter": return EventType.Battle_Simulator_Nonencounter;
                 case "lakeacallback": return EventType.Lakea_Callback;
+                case "lakeastartup": return EventType.Lakea_Start_Up;
                 case "lakeatimer": return EventType.Lakea_Timer_Start;
                 case "obsscenechanged": return EventType.OBS_Scene_Changed;
                 case "obssourceactivestatus": return EventType.OBS_Source_Active_Status;

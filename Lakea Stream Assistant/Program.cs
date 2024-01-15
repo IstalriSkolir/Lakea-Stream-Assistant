@@ -7,6 +7,7 @@ using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Tokens;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Models.Events.EventLists;
 
 namespace Lakea_Stream_Assistant
 {
@@ -63,6 +64,7 @@ namespace Lakea_Stream_Assistant
                 OBS.Init(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password);
                 Twitch.Init(config, eventHandler, lakeaCommands);
                 eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
+                eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up"));
                 Terminal.Output("Lakea: All set and ready to go!");
                 Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
             }
