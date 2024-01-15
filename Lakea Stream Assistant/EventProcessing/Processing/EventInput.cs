@@ -49,6 +49,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     case EventType.Lakea_Command:
                         lakea.NewCommand((LakeaCommand)eve);
                         break;
+                    case EventType.Lakea_Exit:
+                        lakea.NewExit((EventItem)eve);
+                        break;
                     case EventType.Lakea_Start_Up:
                         lakea.NewStartup((EventItem)eve);
                         break;
