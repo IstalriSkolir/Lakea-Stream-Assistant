@@ -19,10 +19,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         KeepAliveToken keepAliveToken;
 
         //Constructor takes object references, sets predefined dictionaries and command active/modonly status
-        public DefaultCommands(SettingsCommands commands, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
+        public DefaultCommands(ConfigSettings settings, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
         {
             this.process = new ProcessCommand(externalProcesses);
-            this.quotes = new QuoteCommand();
+            this.quotes = new QuoteCommand(settings.ResourcePath);
             this.keepAliveToken = keepAliveToken;
             this.commandFunctions = new Dictionary<string, Func<LakeaCommand, EventItem>>
             {
@@ -39,16 +39,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
-                { "exit", new CommandConfiguration("Exit", commands.Exit.Enabled, commands.Exit.ModOnly) },
-                { "process", new CommandConfiguration("Process", commands.Process.Enabled, commands.Process.ModOnly) },
-                { "quote", new CommandConfiguration("Quote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
-                { "quotecount", new CommandConfiguration("QuoteCount", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
-                { "addquote", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
-                { "quoteadd", new CommandConfiguration("AddQuote", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
-                { "quotefest", new CommandConfiguration("QuoteFest", commands.Quotes.Enabled, commands.Quotes.ModOnly) },
-                { "resetterminal", new CommandConfiguration("ResetTerminal", commands.ResetTerminal.Enabled, commands.ResetTerminal.ModOnly) },
-                { "so", new CommandConfiguration("Shout Out", commands.ShoutOut.Enabled, commands.ShoutOut.ModOnly) },
-                { "status", new CommandConfiguration("Status", commands.Status.Enabled, commands.Status.ModOnly) }
+                { "exit", new CommandConfiguration("Exit", settings.Commands.Exit.Enabled, settings.Commands.Exit.ModOnly) },
+                { "process", new CommandConfiguration("Process", settings.Commands.Process.Enabled, settings.Commands.Process.ModOnly) },
+                { "quote", new CommandConfiguration("Quote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
+                { "quotecount", new CommandConfiguration("QuoteCount", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
+                { "addquote", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
+                { "quoteadd", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
+                { "quotefest", new CommandConfiguration("QuoteFest", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
+                { "resetterminal", new CommandConfiguration("ResetTerminal", settings.Commands.ResetTerminal.Enabled, settings.Commands.ResetTerminal.ModOnly) },
+                { "so", new CommandConfiguration("Shout Out", settings.Commands.ShoutOut.Enabled, settings.Commands.ShoutOut.ModOnly) },
+                { "status", new CommandConfiguration("Status", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) }
             };
         }
 

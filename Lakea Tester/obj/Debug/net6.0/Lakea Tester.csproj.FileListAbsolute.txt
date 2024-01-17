@@ -2,6 +2,9 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\CoverletSo
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\testhost.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.deps.json
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.runtimeconfig.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.deps.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.runtimeconfig.json
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.exe
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.exe
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\testhost.exe
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.PlatformAbstractions.dll
@@ -9,9 +12,12 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.AdapterUtilities.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\BossHealthBarBorder.png
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Quotes.xml
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\BadConfig.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\Config.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\ConfigExample.xml
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Python\TestPython.py
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.deps.json
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.runtimeconfig.json
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.dll
@@ -29,11 +35,20 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.CrossPlatEngine.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.Utilities.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.Common.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\NuGet.Frameworks.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\obs-websocket-dotnet.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.CodeDom.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Diagnostics.PerformanceCounter.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Management.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Security.Permissions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Windows.Extensions.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\TwitchLib.Api.Core.Enums.dll
@@ -114,9 +129,17 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hans\Mi
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Management.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Reactive.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Stream Assistant.pdb
+D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.pdb
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Reactive.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.csproj.AssemblyReference.cache
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.GeneratedMSBuildEditorConfig.editorconfig
@@ -129,26 +152,3 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\refint\Lak
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.pdb
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\Lakea Tester.genruntimeconfig.cache
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\obj\Debug\net6.0\ref\Lakea Tester.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.CodeDom.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Diagnostics.PerformanceCounter.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Drawing.Common.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Management.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Security.Permissions.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\System.Windows.Extensions.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Management.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\BadConfig.xml
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.deps.json
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.runtimeconfig.json
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.exe
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.dll
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Battle Similator.pdb
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\BossHealthBarBorder.png
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Python\TestPython.py

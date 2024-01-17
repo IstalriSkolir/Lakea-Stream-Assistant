@@ -9,10 +9,10 @@ namespace Battle_Similator.Models.Encounters
         private HealthBarImage healthBar;
         private string[] bossList;
 
-        public BossEncounter(IO io, string config)
+        public BossEncounter(IO io, string config, string resourcePath)
         {
             this.io = io;
-            healthBar = new HealthBarImage(io, config);
+            healthBar = new HealthBarImage(io, config, resourcePath);
             this.bossList = io.LoadBossList();
         }
 

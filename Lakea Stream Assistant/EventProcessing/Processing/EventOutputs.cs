@@ -20,8 +20,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         public EventOutputs(EventInput handleEvents, ConfigSettings settings)
         {
             this.handleEvents = handleEvents;
-            this.battleManager = new BattleManager(handleEvents);
-            this.pythonScripts = new PythonScripts(settings.PythonExePath);
+            this.battleManager = new BattleManager(handleEvents, settings.ResourcePath);
+            this.pythonScripts = new PythonScripts(settings.PythonExePath, settings.ResourcePath);
         }
 
         #region OBS Outputs

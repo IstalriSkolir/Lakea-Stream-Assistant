@@ -12,11 +12,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private string resultPath;
 
         //Constructor sets the file paths
-        public BattleFileParser()
+        public BattleFileParser(string resourcePath)
         {
-            characterPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\Characters\\";
-            monsterPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\Monsters\\";
-            resultPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\";
+            if (resourcePath == null || resourcePath == string.Empty || resourcePath.Equals("default"))
+            {
+                characterPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\Characters\\";
+                monsterPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\Monsters\\";
+                resultPath = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\";
+            }
+            else
+            {
+                characterPath = resourcePath + "\\Creatures\\Characters\\";
+                monsterPath = resourcePath + "\\Creatures\\Monsters\\";
+                resultPath = resourcePath;
+            }
         }
 
         //Load a character from a file into a dictionary
@@ -158,7 +167,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
-                string[] resultsArray = File.ReadAllLines(resultPath + "Output\\RESULT.txt");
+                string[] resultsArray = File.ReadAllLines(resultPath + "\\RESULT.txt");
                 Dictionary<string, string> resultsDict = new Dictionary<string, string>();
                 foreach (string result in resultsArray)
                 {

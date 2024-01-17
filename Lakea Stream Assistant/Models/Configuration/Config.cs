@@ -109,7 +109,9 @@ public partial class ConfigSettings
 
     private int terminalRefreshRateField;
 
-    private string pythonExePath;
+    private string resourcePathField;
+
+    private string pythonExePathField;
 
     private SettingsCommands commandsField;
 
@@ -140,15 +142,28 @@ public partial class ConfigSettings
     }
 
     /// <remarks/>
+    public string ResourcePath
+    {
+        get
+        {
+            return this.resourcePathField;
+        }
+        set
+        {
+            this.resourcePathField = value;
+        }
+    }
+
+    /// <remarks/>
     public string PythonExePath
     {
         get
         {
-            return this.pythonExePath;
+            return this.pythonExePathField;
         }
         set
         {
-            this.pythonExePath = value;
+            this.pythonExePathField = value;
         }
     }
 
