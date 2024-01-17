@@ -19,10 +19,10 @@ namespace Battle_Similator.Models.Resources
         private int borderXPos = 500;
         private int borderYPos = 0;
         private int textXPos = 500;
-        private int textYPos = 0;
+        private int textYPos = 250;
         private int borderThickness = 25;
         private int buffer = 5;
-        private int barHeight = 200;
+        private int barHeight = 225;
         private int barWidth;
         private int barXPos;
         private int barYPos;
@@ -32,7 +32,7 @@ namespace Battle_Similator.Models.Resources
             this.io = io;
             barWidth = imageWidth - (profileImageWidth + borderThickness - buffer);
             barXPos = profileImageWidth + borderThickness - buffer;
-            barYPos = imageHeight - (barHeight + borderThickness - buffer);
+            barYPos = imageHeight - (barHeight + borderThickness - buffer) - 25;
             if (config == "LAKEA")
             {
                 path = resourcePath;
@@ -112,7 +112,7 @@ namespace Battle_Similator.Models.Resources
 
         private Graphics drawHealthBar(Graphics graphics, float fillAmount)
         {
-            SolidBrush brush = new SolidBrush(Color.Red);
+            SolidBrush brush = new SolidBrush(Color.DarkRed);
             float widthFloat = barWidth * fillAmount;
             int widthInt = (int)widthFloat;
             Rectangle healthBar = new Rectangle(barXPos, barYPos, widthInt, barHeight);
@@ -138,7 +138,7 @@ namespace Battle_Similator.Models.Resources
             string name = boss.Name.Replace("_", " ").ToLower();
             name = textInfo.ToTitleCase(name);
             string toWrite = name + " lvl:" + boss.Level;
-            graphics.DrawString(toWrite, font, Brushes.Black, textXPos, textYPos);
+            graphics.DrawString(toWrite, font, Brushes.DeepSkyBlue, textXPos, textYPos);
             return graphics;
         }
     }
