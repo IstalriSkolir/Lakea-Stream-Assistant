@@ -11,11 +11,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private string pythonPath;
         private string scriptFolder;
 
-        public PythonScripts(string pythonPath)
+        public PythonScripts(string pythonPath, string resourcePath)
         {
             Processes = new List<Process>();
             this.pythonPath = pythonPath;
-            scriptFolder = Environment.CurrentDirectory + "\\Resources\\Python\\";
+            if(resourcePath == null || resourcePath == string.Empty || resourcePath.Equals("default"))
+            {
+                scriptFolder = Environment.CurrentDirectory + "\\Resources\\Python\\";
+            }
+            else
+            {
+                scriptFolder = resourcePath + "\\Python\\";
+            }
         }
 
         public void RunPythonScript(Dictionary<string, string> args)

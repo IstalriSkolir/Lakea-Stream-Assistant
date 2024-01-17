@@ -20,12 +20,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private bool active;
         private bool bossesFirstFight;
         private int bossCount;
+        private string resourcePath;
 
         //Constructor sets the path and other properties for the Battle Simulator Application
-        public BattleManager(EventInput eventInput)
+        public BattleManager(EventInput eventInput, string resourcePath)
         {
             this.eventInput = eventInput;
-            this.fileParser = new BattleFileParser();
+            this.fileParser = new BattleFileParser(resourcePath);
             this.queue = new List<string>();
             this.active = false;
             this.bossesFirstFight = true;
@@ -36,6 +37,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             this.battleSim.StartInfo = battleSimInfo;
             this.battleSim.EnableRaisingEvents = true;
             this.battleSim.Exited += battleSimulatorExited;
+            if (resourcePath == null || resourcePath == string.Empty || resourcePath.Equals("default"))
+            {
+                this.resourcePath = Environment.CurrentDirectory + "\\Resources\\Applications\\Battle Simulator\\Creatures\\";
+            }
+            else
+            {
+                this.resourcePath = resourcePath + "\\\\Creatures\\\\";
+            }
             Other("ENVIRONMENTRESET", "NA", "NA");
         }
 
@@ -142,7 +151,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             try
             {
                 active = true;
-                string parameters = queue[0];
+                string parameters = queue[0] + " \"" + resourcePath + "\"";
                 queue.RemoveAt(0);
                 Terminal.Output("Lakea: Starting Battle Simulator -> " + parameters);
                 Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + parameters);

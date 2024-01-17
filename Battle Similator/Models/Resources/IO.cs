@@ -6,11 +6,11 @@ namespace Battle_Similator.Models.Resources
     {
         string path;
 
-        public IO(string config)
+        public IO(string config, string resourcePath)
         {
             if (config == "LAKEA")
             {
-                path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\Creatures\\";
+                path = resourcePath;
             }
             else if (config == "DEBUG")
             {
@@ -245,7 +245,7 @@ namespace Battle_Similator.Models.Resources
         {
             try
             {
-                string filePath = path + "..\\Output\\RESULT.txt";
+                string filePath = path + "..\\RESULT.txt";
                 File.WriteAllText(filePath, result);
             }
             catch (Exception ex)

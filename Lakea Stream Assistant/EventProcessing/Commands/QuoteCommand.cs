@@ -15,10 +15,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         public bool Initilaised { get { return initiliased; } }
 
-        public QuoteCommand()
+        public QuoteCommand(string resourcePath)
         {
             random = new Random();
-            quotes = initiliaseQuotes();
+            quotes = initiliaseQuotes(resourcePath);
         }
 
         public Dictionary<string, string> NewQuoteCommand(LakeaCommand command)
@@ -127,13 +127,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         #region IO Functions
 
-        private List<string> initiliaseQuotes()
+        private List<string> initiliaseQuotes(string resourcePath)
         {
             try
             {
                 Terminal.Output("Lakea: Loading Quotes File...");
                 Logs.Instance.NewLog(LogLevel.Info, "Loading Quotes from File...");
-                filePath = Environment.CurrentDirectory + "\\Resources\\Quotes.xml";
+                resourcePath = resourcePath.ToLower();
+                if(resourcePath == null || resourcePath == string.Empty || resourcePath.Equals("default"))
+                {
+                    filePath = Environment.CurrentDirectory + "\\Resources\\Quotes.xml";
+                }
+                else
+                {
+                    filePath = resourcePath + "\\Quotes.xml";
+                }
                 if(File.Exists(filePath))
                 {
                     List<string> list = loadQuotesFromFile(filePath);

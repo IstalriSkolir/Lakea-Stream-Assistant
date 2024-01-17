@@ -8,12 +8,12 @@ namespace Battle_Similator.Models.NonEncounter
         private IO io;
         HealthBarImage healthBar;
         private string path;
-        public EnvironmentReset(IO io, string config)
+        public EnvironmentReset(IO io, string config, string resourcePath)
         {
             this.io = io;
             if (config == "LAKEA")
             {
-                path = Environment.CurrentDirectory + "\\Applications\\Battle Simulator\\";
+                path = resourcePath;
             }
             else if (config == "DEBUG")
             {
@@ -23,7 +23,7 @@ namespace Battle_Similator.Models.NonEncounter
             {
                 Environment.Exit((int)ExitCode.Invalid_Args);
             }
-            this.healthBar = new HealthBarImage(io, config);
+            this.healthBar = new HealthBarImage(io, config, path);
         }
 
         public void Start()
@@ -35,9 +35,9 @@ namespace Battle_Similator.Models.NonEncounter
         {
             if(io.CurrentBossFileExists())
             {
-                File.Delete(path + "Creatures\\Bosses\\CURRENTBOSS.txt");
+                File.Delete(path + "Bosses\\CURRENTBOSS.txt");
             }
-            if(File.Exists(path + "Creatures\\Bosses\\CURRENTBOSSFIGHTERS.txt"))
+            if(File.Exists(path + "Bosses\\CURRENTBOSSFIGHTERS.txt"))
             {
                 io.DeleteCurrentBossFighters();
             }

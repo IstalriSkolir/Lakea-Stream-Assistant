@@ -13,17 +13,17 @@ namespace Battle_Similator
             {
                 Environment.Exit((int)ExitCode.No_Args_Given);
             }
-            else if(args.Length < 4 && args[1] != "ENVIRONMENTRESET")
+            else if(args.Length < 5 && args[1] != "ENVIRONMENTRESET")
             {
                 Environment.Exit((int)ExitCode.Not_Enough_Args);
             }
             else
             {
-                IO io = new IO(args[0]);
+                IO io = new IO(args[0], args[4]);
                 switch(args[1])
                 {
                     case "ENVIRONMENTRESET":
-                        EnvironmentReset reset = new EnvironmentReset(io, args[0]);
+                        EnvironmentReset reset = new EnvironmentReset(io, args[0], args[4]);
                         reset.Start();
                         exitCode(0);
                         break;
@@ -53,7 +53,7 @@ namespace Battle_Similator
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "BOSSBATTLE":
-                        BossEncounter bossEncounter = new BossEncounter(io, args[0]);
+                        BossEncounter bossEncounter = new BossEncounter(io, args[0], args[4]);
                         bossEncounter.Start(args[2], args[3]);
                         exitCode((int)ExitCode.Boss_Battle);
                         break;
