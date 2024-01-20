@@ -15,13 +15,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private BattleManager battleManager;
         private EventInput handleEvents;
         private PythonScripts pythonScripts;
+        private LakeaCaptured captured;
         private Random random = new Random();
 
-        public EventOutputs(EventInput handleEvents, ConfigSettings settings)
+        public EventOutputs(EventInput handleEvents, ConfigSettings settings, LakeaCaptured captured)
         {
             this.handleEvents = handleEvents;
             this.battleManager = new BattleManager(handleEvents, settings.ResourcePath);
             this.pythonScripts = new PythonScripts(settings.PythonExePath, settings.ResourcePath);
+            this.captured = captured;
         }
 
         #region OBS Outputs
@@ -296,6 +298,37 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 createCallback(callbackArgs, callback);
             }
+        }
+
+        #endregion
+
+        #region Lakea Captures
+
+        //Lakea has been captured
+        public void CaptureLakea(int captureDuration)
+        {
+            captured.LakeaCaught(this, captureDuration);
+        }
+
+        //Lakea has gotten free
+        public void LakeaFreed(Dictionary<string, string> args, Callbacks callback)
+        {
+            captured.LakeaReleased(this);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
+        }
+
+        //An event has come through while Lakea is caught
+        public void LakeaSendRetort()
+        {
+            captured.Retort(this);
         }
 
         #endregion

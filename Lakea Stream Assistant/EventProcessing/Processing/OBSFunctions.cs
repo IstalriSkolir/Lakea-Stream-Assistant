@@ -10,15 +10,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     //Functions for handling OBS Events
     public class OBSFunctions
     {
-        private EventProcesser processer;
         private EventPassArguments passArgs;
         private Dictionary<string, EventItem> sceneChanges;
         private Dictionary<string, EventItem> sourceActiveStatus;
 
         //Contructor stores list of events to check against when it receives a new event
-        public OBSFunctions(ConfigEvent[] events, EventProcesser processor, EventPassArguments passArgs)
+        public OBSFunctions(ConfigEvent[] events, EventPassArguments passArgs)
         {
-            this.processer = processor;
             this.passArgs = passArgs;
             sceneChanges = new Dictionary<string, EventItem>();
             sourceActiveStatus = new Dictionary<string, EventItem>();
@@ -55,7 +53,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a scene changes, checks the scenes dictionary for event before triggering events effect
-        public void NewChangedScene(OBSSceneChange eve)
+        public EventItem NewChangedScene(OBSSceneChange eve)
         {
             try
             {
@@ -64,7 +62,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = passArgs.GetEventArgs(sceneChanges[eve.Args.SceneName], eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
             }
@@ -73,10 +71,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: OBS Changed Scene Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a source active status changes, checks the source active status dictionary for event before triggering events effect
-        public void NewSourceActiveStatus(OBSSourceActive eve)
+        public EventItem NewSourceActiveStatus(OBSSourceActive eve)
         {
             try
             {
@@ -90,7 +89,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             EventItem item = passArgs.GetEventArgs(sourceActiveStatus[eve.SourceName], eve);
                             if (item != null)
                             {
-                                processer.ProcessEvent(item);
+                                return item;
                             }
                         }
                     }
@@ -99,7 +98,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         EventItem item = passArgs.GetEventArgs(sourceActiveStatus[eve.SourceName], eve);
                         if (item != null)
                         {
-                            processer.ProcessEvent(item);
+                            return item;
                         }
                     }
                 }
@@ -109,6 +108,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: OBS Source Active Status Changed Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
     }
 }

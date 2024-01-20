@@ -16,6 +16,8 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
         private readonly int duration;
         private readonly bool usePreviousArguments;
 
+        public EventItem() { }
+
         public EventItem(EventSource source, EventType type, EventTarget target, EventGoal goal, string name, string id = "", int duration = 0, 
             bool usePreviousArguments = false, Callbacks callback = null, Dictionary<string, string> args = null)
         {

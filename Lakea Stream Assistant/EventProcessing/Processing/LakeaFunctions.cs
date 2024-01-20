@@ -4,6 +4,7 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using System;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -11,25 +12,25 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     public class LakeaFunctions
     {
         private EventInput input;
-        private EventProcesser processer;
         private EventPassArguments passArgs;
         private DefaultCommands commands;
         private Dictionary<string, EventItem> callbacks;
         private Dictionary<string, EventItem> timers;
         private Dictionary<string, EventItem> applications;
+        private Dictionary<string, EventItem> lakeaFreed;
         private List<EventItem> startupEvents;
         private List<EventItem> shutdownEvents;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
+        public LakeaFunctions(ConfigEvent[] events, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
         {
             this.input = input;
-            this.processer = processer;
             this.passArgs = passArgs;
             this.commands = commands;
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
             applications = new Dictionary<string, EventItem>();
+            lakeaFreed = new Dictionary<string, EventItem>();
             startupEvents = new List<EventItem>();
             shutdownEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
@@ -52,6 +53,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             case EventType.Battle_Simulator_Encounter:
                             case EventType.Battle_Simulator_Nonencounter:
                                 applications.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Lakea_Released:
+                                lakeaFreed.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             case EventType.Lakea_Start_Up:
                                 startupEvents.Add(new EventItem(eve));
@@ -76,20 +80,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When Lakea finishes setting up, run all start up events in config
-        public void NewStartup(EventItem eve)
+        public EventItem NewStartup(EventItem eve)
         {
             try
             {
                 if(startupEvents.Count > 0)
                 {
-                    foreach(EventItem storedItem in startupEvents)
+                    EventItem item = startupEvents[startupEvents.Count - 1];
+                    startupEvents.RemoveAt(startupEvents.Count - 1);
+                    item = passArgs.GetEventArgs(item, eve);
+                    input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up"));
+                    if (item != null)
                     {
-                        EventItem item = passArgs.GetEventArgs(storedItem, eve);
-                        if(item != null)
-                        {
-                            processer.ProcessEvent(item);
-                        }
-                    }
+                        return item;
+                    }                  
                 }
             }
             catch (Exception ex)
@@ -97,22 +101,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Startup Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When Lakea shuts down, run all exit events in config
-        public void NewExit(EventItem eve)
+        public EventItem NewExit(EventItem eve)
         {
             try
             {
                 if(shutdownEvents.Count > 0)
                 {
-                    foreach(EventItem storedItem in shutdownEvents)
+                    EventItem item = shutdownEvents[shutdownEvents.Count - 1];
+                    shutdownEvents.RemoveAt(shutdownEvents.Count - 1);
+                    item = passArgs.GetEventArgs(item, eve);
+                    input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit"));
+                    if(item != null)
                     {
-                        EventItem item = passArgs.GetEventArgs(storedItem, eve);
-                        if(item != null)
-                        {
-                            processer.ProcessEvent(item);
-                        }
+                        return item;
                     }
                 }
             }
@@ -121,10 +126,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Exit Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a callback event is triggered, checks dictionary for event before triggering the events effect
-        public void NewCallback(LakeaCallback eve)
+        public EventItem NewCallback(LakeaCallback eve)
         {
             try
             {
@@ -145,13 +151,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         }
                         EventItem item = new EventItem(callbacks[eve.Callback.ID], currentArgs);
                         item = passArgs.GetEventArgs(item, eve);
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                     else
                     {
                         EventItem item = callbacks[eve.Callback.ID];
                         item = passArgs.GetEventArgs(item, eve);
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else
@@ -165,17 +171,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Callback Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a command event that is a inbuilt Lake command, call the commands object to call the relevant 'EventItem' for it
-        public void NewCommand(LakeaCommand eve)
+        public EventItem NewCommand(LakeaCommand eve)
         {
             try
             {
                 EventItem item = commands.NewLakeaCommand(eve);
                 if (item != null)
                 {
-                    processer.ProcessEvent(item);
+                    return item;
                 }
             }
             catch (Exception ex)
@@ -183,10 +190,33 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Default Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
+        }
+
+        //When Lakea is freed, check for events for it
+        public EventItem LakeaFreed(EventItem eve)
+        {
+            try
+            {
+                if (lakeaFreed.ContainsKey(eve.ID))
+                {
+                    EventItem item = passArgs.GetEventArgs(applications[eve.ID], eve);
+                    if(item != null)
+                    {
+                        return item;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Lakea Freed Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
         }
 
         //When a event comes from one of the supporting apps, pass it through to the EventProcessor
-        public void NewSupportingApplicationEvent(EventItem eve)
+        public EventItem NewSupportingApplicationEvent(EventItem eve)
         {
             try
             {
@@ -195,12 +225,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = passArgs.GetEventArgs(applications[eve.ID], eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else if(eve.EventGoal != EventGoal.Null)
                 {
-                    processer.ProcessEvent(eve);
+                    return eve;
                 }
             }
             catch(Exception ex)
@@ -208,20 +238,22 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Supporting Application Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a timer event is fired, process the event item it carries
-        public void NewTimer(LakeaTimer eve)
+        public EventItem NewTimer(LakeaTimer eve)
         {
             try
             {
-                processer.ProcessEvent(eve.EventItem);
+                return eve.EventItem;
             }
             catch (Exception ex)
             {
                 Terminal.Output("Lakea: Timer Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //Start the timers for timed events

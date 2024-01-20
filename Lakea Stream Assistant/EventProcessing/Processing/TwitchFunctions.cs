@@ -9,7 +9,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     //Functions for handling Twitch Events
     public class TwitchFunctions
     {
-        private EventProcesser processer;
         private EventPassArguments passArgs;
         private Dictionary<string, EventItem> follows;
         private Dictionary<string, EventItem> bits;
@@ -20,9 +19,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private List<Tuple<int, string>> bitsOrder;
 
         //Contructor stores list of events to check against when it receives a new event
-        public TwitchFunctions(ConfigEvent[] events, EventProcesser processer, EventPassArguments passArgs)
+        public TwitchFunctions(ConfigEvent[] events, EventPassArguments passArgs)
         {
-            this.processer = processer;
             this.passArgs = passArgs;
             follows = new Dictionary<string, EventItem>();
             bits = new Dictionary<string, EventItem>();
@@ -91,7 +89,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a follow event is triggered, checks the follow dictionary for event before triggering events effect
-        public void NewFollow(TwitchFollow eve)
+        public EventItem NewFollow(TwitchFollow eve)
         {
             try
             {
@@ -101,7 +99,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else
@@ -115,10 +113,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Twitch Follows Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
-        public void NewBits(TwitchBits eve)
+        public EventItem NewBits(TwitchBits eve)
         {
             bool eventFound = false;
             int bitAmount = eve.Args.BitsUsed;
@@ -133,7 +132,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         EventItem item = passArgs.GetEventArgs(bits[id], eve);
                         if (item != null)
                         {
-                            processer.ProcessEvent(item);
+                            return item;
                         }
                     }
                 }
@@ -146,7 +145,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         EventItem item = passArgs.GetEventArgs(bits[id], eve);
                         if (item != null)
                         {
-                            processer.ProcessEvent(item);
+                            return item;
                         }
                     }
                 }
@@ -156,10 +155,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Bit Event Warning-> " + eve.Args.BitsUsed);
                 Logs.Instance.NewLog(LogLevel.Warning, "Bit Event Warning -> " + eve.Args.BitsUsed);
             }
+            return null;
         }
 
         //When a channel redeem event is triggered, checks the redeem dictionary for event before triggering the events effect
-        public void NewRedeem(TwitchRedeem eve)
+        public EventItem NewRedeem(TwitchRedeem eve)
         {
             try
             {
@@ -168,7 +168,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = passArgs.GetEventArgs(redeems[eve.Args.RewardRedeemed.Redemption.Reward.Id], eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else
@@ -182,10 +182,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Twitch Redeem Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a chat command event is triggered, checks the commands dictionary for event before triggering the events effect
-        public void NewCommand(TwitchCommand eve)
+        public EventItem NewCommand(TwitchCommand eve)
         {
             try
             {
@@ -195,7 +196,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = passArgs.GetEventArgs(commands[command], eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else
@@ -209,10 +210,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Twitch Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a channel raid event is triggered, checks the raid dictionary for event before triggering the events effect
-        public void NewRaid(TwitchRaid eve)
+        public EventItem NewRaid(TwitchRaid eve)
         {
             try
             {
@@ -223,7 +225,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else if (raids.ContainsKey("Twitch_Raid_Default"))
@@ -232,7 +234,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else if (raids.Count > 0)
@@ -251,10 +253,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Twitch Raid Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
 
         //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
-        public void newSubscription(TwitchPubSubSubscription eve)
+        public EventItem newSubscription(TwitchPubSubSubscription eve)
         {
             try
             {
@@ -273,7 +276,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else if (subscriptions.ContainsKey("Twitch_Subscription_Default"))
@@ -282,7 +285,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
-                        processer.ProcessEvent(item);
+                        return item;
                     }
                 }
                 else if (subscriptions.Count > 0)
@@ -301,6 +304,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Terminal.Output("Lakea: Twitch Subscription Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            return null;
         }
     }
 }
