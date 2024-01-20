@@ -115,6 +115,8 @@ public partial class ConfigSettings
 
     private SettingsCommands commandsField;
 
+    private SettingsCaptures capturesField;
+
     /// <remarks/>
     public string LogLevel
     {
@@ -177,6 +179,19 @@ public partial class ConfigSettings
         set
         {
             this.commandsField = value;
+        }
+    }
+
+    /// <remarks/>
+    public SettingsCaptures Captures
+    {
+        get
+        {
+            return this.capturesField;
+        }
+        set
+        {
+            this.capturesField = value;
         }
     }
 }
@@ -281,6 +296,67 @@ public partial class SettingsCommands
         }
     }
 }
+
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class SettingsCaptures
+{
+
+    private string[] capturedLinesField;
+
+    private string[] retortLinesField;
+
+    private string[] releasedLinesField;
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
+    public string[] CapturedLines
+    {
+        get
+        {
+            return this.capturedLinesField;
+        }
+        set
+        {
+            this.capturedLinesField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
+    public string[] RetortLines
+    {
+        get
+        {
+            return this.retortLinesField;
+        }
+        set
+        {
+            this.retortLinesField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
+    public string[] ReleasedLines
+    {
+        get
+        {
+            return this.releasedLinesField;
+        }
+        set
+        {
+            this.releasedLinesField = value;
+        }
+    }
+}
+
+
 
 /// <remarks/>
 [System.SerializableAttribute()]

@@ -34,6 +34,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "battlesimulatornonencounter": return EventType.Battle_Simulator_Nonencounter;
                 case "lakeacallback": return EventType.Lakea_Callback;
                 case "lakeaexit": return EventType.Lakea_Exit;
+                case "lakeareleased": return EventType.Lakea_Released;
                 case "lakeastartup": return EventType.Lakea_Start_Up;
                 case "lakeatimer": return EventType.Lakea_Timer_Start;
                 case "obsscenechanged": return EventType.OBS_Scene_Changed;
@@ -57,6 +58,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "null": return EventTarget.Null;
                 case "basecamp": return EventTarget.Base_Camp;
                 case "battlesimulator": return EventTarget.Battle_Simulator;
+                case "lakea": return EventTarget.Lakea;
                 case "python": return EventTarget.Python;
                 case "twitch": return EventTarget.Twitch;
                 case "obs": return EventTarget.OBS;
@@ -74,6 +76,8 @@ namespace Lakea_Stream_Assistant.Enums
                 case "battlesimulatorcharactersheet": return EventGoal.Battle_Simulator_Character_Sheet;
                 case "battlesimulatorencounter": return EventGoal.Battle_Simulator_Encounter;
                 case "battlesimulatornonencounter": return EventGoal.Battle_Simulator_Nonencounter;
+                case "lakeacaught": return EventGoal.Lakea_Caught;
+                case "lakeafreed": return EventGoal.Lakea_Freed;
                 case "obsenablesource": return EventGoal.OBS_Enable_Source;
                 case "obsdisablesource": return EventGoal.OBS_Disable_Source;
                 case "obsenablerandomsource": return EventGoal.OBS_Enable_Random_Source;
