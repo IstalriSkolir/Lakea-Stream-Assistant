@@ -34,7 +34,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 string argsString = getScriptArguments(args);
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = pythonPath;
-                startInfo.Arguments = "\"" + scriptFolder + args["Script"] + ".py\" + " + argsString;
+                startInfo.Arguments = "\"" + scriptFolder + args["Script"] + ".py\" " + argsString;
                 Process process = Process.Start(startInfo);
                 Processes.Add(process);
             }

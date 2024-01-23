@@ -17,7 +17,7 @@ namespace Battle_Similator.Models.NonEncounters
         public void Start(string characterID, string characterName)
         {
             Character character = io.LoadCharacterData(characterID, characterName);
-            int xpGained = (random.Next(1, 11) * 5) + (character.Level * 5);
+            int xpGained = (random.Next(1, 9) * 5) + (character.Level * 5);
             if(xpGained > 100)
             {
                 xpGained = 100;
