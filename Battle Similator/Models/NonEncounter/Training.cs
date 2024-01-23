@@ -18,6 +18,10 @@ namespace Battle_Similator.Models.NonEncounters
         {
             Character character = io.LoadCharacterData(characterID, characterName);
             int xpGained = (random.Next(1, 11) * 5) + (character.Level * 5);
+            if(xpGained > 100)
+            {
+                xpGained = 100;
+            }
             bool levelUp = character.IncreaseXP(xpGained);
             string resultString = "CHARACTER_NAME:" + character.Name + "\nCHARACTER_ID:" + character.ID + "\nXP_GAINED:" + xpGained + "\nLEVEL_UP:" +
                 levelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + character.Level;
