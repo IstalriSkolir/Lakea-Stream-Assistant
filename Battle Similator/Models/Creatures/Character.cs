@@ -91,8 +91,8 @@
                         break;
                 }
                 updateAbilityModifiers();
-                hpMax += rand.Next(1, ConstitutionMod);
             }
+            hpMax += rand.Next(1, ConstitutionMod);
             calculateNextLevel();
             if(xp >= nextLevel)
             {
