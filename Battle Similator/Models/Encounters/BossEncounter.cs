@@ -100,7 +100,7 @@ namespace Battle_Similator.Models.Encounters
                     fighters.Add(fighter);
                 }
             }
-            int xpGain = totalXP / fighters.Count;
+            int xpGain = (int)totalXP / fighters.Count;
             xpGain += 5 - (xpGain % 5);
             foreach(string fighter in fighters)
             {
