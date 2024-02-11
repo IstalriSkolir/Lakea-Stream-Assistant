@@ -30,7 +30,9 @@ namespace Battle_Similator.Models.Resources
             {
                 string filePath = path + "Characters\\" + character.ID + ".txt";
                 string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax +
-                    "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution;
+                    "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution + "\nDEATHS:" + character.Deaths + "\nMONSTERS_KILLED:" +
+                    character.MonstersKilled + "\nBOSSES_FOUGHT:" + character.BossesFought + "\nBOSSES_BEATEN:" + character.BossesBeaten + "\nMONSTER_WIN_RATE:" + 
+                    character.MonsterWinRate;
                 File.WriteAllText(filePath, characterString);
             }
             catch (Exception)
@@ -46,6 +48,7 @@ namespace Battle_Similator.Models.Resources
                 string filePath = path + "Characters\\" + id + ".txt";
                 if (File.Exists(filePath))
                 {
+                    
                     string[] lines = File.ReadAllLines(filePath);
                     Dictionary<string, string> props = new Dictionary<string, string>();
                     foreach (string line in lines)
@@ -77,12 +80,26 @@ namespace Battle_Similator.Models.Resources
                             case "CON":
                                 props.Add("CON", parts[1]);
                                 break;
+                            case "DEATHS":
+                                props.Add("DEATHS", parts[1]);
+                                break;
+                            case "MONSTERS_KILLED":
+                                props.Add("MONSTERS_KILLED", parts[1]);
+                                break;
+                            case "BOSSES_FOUGHT":
+                                props.Add("BOSSES_FOUGHT", parts[1]);
+                                break;
+                            case "BOSSES_BEATEN":
+                                props.Add("BOSSES_BEATEN", parts[1]);
+                                break;
+                            case "MONSTER_WIN_RATE":
+                                props.Add("MONSTER_WIN_RATE", parts[1]);
+                                break;
                             default:
                                 break;
                         }
                     }
-                    return new Character(props["NAME"], props["ID"], int.Parse(props["XP"]), int.Parse(props["LEVEL"]), int.Parse(props["HP"]), int.Parse(props["STR"]),
-                        int.Parse(props["DEX"]), int.Parse(props["CON"]));
+                    return new Character(props);
                 }
                 else
                 {
@@ -272,7 +289,14 @@ namespace Battle_Similator.Models.Resources
             try
             {
                 string filePath = path + "Bosses\\CURRENTBOSSFIGHTERS.txt";
-                return File.ReadAllLines(filePath);
+                if(File.Exists(filePath))
+                {
+                    return File.ReadAllLines(filePath);
+                }
+                else
+                {
+                    return new string[0];
+                }
             }
             catch(Exception ex )
             {
@@ -286,7 +310,10 @@ namespace Battle_Similator.Models.Resources
             try
             {
                 string filePath = path + "Bosses\\CURRENTBOSSFIGHTERS.txt";
-                File.Delete(filePath);
+                if(File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
             }
             catch
             {

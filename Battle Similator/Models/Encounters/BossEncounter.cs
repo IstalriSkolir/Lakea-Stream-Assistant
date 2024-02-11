@@ -43,6 +43,7 @@ namespace Battle_Similator.Models.Encounters
         {
             string bossBeaten = "\nBOSS_BEATEN:";
             string allBossesBeaten = "\nALL_BOSSES_BEATEN:";
+            result.Character.NewBossFought();
             if(result.Winner.Equals(result.Character.ID))
             {
                 bossBeaten += "TRUE";
@@ -72,12 +73,14 @@ namespace Battle_Similator.Models.Encounters
                     Monster nextBoss = io.LoadNPCData("Bosses", nextBossString);
                     io.SaveCurrentBossData(nextBoss);
                 }
+                io.SaveCharacterData(result.Character);
                 distributeXP(result.Character.ID, result.Monster.XPValue);
             }
             else
             {
                 bossBeaten += "FALSE";
                 allBossesBeaten += "FALSE";
+                io.SaveCharacterData(result.Character);
                 io.SaveCurrentBossData(result.Monster);
                 io.AppendCurrentBossFighters(result.Character.ID);
             }
@@ -85,7 +88,7 @@ namespace Battle_Similator.Models.Encounters
                 result.Character.ID + "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" +
                 result.XPGained + "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level + bossBeaten + allBossesBeaten;
             io.SaveResultData(resultsString);
-            io.SaveCharacterData(result.Character);
+            //io.SaveCharacterData(result.Character);
             healthBar.GenerateHealthBarImage(result.Monster);
         }
 
@@ -101,10 +104,15 @@ namespace Battle_Similator.Models.Encounters
                 }
             }
             int xpGain = (int)totalXP / fighters.Count;
-            xpGain += 5 - (xpGain % 5);
+            if(xpGain % 5 != 0)
+            {
+                int remainder = xpGain % 5;
+                xpGain -= remainder;
+            }
             foreach(string fighter in fighters)
             {
                 Character character = io.LoadCharacterData(fighter);
+                character.NewBossBeaten();
                 character.IncreaseXP(xpGain);
                 io.SaveCharacterData(character);
             }
