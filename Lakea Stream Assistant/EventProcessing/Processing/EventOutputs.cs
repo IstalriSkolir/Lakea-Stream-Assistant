@@ -305,9 +305,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         #region Lakea Captures
 
         //Lakea has been captured
-        public void CaptureLakea(int captureDuration)
+        public void CaptureLakea(Dictionary<string, string> args, Callbacks callback)
         {
+            int captureDuration = int.Parse(args["Duration"]);
             captured.LakeaCaught(this, captureDuration);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
         }
 
         //Lakea has gotten free
