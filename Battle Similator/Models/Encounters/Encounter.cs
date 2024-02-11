@@ -44,7 +44,10 @@ namespace Battle_Similator.Models.Encounters
 
         private void hit(Creature attacker, Creature target)
         {
-            int initialDamage = random.Next(1, attacker.StrengthMod);
+            int halfStrengthMod = attacker.StrengthMod / 2;
+            int roll1 = random.Next(1, halfStrengthMod);
+            int roll2 = random.Next(1, halfStrengthMod);
+            int initialDamage = roll1 + roll2;
             float modifier = (float)Math.Sqrt((float)attacker.Level / (float)target.Level);
             float totalDamage = (float)initialDamage * modifier;
             int actualDamage = (int)Math.Round(totalDamage);
