@@ -128,7 +128,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             outputs.OtherBattleSimEvent(item.Args, item.Callback);
                             break;
                         case EventGoal.Lakea_Caught:
-                            outputs.CaptureLakea(item.Duration);
+                            outputs.CaptureLakea(item.Args, item.Callback);
                             break;
                         case EventGoal.Lakea_Freed:
                             outputs.LakeaFreed(item.Args, item.Callback);
