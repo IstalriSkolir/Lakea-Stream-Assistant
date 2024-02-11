@@ -39,6 +39,25 @@
             this.calculateNextLevel();
         }
 
+        public Character(string name, string id, int xp, int level, int hp, int str, int dex, int con)
+        {
+            this.name= name;
+            this.id = id;
+            this.xp = xp;
+            this.level = level;
+            this.hp = hp;
+            this.hpMax = hp;
+            this.strength = str;
+            this.dexterity = dex;
+            this.constitution = con;
+            this.deaths = 0;
+            this.monstersKilled = 0;
+            this.bossesFought = 0;
+            this.bossesBeaten = 0;
+            this.updateAbilityModifiers();
+            this.calculateNextLevel();
+        }
+
         public Character(Dictionary<string, string> props)
         {
             this.name = props["NAME"];
