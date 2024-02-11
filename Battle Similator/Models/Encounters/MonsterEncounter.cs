@@ -40,9 +40,11 @@ namespace Battle_Similator.Models.Encounters
         {
             if (result.Winner.Equals(result.Character.ID))
             {
+                result.Character.NewMonsterKilled();
                 bool levelUp = result.Character.IncreaseXP(result.Monster.XPValue);
                 result.LevelUp = levelUp;
             }
+            result.Character.UpdateMonsterWinRate();
             string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
                 "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained +
                 "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
