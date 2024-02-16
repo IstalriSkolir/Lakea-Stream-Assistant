@@ -8,5 +8,6 @@
     Not_Enough_Args = 12,
     Invalid_Args = 13,
     IO_Save_Error = 21,
-    IO_Load_Error = 22
+    IO_Load_Error = 22,
+    Encounter_Error = 31
 }

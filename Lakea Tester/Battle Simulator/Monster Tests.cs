@@ -65,11 +65,11 @@ namespace Lakea_Tester.Battle_Simulator
             Monster3.TakeDamage(5);
             Monster3.TakeDamage(20);
             Assert.AreEqual(10, Monster1.HP, "Monster1.HP: " + Monster1.HP + ", Expected: 10");
-            Assert.IsTrue(Monster1.IsAlive, "Monster1.IsAlive: " + Monster1.IsAlive + ", Expected: True");
+            Assert.IsTrue(Monster1.IsAlive, "Monster1.IsAlive");
             Assert.AreEqual(1, Monster2.HP, "Monster2.HP: " + Monster2.HP + ", Expected: 1");
-            Assert.IsTrue(Monster2.IsAlive, "Monster2.IsAlive: " + Monster2.IsAlive + ", Expected: True");
+            Assert.IsTrue(Monster2.IsAlive, "Monster2.IsAlive");
             Assert.AreEqual(5, Monster3.HP, "Monster3.HP: " + Monster3.HP + ", Expected: 5");
-            Assert.IsTrue(Monster3.IsAlive, "Monster3.IsAlive: " + Monster3.IsAlive + ", Expected: True");
+            Assert.IsTrue(Monster3.IsAlive, "Monster3.IsAlive");
         }
 
         [TestMethod]
@@ -82,11 +82,11 @@ namespace Lakea_Tester.Battle_Simulator
             Monster2.TakeDamage(26);
             Monster3.TakeDamage(30);
             Assert.AreEqual(0, Monster1.HP, "Monster1.HP: " + Monster1.HP + ", Expected: 0");
-            Assert.IsFalse(Monster1.IsAlive, "Monster1.IsAlive: " + Monster1.IsAlive + ", Expected: False");
+            Assert.IsFalse(Monster1.IsAlive, "Monster1.IsAlive");
             Assert.AreEqual(0, Monster2.HP, "Monster2.HP: " + Monster2.HP + ", Expected: 0");
-            Assert.IsFalse(Monster2.IsAlive, "Monster2.IsAlive: " + Monster2.IsAlive + ", Expected: False");
+            Assert.IsFalse(Monster2.IsAlive, "Monster2.IsAlive");
             Assert.AreEqual(0, Monster3.HP, "Monster3.HP: " + Monster3.HP + ", Expected: 0");
-            Assert.IsFalse(Monster3.IsAlive, "Monster3.IsAlive: " + Monster3.IsAlive + ", Expected: False");
+            Assert.IsFalse(Monster3.IsAlive, "Monster3.IsAlive");
         }
     }
 }

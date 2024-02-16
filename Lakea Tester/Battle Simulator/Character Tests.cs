@@ -107,11 +107,11 @@ namespace Lakea_Tester.Battle_Simulator
             Char2.TakeDamage(40);
             Char3.TakeDamage(40);
             Char4.TakeDamage(50);
-            Assert.IsFalse(Char1.IsAlive, "Char1.IsAlive: " + Char1.IsAlive + ", Expected: False");
+            Assert.IsFalse(Char1.IsAlive, "Char1.IsAlive");
             Assert.AreEqual(1, Char1.Deaths, "Char1.Deaths: " + Char1.Deaths + ", Expected: 1");
-            Assert.IsFalse(Char2.IsAlive, "Char2.IsAlive: " + Char2.IsAlive + ", Expected: False");
+            Assert.IsFalse(Char2.IsAlive, "Char2.IsAlive");
             Assert.AreEqual(10, Char2.Level, "Char2.Level: " + Char2.Level + ", Expected: 10");
-            Assert.IsFalse(Char3.IsAlive, "Char3.IsAlive: " + Char3.IsAlive + ", Expected: False");
+            Assert.IsFalse(Char3.IsAlive, "Char3.IsAlive");
             Assert.AreEqual(5, Char3.Level, "Char3.Level: " + Char3.Level + ", Expected: 5");
             Assert.AreEqual(300, Char3.XP, "Char3.XP: " + Char3.XP + ", Expected: 300");
             Assert.IsTrue(Char3.HPMax >= 20 && Char3.HPMax <= 50, "Char3.HPMax: " + Char3.HPMax + ", Expected: 20>x>50");
@@ -122,7 +122,7 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.IsTrue(abilityModTotal >= 10 && abilityModTotal <= 13,
                 "Char3 Ability Mod Total: " + abilityModTotal + ", Expected: 10>x>13, StrMod: " + Char3.StrengthMod + ", DexMod: " + 
                 Char3.DexterityMod + ", ConMod: " + Char3.ConstitutionMod);
-            Assert.IsFalse(Char4.IsAlive, "Char4.IsAlive: " + Char4.IsAlive + ", Expected: False");
+            Assert.IsFalse(Char4.IsAlive, "Char4.IsAlive");
             Assert.AreEqual((int.Parse(CharProps["DEATHS"]) + 1), Char4.Deaths, "Char4.Deaths: " + Char4.Deaths + ", Expected: " + CharProps["DEATHS"]);
         }
 
