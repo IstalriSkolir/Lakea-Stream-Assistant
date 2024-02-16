@@ -54,6 +54,7 @@
             this.monstersKilled = 0;
             this.bossesFought = 0;
             this.bossesBeaten = 0;
+            this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
         }

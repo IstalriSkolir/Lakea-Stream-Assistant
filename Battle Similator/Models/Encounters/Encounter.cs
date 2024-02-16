@@ -9,12 +9,19 @@ namespace Battle_Similator.Models.Encounters
         private Random random;
         private string encounterType;
 
-        public Encounter(Character character, Monster monster, string encounterType)
+        public Encounter(Character character, Monster monster, string encounterType, int randomSeed = -1)
         {
             this.character = character;
             this.monster = monster;
-            random = new Random();
             this.encounterType = encounterType;
+            if(randomSeed != -1)
+            {
+                random = new Random(randomSeed);
+            }
+            else
+            {
+                random = new Random();
+            }
         }
 
         public EncounterResult Run()
