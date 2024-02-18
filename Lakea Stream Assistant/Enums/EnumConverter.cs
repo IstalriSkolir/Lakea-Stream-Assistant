@@ -75,6 +75,7 @@ namespace Lakea_Stream_Assistant.Enums
             {
                 case "null": return EventGoal.Null;
                 case "battlesimulatorcharactersheet": return EventGoal.Battle_Simulator_Character_Sheet;
+                case "battlesimulatorcharacterstatistics": return EventGoal.Battle_Simulator_Character_Statistics;
                 case "battlesimulatorencounter": return EventGoal.Battle_Simulator_Encounter;
                 case "battlesimulatornonencounter": return EventGoal.Battle_Simulator_Nonencounter;
                 case "lakeacaught": return EventGoal.Lakea_Caught;

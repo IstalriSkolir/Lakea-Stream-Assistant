@@ -78,6 +78,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             return null;
         }
 
+        //Get the character statistics of a user
+        public Dictionary<string, string> GetCharacterStatistics(string accountID, string displayName)
+        {
+            Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
+            Dictionary<string, string> args = new Dictionary<string, string>()
+            {
+                { "Message", "@" + displayName + " -> DEATHS: " + character["DEATHS"] + ", MONSTERS_KILLED: " + character["MONSTERS_KILLED"] + ", MONSTER_WIN_RATE: " +
+                    character["MONSTER_WIN_RATE"] + ", BOSSES_FOUGHT: " + character["BOSSES_FOUGHT"] + ", BOSSES_BEATEN: " + character["BOSSES_BEATEN"] }
+            };
+            return args;
+        }
+
         #region Run Battle Simulator
 
         //Add an event to the Battle Sim Queue

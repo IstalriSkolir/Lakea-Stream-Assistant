@@ -46,6 +46,7 @@
     {
         Null,
         Battle_Simulator_Character_Sheet,
+        Battle_Simulator_Character_Statistics,
         Battle_Simulator_Nonencounter,
         Battle_Simulator_Encounter,
         Lakea_Caught,
