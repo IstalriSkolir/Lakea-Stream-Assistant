@@ -115,7 +115,7 @@ public partial class ConfigSettings
 
     private SettingsCommands commandsField;
 
-    private SettingsCaptures capturesField;
+    private SettingsCapturedEventRetort capturedEventRetorts;
 
     /// <remarks/>
     public string LogLevel
@@ -183,15 +183,15 @@ public partial class ConfigSettings
     }
 
     /// <remarks/>
-    public SettingsCaptures Captures
+    public SettingsCapturedEventRetort CapturedEventRetorts
     {
         get
         {
-            return this.capturesField;
+            return this.capturedEventRetorts;
         }
         set
         {
-            this.capturesField = value;
+            this.capturedEventRetorts = value;
         }
     }
 }
@@ -297,66 +297,31 @@ public partial class SettingsCommands
     }
 }
 
-
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public partial class SettingsCaptures
+public partial class SettingsCapturedEventRetort
 {
 
-    private string[] capturedLinesField;
-
-    private string[] retortLinesField;
-
-    private string[] releasedLinesField;
+    private string[] eventTypeField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
-    public string[] CapturedLines
+    [System.Xml.Serialization.XmlElementAttribute("EventType")]
+    public string[] EventType
     {
         get
         {
-            return this.capturedLinesField;
+            return this.eventTypeField;
         }
         set
         {
-            this.capturedLinesField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
-    public string[] RetortLines
-    {
-        get
-        {
-            return this.retortLinesField;
-        }
-        set
-        {
-            this.retortLinesField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("line", IsNullable = false)]
-    public string[] ReleasedLines
-    {
-        get
-        {
-            return this.releasedLinesField;
-        }
-        set
-        {
-            this.releasedLinesField = value;
+            this.eventTypeField = value;
         }
     }
 }
-
-
 
 /// <remarks/>
 [System.SerializableAttribute()]

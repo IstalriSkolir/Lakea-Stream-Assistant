@@ -17,7 +17,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> callbacks;
         private Dictionary<string, EventItem> timers;
         private Dictionary<string, EventItem> applications;
-        private Dictionary<string, EventItem> lakeaFreed;
+        private Dictionary<string, EventItem> lakeaReleased;
+        private Dictionary<string, EventItem> lakeaRetort;
         private List<EventItem> startupEvents;
         private List<EventItem> shutdownEvents;
 
@@ -30,7 +31,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             callbacks = new Dictionary<string, EventItem>();
             timers = new Dictionary<string, EventItem>();
             applications = new Dictionary<string, EventItem>();
-            lakeaFreed = new Dictionary<string, EventItem>();
+            lakeaReleased = new Dictionary<string, EventItem>();
+            lakeaRetort = new Dictionary<string, EventItem>();
             startupEvents = new List<EventItem>();
             shutdownEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
@@ -55,7 +57,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 applications.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             case EventType.Lakea_Released:
-                                lakeaFreed.Add(eve.EventDetails.ID, new EventItem(eve));
+                                lakeaReleased.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Lakea_Retort:
+                                lakeaRetort.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             case EventType.Lakea_Start_Up:
                                 startupEvents.Add(new EventItem(eve));
@@ -194,13 +199,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When Lakea is freed, check for events for it
-        public EventItem LakeaFreed(EventItem eve)
+        public EventItem LakeaReleased(EventItem eve)
         {
             try
             {
-                if (lakeaFreed.ContainsKey(eve.ID))
+                if (lakeaReleased.ContainsKey(eve.ID))
                 {
-                    EventItem item = passArgs.GetEventArgs(applications[eve.ID], eve);
+                    EventItem item = passArgs.GetEventArgs(lakeaReleased[eve.ID], eve);
                     if(item != null)
                     {
                         return item;
@@ -209,7 +214,26 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Lakea Freed Error -> " + ex.Message);
+                Terminal.Output("Lakea: Lakea Released Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        //When a event is fired and Lakea is caught, process the Lakea retort event
+        public EventItem LakeaRetort()
+        {
+            try
+            {
+                if(lakeaRetort.ContainsKey("Lakea_Retort"))
+                {
+                    //return passArgs.GetEventArgs(lakeaRetort, eve);
+                    return lakeaRetort["Lakea_Retort"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Lakea Retort Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;

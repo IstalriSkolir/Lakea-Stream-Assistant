@@ -6,6 +6,7 @@ using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using System.Linq;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -18,15 +19,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventOutputs outputs;
         private EventPassArguments passArgs;
         private LakeaCaptured captured;
+        //private string[] capturedRetortTypes;
+        //private SettingsCapturedEventRetort capturedRetortTypes;
 
         public EventInput(Config config, DefaultCommands commands)
         {
             passArgs = new EventPassArguments();
-            captured = new LakeaCaptured(this, config.Settings.Captures);
             lakea = new LakeaFunctions(config.Events, passArgs, commands, this);
             obs = new OBSFunctions(config.Events, passArgs);
             twitch = new TwitchFunctions(config.Events, passArgs);
+            captured = new LakeaCaptured(this, lakea, config.Settings.CapturedEventRetorts);
             outputs = new EventOutputs(this, config.Settings, captured);
+            //capturedRetortTypes = config.Settings.CapturedEventRetorts.EventType;
         }
 
         //Called on a new event, checks event type before calling relevent function
@@ -56,7 +60,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         item = lakea.NewExit((EventItem)eve);
                         break;
                     case EventType.Lakea_Released:
-                        item = (EventItem)eve;
+                        item = lakea.LakeaReleased((EventItem)eve);
                         break;
                     case EventType.Lakea_Start_Up:
                         item = lakea.NewStartup((EventItem)eve);
@@ -91,6 +95,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 if(item != null)
                 {
+                    item = captured.CheckIfCaptured(item);
                     processEvent(item);
                 }
             }
@@ -102,17 +107,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         // Receives 'EventItem' object and calls the corresponding 'EventOutputs' function with the relevant arguments
-        private void processEvent(EventItem item)
+        private void processEvent(EventItem item)//, EventType type)
         {
             try
             {
                 if (item != null)
                 {
-                    if (captured.IsCaught && (item.EventGoal != EventGoal.Null && item.EventGoal != EventGoal.Lakea_Freed))
-                    {
-                        outputs.LakeaSendRetort();
-                        return;
-                    }
                     switch (item.EventGoal)
                     {
                         case EventGoal.Null:
@@ -129,9 +129,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             break;
                         case EventGoal.Lakea_Caught:
                             outputs.CaptureLakea(item.Args, item.Callback);
-                            break;
-                        case EventGoal.Lakea_Freed:
-                            outputs.LakeaFreed(item.Args, item.Callback);
                             break;
                         case EventGoal.OBS_Disable_Source:
                             outputs.SetActiveOBSSource(item.Args, item.Duration, false, item.Callback);

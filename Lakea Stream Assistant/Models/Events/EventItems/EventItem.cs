@@ -58,6 +58,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
         public EventItem(EventItem item, Dictionary<string, string> args)
         {
             this.source = item.Source;
+            this.type = item.Type;
             this.target = item.target;
             this.goal = item.goal;
             this.name = item.name;
