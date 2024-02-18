@@ -121,6 +121,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.Battle_Simulator_Character_Sheet:
                             outputs.GetCharacterSheet(item.Args, item.Callback);
                             break;
+                        case EventGoal.Battle_Simulator_Character_Statistics:
+                            outputs.GetCharacterStatistics(item.Args, item.Callback);
+                            break;
                         case EventGoal.Battle_Simulator_Encounter:
                             outputs.Battle(item.Args, item.Callback);
                             break;

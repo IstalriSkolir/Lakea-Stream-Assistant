@@ -270,6 +270,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
+        //Function to call the Battle Manager to get a characters statistics
+        public void GetCharacterStatistics(Dictionary<string, string> args, Callbacks callback)
+        {
+            Dictionary<string, string> messageArgs = battleManager.GetCharacterStatistics(args["AccountID"], args["DisplayName"]);
+            if(messageArgs != null)
+            {
+                SendTwitchChatMessage(messageArgs, callback);
+            }
+        }
+
         //Function to call the Battle Manager to train a character
         public void OtherBattleSimEvent(Dictionary<string, string> args, Callbacks callback)
         {

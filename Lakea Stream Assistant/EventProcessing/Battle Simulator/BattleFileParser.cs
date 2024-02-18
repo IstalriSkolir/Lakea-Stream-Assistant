@@ -66,6 +66,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                             case "CON":
                                 characterDict.Add("CON", parts[1]);
                                 break;
+                            case "DEATHS":
+                                characterDict.Add("DEATHS", parts[1]);
+                                break;
+                            case "MONSTERS_KILLED":
+                                characterDict.Add("MONSTERS_KILLED", parts[1]);
+                                break;
+                            case "BOSSES_FOUGHT":
+                                characterDict.Add("BOSSES_FOUGHT", parts[1]);
+                                break;
+                            case "BOSSES_BEATEN":
+                                characterDict.Add("BOSSES_BEATEN", parts[1]);
+                                break;
+                            case "MONSTER_WIN_RATE":
+                                characterDict.Add("MONSTER_WIN_RATE", parts[1]);
+                                break;
                             default:
                                 Terminal.Output("Lakea: Unrecognised Property in Character File -> " + property);
                                 Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Property in Character File -> " + property);
