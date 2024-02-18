@@ -320,27 +320,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Lakea has gotten free
-        public void LakeaFreed(Dictionary<string, string> args, Callbacks callback)
-        {
-            captured.LakeaReleased(this);
-            if (callback != null)
-            {
-                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
-                foreach (var arg in args)
-                {
-                    callbackArgs.Add(arg.Key, arg.Value);
-                }
-                createCallback(callbackArgs, callback);
-            }
-        }
-
-        //An event has come through while Lakea is caught
-        public void LakeaSendRetort()
-        {
-            captured.Retort(this);
-        }
-
         #endregion
 
         #region Miscellaneous

@@ -9,72 +9,53 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
     public class LakeaCaptured
     {
         private EventInput input;
-        private Dictionary<string, string> capturedLines;
-        private Dictionary<string, string> retortLines;
-        private Dictionary<string, string> releasedLines; 
+        private LakeaFunctions lakea;
+        private string[] retortEvents;
         private bool isCaught;
 
-        public LakeaCaptured(EventInput eventInput, SettingsCaptures captures)
+        public LakeaCaptured(EventInput eventInput, LakeaFunctions lakeaFunctions, SettingsCapturedEventRetort retorts)
         {
             input = eventInput;
+            lakea = lakeaFunctions;
+            retortEvents = retorts.EventType;
             isCaught = false;
-            capturedLines = new Dictionary<string, string>();
-            retortLines = new Dictionary<string, string>();
-            releasedLines = new Dictionary<string, string>();
-            for(int x = 0; x < captures.CapturedLines.Count(); x++)
-            {
-                capturedLines.Add("Message" + (x + 1), captures.CapturedLines[x]);
-            }
-            for(int x = 0; x < captures.RetortLines.Count(); x++)
-            {
-                retortLines.Add("Message" + (x + 1), captures.RetortLines[x]);
-            }
-            for(int x = 0; x < captures.ReleasedLines.Count(); x++)
-            {
-                releasedLines.Add("Message" + (x + 1), captures.ReleasedLines[x]);
-            }
         }
-
-        public bool IsCaught { get { return isCaught; } }
 
         public void LakeaCaught(EventOutputs outputs, int captureDuration)
         {
             Terminal.Output("Lakea: Captured -> True");
             Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> True");
             isCaught = true;
-            if(capturedLines.Count > 0)
-            {
-                outputs.SendTwitchRandomChatMessage(capturedLines, null);
-            }
             Task.Delay(captureDuration * 1000).ContinueWith(t => timerRelease());
         }
 
-        public void LakeaReleased(EventOutputs outputs)
+        public EventItem CheckIfCaptured(EventItem item)
         {
-            Terminal.Output("Lakea: Captured -> False");
-            Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> False");
-            isCaught = false;
-            if(releasedLines.Count > 0)
+            if (!isCaught || (item.EventGoal == EventGoal.Null || item.EventGoal == EventGoal.Lakea_Released) || item.Type == EventType.Lakea_Callback)
             {
-                outputs.SendTwitchRandomChatMessage(releasedLines, null);
+                return item;
             }
-        }
-
-        public void Retort(EventOutputs outputs)
-        {
-            Terminal.Output("Lakea: Captured -> Sending Retort");
-            Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> Sending Retort");
-            if (retortLines.Count > 0)
+            else
             {
-                outputs.SendTwitchRandomChatMessage(retortLines, null);
+                if (retortEvents.Contains(item.Type.ToString()))
+                {
+                    Terminal.Output("Lakea: Captured -> Sending Retort");
+                    Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> Sending Retort");
+                    return lakea.LakeaRetort();
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
         private void timerRelease()
         {
-            Terminal.Output("Lakea: Release -> Timer Fired");
-            Logs.Instance.NewLog(LogLevel.Info, "Lakea Release -> Timer Fired");
-            input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Released, EventTarget.Lakea, EventGoal.Lakea_Freed, "Lakea Freed"));
+            Terminal.Output("Lakea: Captured -> False");
+            Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> False");
+            isCaught = false;
+            input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Released, EventTarget.Lakea, EventGoal.Lakea_Released, "Lakea Released", "Lakea_Released"));
         }
     }
 }
