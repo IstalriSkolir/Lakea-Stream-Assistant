@@ -135,25 +135,28 @@
         {
             Random rand = new Random();
             level++;
-            for(int point = 0; point < 2; point++)
-            {
-                int ran = rand.Next(0, 3);
-                switch(ran)
-                {
-                    case 0:
-                        strength++;
-                        break;
-                    case 1:
-                        dexterity++;
-                        break;
-                    case 2:
-                        constitution++;
-                        break;
-                }
-                updateAbilityModifiers();
-            }
-            hpMax += rand.Next(1, ConstitutionMod + 1);
             calculateNextLevel();
+            if(level <= 100)
+            {
+                for (int point = 0; point < 2; point++)
+                {
+                    int ran = rand.Next(0, 3);
+                    switch (ran)
+                    {
+                        case 0:
+                            strength++;
+                            break;
+                        case 1:
+                            dexterity++;
+                            break;
+                        case 2:
+                            constitution++;
+                            break;
+                    }
+                    updateAbilityModifiers();
+                }
+                hpMax += rand.Next(1, ConstitutionMod + 1);
+            }
             if(xp >= nextLevel)
             {
                 levelUp();

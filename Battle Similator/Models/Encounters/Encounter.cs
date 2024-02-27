@@ -55,7 +55,7 @@ namespace Battle_Similator.Models.Encounters
             int roll1 = random.Next(1, halfStrengthMod);
             int roll2 = random.Next(1, halfStrengthMod);
             int initialDamage = roll1 + roll2;
-            float modifier = (float)Math.Sqrt((float)attacker.Level / (float)target.Level);
+            float modifier = (float)Math.Sqrt((float)getCreatureLevel(attacker) / (float)getCreatureLevel(target));
             float totalDamage = (float)initialDamage * modifier;
             int actualDamage = (int)Math.Round(totalDamage);
             if(actualDamage < 1)
@@ -63,6 +63,25 @@ namespace Battle_Similator.Models.Encounters
                 actualDamage = 1;
             }
             target.TakeDamage(actualDamage);
+        }
+
+        private int getCreatureLevel(Creature creature)
+        {
+            if(creature.GetType() == typeof(Character))
+            {
+                if(creature.Level <= 100)
+                {
+                    return creature.Level;
+                }
+                else
+                {
+                    return 100;
+                }
+            }
+            else
+            {
+                return creature.Level;
+            }
         }
     }
 }
