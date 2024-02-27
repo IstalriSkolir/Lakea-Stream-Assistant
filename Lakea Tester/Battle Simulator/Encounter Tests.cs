@@ -101,5 +101,23 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.AreEqual(0, result.XPGained, "result.XPGained: " + result.XPGained + ", Expected: 0");
             Assert.IsFalse(result.LevelUp, "result.LevelUp");
         }
+
+        [TestMethod]
+        public void EncounterCharacterOverLevel100()
+        {
+            Character character = new Character("Character", "Character_ID", 0, 200, 1000, 100, 100, 100);
+            Monster monster = new Monster("Monster", "Monster_ID", 150, 1000, 1000, 100, 100, 100, 0);
+            Encounter encounter = new Encounter(character, monster, "TESTING", RandomSeed);
+            EncounterResult result = encounter.Run();
+            Assert.IsNotNull(result, "result");
+            Assert.IsNotNull(result.Character, "result.Character");
+            Assert.IsNotNull(result.Monster, "result.Monster");
+            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner: " + result.Winner + ", Expected: " + result.Monster.ID);
+            Assert.IsTrue(result.Monster.IsAlive, "result.Monster.IsAlive");
+            Assert.IsFalse(result.Character.IsAlive, "result.Character.IsAlive");
+            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP: " + result.Monster.HP + ", Expected: >0");
+            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP: " + result.Character.HP + ", Expected: <=0");
+            Assert.IsFalse(result.LevelUp, "result.LevelUp");
+        }
     }
 }

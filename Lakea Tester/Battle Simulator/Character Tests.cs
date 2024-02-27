@@ -183,6 +183,19 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
+        public void CharacterLevelUpOver100()
+        {
+            Character character = new Character("Character", "Character_ID", 148500, 100, 700, 80, 80, 80);
+            character.IncreaseXP(3000);
+            Assert.AreEqual(151500, character.XP, "character.XP: " + character.XP + ", Expected: 151500");
+            Assert.AreEqual(101, character.Level, "character.Level: " + character.Level + ", Expected: 101");
+            Assert.AreEqual(700, character.HPMax, "character.HPMax: " + character.HPMax + ", Expected: 700");
+            Assert.AreEqual(80, character.Strength, "character.Strength: " + character.Strength + ", Expected: 80");
+            Assert.AreEqual(80, character.Dexterity, "character.Dexterity: " + character.Dexterity + ", Expected: 80");
+            Assert.AreEqual(80, character.Constitution, "character.Constitution: " + character.Constitution + ", Expected: 80");
+        }
+
+        [TestMethod]
         public void CharacterStatisticsTest()
         {
             Char1 = new Character("Char1", "ID1");
