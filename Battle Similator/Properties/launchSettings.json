@@ -2,7 +2,8 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"LAKEA\"\r\n\"WEAKMONSTER\"\r\n\"106861102\"\r\n\"IstalriSkolir\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\""
+      "commandLineArgs": "\"LAKEA\"\r\n\"HARDMONSTER\"\r\n\"106861102\"\r\n\"IstalriSkolir\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"",
+      "remoteDebugEnabled": true
     }
   }
 }

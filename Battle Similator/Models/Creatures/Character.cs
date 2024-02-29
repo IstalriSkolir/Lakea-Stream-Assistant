@@ -10,6 +10,7 @@
         private int bossesBeaten;
         private float monsterWinRate;
         private bool resetOnDeath = true;
+        private Random random;
 
         public int XP { get { return xp; } }
         public int Deaths { get { return deaths; } }
@@ -19,7 +20,7 @@
         public float MonsterWinRate { get { return monsterWinRate; } }
         public bool ResetOnDeath { get { return resetOnDeath; } set { resetOnDeath = value; } }
 
-        public Character(string name, string id)
+        public Character(string name, string id, int randomSeed = -1)
         {
             this.name = name;
             this.id = id;
@@ -37,9 +38,17 @@
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
+            if(randomSeed == -1)
+            {
+                this.random = new Random();
+            }
+            else
+            {
+                this.random = new Random(randomSeed);
+            }
         }
 
-        public Character(string name, string id, int xp, int level, int hp, int str, int dex, int con)
+        public Character(string name, string id, int xp, int level, int hp, int str, int dex, int con, int randomSeed = -1)
         {
             this.name= name;
             this.id = id;
@@ -57,6 +66,14 @@
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
+            if(randomSeed == -1)
+            {
+                this.random = new Random();
+            }
+            else
+            {
+                this.random = new Random(randomSeed);
+            }
         }
 
         public Character(Dictionary<string, string> props)
@@ -133,14 +150,13 @@
 
         private void levelUp()
         {
-            Random rand = new Random();
             level++;
             calculateNextLevel();
             if(level <= 100)
             {
                 for (int point = 0; point < 2; point++)
                 {
-                    int ran = rand.Next(0, 3);
+                    int ran = random.Next(0, 3);
                     switch (ran)
                     {
                         case 0:
@@ -155,7 +171,7 @@
                     }
                     updateAbilityModifiers();
                 }
-                hpMax += rand.Next(1, ConstitutionMod + 1);
+                hpMax += random.Next(1, ConstitutionMod + 1);
             }
             if(xp >= nextLevel)
             {
@@ -169,13 +185,76 @@
             if (resetOnDeath)
             {
                 deaths++;
-                level = 1;
-                xp = 300;
-                hpMax = 20;
-                strength = 9;
-                dexterity = 9;
-                constitution = 9;
-                levelUp();
+                reduceXP();
+            }
+        }
+
+        private void reduceXP()
+        {
+            float perCent = 0;
+            if(level <= 20)
+            {
+                perCent = 0.85f;
+            }
+            else if(level > 20 && level <= 50)
+            {
+                perCent = 0.7f;
+            }
+            else
+            {
+                perCent = 0.5f;
+            }
+            int newXP = (int)MathF.Round(perCent * (float)xp);
+            int remainder = newXP % 5;
+            xp = newXP - remainder;
+            int requiredXP = 0;
+            for (int count = 1; count <= level - 1; count++)
+            {
+                requiredXP += count * 30;
+            }
+            if (xp < requiredXP)
+            {
+                reduceLevel();
+            }
+        }
+
+        private void reduceLevel()
+        {
+            bool finished = false;
+            while (!finished)
+            {
+                level--;
+                for (int point = 0; point < 2; point++)
+                {
+                    int ran = random.Next(0, 3);
+                    switch (ran)
+                    {
+                        case 0:
+                            strength--;
+                            if (strength < 9) strength = 9;
+                            break;
+                        case 1:
+                            dexterity--;
+                            if(dexterity < 9) dexterity = 9;
+                            break;
+                        case 2:
+                            constitution--;
+                            if(constitution < 9) constitution = 9;
+                            break;
+                    }
+                    updateAbilityModifiers();
+                }
+                hpMax -= random.Next(1, ConstitutionMod + 1);
+                if(hpMax < 20) hpMax = 20;
+                int requiredXP = 0;
+                for (int count = 1; count <= level - 1; count++)
+                {
+                    requiredXP += count * 30;
+                }
+                if (xp >= requiredXP)
+                {
+                    finished = true;
+                }
             }
         }
     }

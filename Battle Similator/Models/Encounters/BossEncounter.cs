@@ -88,7 +88,6 @@ namespace Battle_Similator.Models.Encounters
                 result.Character.ID + "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" +
                 result.XPGained + "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level + bossBeaten + allBossesBeaten;
             io.SaveResultData(resultsString);
-            //io.SaveCharacterData(result.Character);
             healthBar.GenerateHealthBarImage(result.Monster);
         }
 
