@@ -76,7 +76,7 @@
             }
         }
 
-        public Character(Dictionary<string, string> props)
+        public Character(Dictionary<string, string> props, int randomSeed = -1)
         {
             this.name = props["NAME"];
             this.id = props["ID"];
@@ -95,6 +95,14 @@
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
+            if (randomSeed == -1)
+            {
+                this.random = new Random();
+            }
+            else
+            {
+                this.random = new Random(randomSeed);
+            }
         }
 
         public override void TakeDamage(int damage)
