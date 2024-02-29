@@ -29,18 +29,16 @@ namespace Lakea_Tester.Battle_Simulator
                 Assert.IsNotNull(result, "result");
                 Assert.IsNotNull(result.Character, "result.Character");
                 Assert.IsNotNull(result.Monster, "result.Monster");
-                Assert.IsTrue((result.Winner == result.Character.ID || result.Winner == result.Monster.ID), "result.Winner: " + result.Winner + ", Expected: " + 
-                    result.Character.ID + " || " + result.Monster.ID);
+                Assert.IsTrue((result.Winner == result.Character.ID || result.Winner == result.Monster.ID), "result.Winner");
                 if(result.Winner == result.Character.ID)
                 {
-                    Assert.AreEqual(result.Monster.XPValue, result.XPGained, "result.XPGained: " + result.XPGained + ", Expected: result.Monster.XPValue - " + 
-                        result.Monster.XPValue);
+                    Assert.AreEqual(result.Monster.XPValue, result.XPGained, "result.XPGained");
                     Assert.IsTrue(result.Character.IsAlive, "result.Character.IsAlive");
                     Assert.IsFalse(result.Monster.IsAlive, "result.Monster.IsAlive");
                 }
                 else if(result.Winner == result.Monster.ID)
                 {
-                    Assert.AreEqual(0, result.XPGained, "result.XPGained: " + result.XPGained + ", Expected: 0");
+                    Assert.AreEqual(0, result.XPGained, "result.XPGained");
                     Assert.IsTrue(result.Monster.IsAlive, "result.Monster.IsAlive");
                     Assert.IsFalse(result.Character.IsAlive, "result.Character.IsAlive");
                 }
@@ -57,11 +55,11 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.IsNotNull(result, "result");
             Assert.IsNotNull(result.Character, "result.Character");
             Assert.IsNotNull(result.Monster, "result.Monster");
-            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner: " + result.Winner + ", Expected: " + result.Monster.ID);
+            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner");
             Assert.IsTrue(result.Monster.IsAlive, "result.Monster.IsAlive");
             Assert.IsFalse(result.Character.IsAlive, "result.Character.IsAlive");
-            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP: " + result.Monster.HP + ", Expected: >0");
-            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP: " + result.Character.HP + ", Expected: <=0");
+            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP");
+            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP");
         }
 
         [TestMethod]
@@ -74,12 +72,12 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.IsNotNull(result, "result");
             Assert.IsNotNull(result.Character, "result.Character");
             Assert.IsNotNull(result.Monster, "result.Monster");
-            Assert.AreEqual(result.Winner, result.Character.ID, "result.Winner: " + result.Winner + ", Expected: " + result.Character.ID);
+            Assert.AreEqual(result.Winner, result.Character.ID, "result.Winner");
             Assert.IsTrue(result.Character.IsAlive, "result.Character.IsAlive");
             Assert.IsFalse(result.Monster.IsAlive, "result.Monster.IsAlive");
-            Assert.IsTrue(result.Character.HP > 0, "result.Character.HP: " + result.Character.HP + ", Expected: >0");
-            Assert.IsTrue(result.Monster.HP <= 0, "result.Monster.HP: " + result.Monster.HP + ", Expected: <=0");
-            Assert.AreEqual(100, result.XPGained, "result.XPGained: " + result.XPGained + ", Expected: 100");
+            Assert.IsTrue(result.Character.HP > 0, "result.Character.HP");
+            Assert.IsTrue(result.Monster.HP <= 0, "result.Monster.HP");
+            Assert.AreEqual(100, result.XPGained, "result.XPGained");
             Assert.IsFalse(result.LevelUp, "result.LevelUp");
         }
 
@@ -93,12 +91,12 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.IsNotNull(result, "result");
             Assert.IsNotNull(result.Character, "result.Character");
             Assert.IsNotNull(result.Monster, "result.Monster");
-            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner: " + result.Winner + ", Expected: " + result.Monster.ID);
+            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner");
             Assert.IsTrue(result.Monster.IsAlive, "result.Monster.IsAlive");
             Assert.IsFalse(result.Character.IsAlive, "result.Character.IsAlive");
-            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP: " + result.Monster.HP + ", Expected: >0");
-            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP: " + result.Character.HP + ", Expected: <=0");
-            Assert.AreEqual(0, result.XPGained, "result.XPGained: " + result.XPGained + ", Expected: 0");
+            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP");
+            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP");
+            Assert.AreEqual(0, result.XPGained, "result.XPGained");
             Assert.IsFalse(result.LevelUp, "result.LevelUp");
         }
 
@@ -112,11 +110,11 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.IsNotNull(result, "result");
             Assert.IsNotNull(result.Character, "result.Character");
             Assert.IsNotNull(result.Monster, "result.Monster");
-            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner: " + result.Winner + ", Expected: " + result.Monster.ID);
+            Assert.AreEqual(result.Winner, result.Monster.ID, "result.Winner");
             Assert.IsTrue(result.Monster.IsAlive, "result.Monster.IsAlive");
             Assert.IsFalse(result.Character.IsAlive, "result.Character.IsAlive");
-            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP: " + result.Monster.HP + ", Expected: >0");
-            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP: " + result.Character.HP + ", Expected: <=0");
+            Assert.IsTrue(result.Monster.HP > 0, "result.Monster.HP");
+            Assert.IsTrue(result.Character.HP <= 0, "result.Character.HP");
             Assert.IsFalse(result.LevelUp, "result.LevelUp");
         }
     }
