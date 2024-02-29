@@ -5,6 +5,7 @@ namespace Lakea_Tester.Battle_Simulator
     [TestClass]
     public class Character_Tests
     {
+        public int RandomSeed;
         Character Char1;
         Character Char2;
         Character Char3;
@@ -32,6 +33,7 @@ namespace Lakea_Tester.Battle_Simulator
             Char2 = new Character("Char2", "ID2", 0, 1, 20, 9, 9, 9);
             Char3 = new Character("Char3", "ID3", 300, 5, 35, 12, 13, 12);
             Char4 = new Character(CharProps);
+            RandomSeed = 100;
         }
 
         [TestMethod]
@@ -97,33 +99,67 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
-        public void CharacterDeathTest()
+        public void CharacterDeathNoResetTest()
         {
-            Char1 = new Character("Char1", "ID1");
-            Char2 = new Character("Char2", "ID2", 300, 10, 40, 15, 17, 15);
-            Char3 = new Character("Char3", "ID3", 300, 10, 40, 15, 17, 15);
-            Char2.ResetOnDeath = false;
-            Char1.TakeDamage(20);
-            Char2.TakeDamage(40);
-            Char3.TakeDamage(40);
-            Char4.TakeDamage(50);
-            Assert.IsFalse(Char1.IsAlive, "Char1.IsAlive");
-            Assert.AreEqual(1, Char1.Deaths, "Char1.Deaths: " + Char1.Deaths + ", Expected: 1");
-            Assert.IsFalse(Char2.IsAlive, "Char2.IsAlive");
-            Assert.AreEqual(10, Char2.Level, "Char2.Level: " + Char2.Level + ", Expected: 10");
-            Assert.IsFalse(Char3.IsAlive, "Char3.IsAlive");
-            Assert.AreEqual(5, Char3.Level, "Char3.Level: " + Char3.Level + ", Expected: 5");
-            Assert.AreEqual(300, Char3.XP, "Char3.XP: " + Char3.XP + ", Expected: 300");
-            Assert.IsTrue(Char3.HPMax >= 20 && Char3.HPMax <= 50, "Char3.HPMax: " + Char3.HPMax + ", Expected: 20>x>50");
-            int abilityTotal = Char3.Strength + Char3.Dexterity + Char3.Constitution;
-            Assert.AreEqual(35, abilityTotal, "Char3 Ability Total: " + abilityTotal + ", Expected: 35, Str: " + Char3.Strength + ", Dex: " +
-                Char3.Dexterity + ", Con: " + Char3.Constitution);
-            int abilityModTotal = Char3.StrengthMod + Char3.DexterityMod + Char3.ConstitutionMod;
-            Assert.IsTrue(abilityModTotal >= 10 && abilityModTotal <= 13,
-                "Char3 Ability Mod Total: " + abilityModTotal + ", Expected: 10>x>13, StrMod: " + Char3.StrengthMod + ", DexMod: " + 
-                Char3.DexterityMod + ", ConMod: " + Char3.ConstitutionMod);
-            Assert.IsFalse(Char4.IsAlive, "Char4.IsAlive");
-            Assert.AreEqual((int.Parse(CharProps["DEATHS"]) + 1), Char4.Deaths, "Char4.Deaths: " + Char4.Deaths + ", Expected: " + CharProps["DEATHS"]);
+            Character character = new Character("Character", "Character_ID", 300, 5, 30, 12, 12, 12);
+            character.ResetOnDeath = false;
+            character.TakeDamage(30);
+            Assert.IsFalse(character.IsAlive, "character.Alive");
+            Assert.AreEqual(0, character.Deaths, "character.Deaths");
+            Assert.AreEqual(5, character.Level, "character.Level");
+            Assert.AreEqual(300, character.XP, "character.XP");
+            Assert.AreEqual(30, character.HPMax, "character.MaxHP");
+            Assert.AreEqual(12, character.Strength, "character.Strength");
+            Assert.AreEqual(12, character.Dexterity, "character.Dexterity");
+            Assert.AreEqual(12, character.Constitution, "character.Constitution");
+            Assert.AreEqual(4, character.StrengthMod, "character.StrengthMod");
+            Assert.AreEqual(4, character.DexterityMod, "character.DexterityMod");
+            Assert.AreEqual(4, character.ConstitutionMod, "character.ConstitutionMod");
+        }
+
+        [TestMethod]
+        public void CharacterDeathResetLevel10()
+        {
+            Character character = new Character("Character", "Character_ID", 1350, 10, 50, 15, 15, 15, RandomSeed);
+            character.TakeDamage(50);
+            Assert.IsFalse(character.IsAlive, "character.IsAlive");
+            Assert.AreEqual(1, character.Deaths, "character.Deaths");
+            Assert.AreEqual(9, character.Level, "character.Level");
+            Assert.AreEqual(1145, character.XP, "character.XP");
+            Assert.AreEqual(47, character.HPMax, "character.HPMax");
+            Assert.AreEqual(14, character.Strength, "character.Strength");
+            Assert.AreEqual(15, character.Dexterity, "character.Dexterity");
+            Assert.AreEqual(14, character.Constitution, "character.Constitution");
+        }
+
+        [TestMethod]
+        public void CharacterDeathResetLevel30()
+        {
+            Character character = new Character("Character", "Character_ID", 13050, 30, 100, 25, 25, 25, RandomSeed);
+            character.TakeDamage(100);
+            Assert.IsFalse(character.IsAlive, "character.IsAlive");
+            Assert.AreEqual(1, character.Deaths, "character.Deaths");
+            Assert.AreEqual(25, character.Level, "character.Level");
+            Assert.AreEqual(9135, character.XP, "character.XP");
+            Assert.AreEqual(73, character.HPMax, "character.HPMax");
+            Assert.AreEqual(23, character.Strength, "character.Strength");
+            Assert.AreEqual(21, character.Dexterity, "character.Dexterity");
+            Assert.AreEqual(21, character.Constitution, "character.Constition");
+        }
+
+        [TestMethod]
+        public void CharacterDeathResetLevel60()
+        {
+            Character character = new Character("Character", "Character_ID", 53100, 60, 300, 40, 40, 40, RandomSeed);
+            character.TakeDamage(300);
+            Assert.IsFalse(character.IsAlive, "character.IsAlive");
+            Assert.AreEqual(1, character.Deaths, "character.Deaths");
+            Assert.AreEqual(42, character.Level, "character.Level");
+            Assert.AreEqual(26550, character.XP, "character.XP");
+            Assert.AreEqual(179, character.HPMax, "character.HPMax");
+            Assert.AreEqual(33, character.Strength, "character.Strength");
+            Assert.AreEqual(24, character.Dexterity, "character.Dexterity");
+            Assert.AreEqual(27, character.Constitution, "character.Constition");
         }
 
         [TestMethod]
