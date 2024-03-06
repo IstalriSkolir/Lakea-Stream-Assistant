@@ -9,6 +9,7 @@
         private int bossesFought;
         private int bossesBeaten;
         private float monsterWinRate;
+        private int prestige;
         private bool resetOnDeath = true;
         private Random random;
 
@@ -18,6 +19,7 @@
         public int BossesFought { get { return bossesFought; } }
         public int BossesBeaten { get { return bossesBeaten; } }
         public float MonsterWinRate { get { return monsterWinRate; } }
+        public int Prestige {  get { return prestige; } }
         public bool ResetOnDeath { get { return resetOnDeath; } set { resetOnDeath = value; } }
 
         public Character(string name, string id, int randomSeed = -1)
@@ -35,6 +37,7 @@
             this.monstersKilled = 0;
             this.bossesFought = 0;
             this.bossesBeaten = 0;
+            this.prestige = 0;
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
@@ -63,6 +66,7 @@
             this.monstersKilled = 0;
             this.bossesFought = 0;
             this.bossesBeaten = 0;
+            this.prestige = 0;
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
@@ -92,6 +96,7 @@
             if(props.ContainsKey("BOSSES_FOUGHT")) { this.bossesFought = int.Parse(props["BOSSES_FOUGHT"]); } else { this.bossesFought = 0; }
             if(props.ContainsKey("BOSSES_BEATEN")) { this.bossesBeaten = int.Parse(props["BOSSES_BEATEN"]); } else { this.bossesBeaten= 0; }
             if(props.ContainsKey("MONSTER_WIN_RATE")) { this.monsterWinRate = float.Parse(props["MONSTER_WIN_RATE"]); } else { this.monsterWinRate = 0; }
+            if(props.ContainsKey("PRESTIGE")) { this.prestige = int.Parse(props["PRESTIGE"]); } else { this.prestige= 0; }
             this.isAlive = true;
             this.updateAbilityModifiers();
             this.calculateNextLevel();
@@ -145,6 +150,20 @@
         {
             float totalBattles = (float)(monstersKilled + deaths);
             monsterWinRate = (float)Math.Round(((monstersKilled / totalBattles) * 100), 1);
+        }
+
+        public void GainPrestige()
+        {
+            prestige++;
+            xp = 0;
+            level = 1;
+            strength = 9;
+            dexterity = 9;
+            constitution = 9;
+            hpMax = 20;
+            hp = 20;
+            calculateNextLevel();
+            IncreaseXP(300);
         }
 
         private void calculateNextLevel()

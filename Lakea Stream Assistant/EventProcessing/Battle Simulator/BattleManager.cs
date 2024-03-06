@@ -105,9 +105,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     {
                         Dictionary<string, string> args = new Dictionary<string, string>
                         {
-                            { "Message", "Your not a high enough level yet @" + displayName + ", you can't reset until you're level 5!" }
+                            { "Message", "You're not a high enough level yet @" + displayName + ", you can't reset until you're level 5!" }
                         };
                         eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Failed_Character_Reset", args: args));
+                        return;
+                    }
+                } 
+                else if(eve == "CHARACTERPRESTIGE")
+                {
+                    Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
+                    int level = Int32.Parse(character["LEVEL"]);
+                    if(level < 100)
+                    {
+                        Dictionary<string, string> args = new Dictionary<string, string>
+                        {
+                            { "Message", "You're not a high enough level yet @" + displayName + ", you can't prestige until you're level 100!" }
+                        };
+                        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Can't Prestige", "Battle_Simulator_Cant_Prestige", args: args));
                         return;
                     }
                 }
@@ -218,6 +232,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     case (int)ExitCode.Boss_Battle:
                         bossBattleEnded(results);
                         break;
+                    case (int)ExitCode.Character_Prestige:
+                        characterPrestiageEnded(results);
+                        break;
                     case (int)ExitCode.Character_Reset:
                         characterResetEnded(results);
                         break;
@@ -311,6 +328,28 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
             }
+        }
+
+        //Read the prestige results and send them to Twitch
+        private void characterPrestiageEnded(Dictionary<string, string> results)
+        {
+            int level = Int32.Parse(results["CHARACTER_LEVEL"]);
+            int nextLevel = 0;
+            for (int count = 1; count <= level; count++)
+            {
+                nextLevel += count * 30;
+            }
+            int strMod = Int32.Parse(results["CHARACTER_STR"]) / 3;
+            int dexMod = Int32.Parse(results["CHARACTER_DEX"]) / 3;
+            int conMod = Int32.Parse(results["CHARACTER_CON"]) / 3;
+            string message = "@" + results["CHARACTER_NAME"] + " Just reached " + results["PRESTIGE"] + " prestige! LEVEL: " + results["CHARACTER_LEVEL"] + ", XP: " +
+                results["CHARACTER_XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " + results["CHARACTER_HP"] + ", STR: " + results["CHARACTER_STR"] + "(+" + strMod + 
+                "), DEX: " + results["CHARACTER_DEX"] + "(+" + dexMod + "), CON: " + results["CHARACTER_CON"] + "(+" + conMod + ")";
+            Dictionary<string, string> args = new Dictionary<string, string>()
+            {
+                { "Message", message }
+            };
+            eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Character Prestige", "Battle_Simulator_Character_Prestige", args: args));
         }
 
         //Read the reset results and send them to Twitch

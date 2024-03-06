@@ -57,6 +57,11 @@ namespace Battle_Similator
                         bossEncounter.Start(args[2], args[3]);
                         exitCode((int)ExitCode.Boss_Battle);
                         break;
+                    case "CHARACTERPRESTIGE":
+                        CharacterPrestige prestige = new CharacterPrestige(io);
+                        prestige.Start(args[2], args[3]);
+                        exitCode((int)ExitCode.Character_Prestige);
+                        break;
                     case "CHARACTERRESET":
                         CharacterReset characterReset = new CharacterReset(io);
                         characterReset.Start(args[2], args[3]);

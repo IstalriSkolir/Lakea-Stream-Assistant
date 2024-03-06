@@ -32,7 +32,7 @@ namespace Battle_Similator.Models.Resources
                 string characterString = "NAME:" + character.Name + "\nID:" + character.ID + "\nLEVEL:" + character.Level + "\nXP:" + character.XP + "\nHP:" + character.HPMax +
                     "\nSTR:" + character.Strength + "\nDEX:" + character.Dexterity + "\nCON:" + character.Constitution + "\nDEATHS:" + character.Deaths + "\nMONSTERS_KILLED:" +
                     character.MonstersKilled + "\nBOSSES_FOUGHT:" + character.BossesFought + "\nBOSSES_BEATEN:" + character.BossesBeaten + "\nMONSTER_WIN_RATE:" + 
-                    character.MonsterWinRate;
+                    character.MonsterWinRate + "\nPRESTIGE:" + character.Prestige;
                 File.WriteAllText(filePath, characterString);
             }
             catch (Exception)
@@ -94,6 +94,9 @@ namespace Battle_Similator.Models.Resources
                                 break;
                             case "MONSTER_WIN_RATE":
                                 props.Add("MONSTER_WIN_RATE", parts[1]);
+                                break;
+                            case "PRESTIGE":
+                                props.Add("PRESTIGE", parts[1]);
                                 break;
                             default:
                                 break;

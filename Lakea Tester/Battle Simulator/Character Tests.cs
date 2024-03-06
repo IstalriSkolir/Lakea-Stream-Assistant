@@ -24,7 +24,8 @@ namespace Lakea_Tester.Battle_Simulator
             { "MONSTERS_KILLED", "15" },
             { "BOSSES_FOUGHT", "3" },
             { "BOSSES_BEATEN", "1" },
-            { "MONSTER_WIN_RATE", "75" }
+            { "MONSTER_WIN_RATE", "75" },
+            { "PRESTIGE", "3" }
         };
 
         public Character_Tests()
@@ -84,6 +85,7 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.AreEqual(int.Parse(CharProps["BOSSES_FOUGHT"]), Char4.BossesFought, "Char4.BossesFought");
             Assert.AreEqual(int.Parse(CharProps["BOSSES_BEATEN"]), Char4.BossesBeaten, "Char4.BossesBeaten");
             Assert.AreEqual(float.Parse(CharProps["MONSTER_WIN_RATE"]), Char4.MonsterWinRate, "Char4.MonsterWinRate");
+            Assert.AreEqual(int.Parse(CharProps["PRESTIGE"]), Char4.Prestige, "Char4.Prestige");
         }
 
         [TestMethod]
@@ -244,6 +246,26 @@ namespace Lakea_Tester.Battle_Simulator
             Assert.AreEqual(2, Char2.BossesBeaten, "Char2.BossesBeaten");
             Assert.AreEqual(100, Char1.MonsterWinRate, "Char1.MonsterWinRate");
             Assert.AreEqual(76.2f, Char2.MonsterWinRate, "Char2.MonsterWinRate");
+        }
+
+        [TestMethod]
+        public void CharacterGainPrestigeTest()
+        {
+            Character character = new Character(CharProps, RandomSeed);
+            character.GainPrestige();
+            Assert.AreEqual(4, character.Prestige, "character.Prestige");
+            Assert.AreEqual(5, character.Level, "character.Level");
+            Assert.AreEqual(300, character.XP, "character.XP");
+            Assert.AreEqual(31, character.HPMax, "character.HPMax");
+            Assert.AreEqual(11, character.Strength, "character.Strength");
+            Assert.AreEqual(11, character.Dexterity, "character.Dexterity");
+            Assert.AreEqual(13, character.Constitution, "character.Constitution");
+            Assert.AreEqual(CharProps["NAME"], character.Name, "character.Name");
+            Assert.AreEqual(CharProps["ID"], character.ID, "character.ID");
+            Assert.AreEqual(int.Parse(CharProps["MONSTERS_KILLED"]), character.MonstersKilled, "character.MonstersKilled");
+            Assert.AreEqual(int.Parse(CharProps["BOSSES_FOUGHT"]), character.BossesFought, "character.BossesFought");
+            Assert.AreEqual(int.Parse(CharProps["BOSSES_BEATEN"]), character.BossesBeaten, "character.BossesBeaten");
+            Assert.AreEqual(float.Parse(CharProps["MONSTER_WIN_RATE"]), character.MonsterWinRate, "character.MonsterWinRate");
         }
     }
 }
