@@ -19,8 +19,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventOutputs outputs;
         private EventPassArguments passArgs;
         private LakeaCaptured captured;
-        //private string[] capturedRetortTypes;
-        //private SettingsCapturedEventRetort capturedRetortTypes;
 
         public EventInput(Config config, DefaultCommands commands)
         {
@@ -30,7 +28,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             twitch = new TwitchFunctions(config.Events, passArgs);
             captured = new LakeaCaptured(this, lakea, config.Settings.CapturedEventRetorts);
             outputs = new EventOutputs(this, config.Settings, captured);
-            //capturedRetortTypes = config.Settings.CapturedEventRetorts.EventType;
         }
 
         //Called on a new event, checks event type before calling relevent function

@@ -81,6 +81,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                             case "MONSTER_WIN_RATE":
                                 characterDict.Add("MONSTER_WIN_RATE", parts[1]);
                                 break;
+                            case "PRESTIGE":
+                                characterDict.Add("PRESTIGE", parts[1]);
+                                break;
                             default:
                                 Terminal.Output("Lakea: Unrecognised Property in Character File -> " + property);
                                 Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Property in Character File -> " + property);
@@ -236,6 +239,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                             break;
                         case "XP_GAINED":
                             resultsDict.Add("XP_GAINED", parts[1]);
+                            break;
+                        case "PRESTIGE":
+                            resultsDict.Add("PRESTIGE", parts[1]);
                             break;
                         default:
                             Terminal.Output("Lakea: Unrecognised Property in Battle Results -> " + result);
