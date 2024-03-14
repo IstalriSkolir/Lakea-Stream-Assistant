@@ -97,6 +97,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
+                TwitchSubTier subTier = TwitchSubTier.None;
                 if(eve == "CHARACTERRESET")
                 {
                     Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
@@ -125,7 +126,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                         return;
                     }
                 }
-                string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\"";
+                else if(eve == "CHARACTERTRAINING")
+                {
+                    subTier = Twitch.GetUserSubscriptionTier(accountID).Result;
+                }
+                string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\"";
                 queue.Add(item);
                 if (!active)
                 {
@@ -148,7 +153,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 int level = Int32.Parse(character["LEVEL"]);
                 if(level >= 5)
                 {
-                    string item = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\"";
+                    TwitchSubTier subTier = Twitch.GetUserSubscriptionTier(accountID).Result;
+                    string item = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\"";
                     queue.Add(item);
                     if(!active)
                     {

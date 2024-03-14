@@ -12,6 +12,7 @@
         private int prestige;
         private bool resetOnDeath = true;
         private Random random;
+        private TwitchSubTier subTier = TwitchSubTier.None;
 
         public int XP { get { return xp; } }
         public int Deaths { get { return deaths; } }
@@ -110,6 +111,25 @@
             }
         }
 
+        public void SetTwitchSubTier(string tierString)
+        {
+            switch(tierString)
+            {
+                case "Tier_1":
+                    subTier = TwitchSubTier.Tier_1;
+                    break;
+                case "Tier_2":
+                    subTier = TwitchSubTier.Tier_2;
+                    break;
+                case "Tier_3":
+                    subTier = TwitchSubTier.Tier_3;
+                    break;
+                default:
+                    subTier = TwitchSubTier.None;
+                    break;
+            }
+        }
+
         public override void TakeDamage(int damage)
         {
             this.hp -= damage;
@@ -164,6 +184,32 @@
             hp = 20;
             calculateNextLevel();
             IncreaseXP(300);
+        }
+
+        public int ApplySubBonusXP(int xpGain)
+        {
+            float multiplier = 1f;
+            switch (subTier)
+            {
+                case TwitchSubTier.None:
+                    break;
+                case TwitchSubTier.Tier_1:
+                    multiplier = 1.2f;
+                    break;
+                case TwitchSubTier.Tier_2:
+                    multiplier = 1.6f;
+                    break;
+                case TwitchSubTier.Tier_3:
+                    multiplier = 2f;
+                    break;
+            }
+            int totalGain = (int)((float)xpGain * multiplier);
+            if (totalGain % 5 != 0)
+            {
+                int remainder = totalGain % 5;
+                totalGain -= remainder;
+            }
+            return totalGain;
         }
 
         private void calculateNextLevel()

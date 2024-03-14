@@ -11,6 +11,9 @@ using TwitchLib.Client.Events;
 using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Events;
+using TwitchLib.Api;
+using TwitchLib.Api.Helix.Models.Subscriptions;
+using System.Drawing;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -21,9 +24,11 @@ namespace Lakea_Stream_Assistant.Singletons
         private static EventInput eventHandler;
         private static TwitchPubSub pubSub;
         private static TwitchClient client;
+        private static TwitchAPI api;
         private static string channelUsername;
         private static string channelID;
         private static string channelAuthKey;
+        private static string clientID;
         private static string botUsername;
         private static string botAuthKey;
         private static string botChannelToJoin;
@@ -44,12 +49,14 @@ namespace Lakea_Stream_Assistant.Singletons
                 channelUsername = config.Twitch.StreamingChannel.UserName;
                 channelID = config.Twitch.StreamingChannel.ID.ToString();
                 channelAuthKey = config.Twitch.StreamingChannel.AuthKey;
+                clientID = config.Twitch.StreamingChannel.ClientID;
                 botUsername = config.Twitch.BotChannel.UserName;
                 botAuthKey = config.Twitch.BotChannel.UserToken;
                 botChannelToJoin = config.Twitch.BotChannel.ChannelConnection;
                 commandIdentifier = config.Twitch.CommandIdentifier.ToCharArray()[0];
                 initiliaseClient();
                 initiliasePubSub();
+                initialiseAPI();
             }
             catch (Exception ex)
             {
@@ -118,6 +125,20 @@ namespace Lakea_Stream_Assistant.Singletons
                 Terminal.Output("Twitch: PubSub Failed to Connect -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+        }
+
+        //Initiliase Twitch's API connection
+        private static void initialiseAPI()
+        {
+            Terminal.Output("Twitch: API Connecting...");
+            Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch API...");
+            api = new TwitchAPI();
+            api.Settings.ClientId = clientID;
+            api.Settings.AccessToken = channelAuthKey;
+            //Subscription[] subs = GetSubscriberList().Result;
+            //Subscription sub = CheckUserSubscription("106861102").Result;
+            //CheckUserSubscription("106861102");//.Result;
+            //TwitchSub sub = GetUserSubscriptionTier("756882056").Result;
         }
 
         #endregion
@@ -271,6 +292,84 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("Twitch: Subscription -> " + e.Subscription.DisplayName);
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscription);
             eventHandler.NewEvent(new TwitchPubSubSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+        }
+
+        #endregion
+
+        #region Twitch API
+
+        //Get list of channel subscribers
+        //public async static Task<Subscription[]> GetSubscriberList(int size = 20)
+        //{
+        //    try
+        //    {
+        //        Terminal.Output("Twitch: Fetching Subscriber List...");
+        //        Logs.Instance.NewLog(LogLevel.Info, "Twitch Fetch Subscriber List...");
+        //        var allSubscriptions = await api.Helix.Subscriptions.GetBroadcasterSubscriptionsAsync(channelID, size, null, channelAuthKey);
+        //        return allSubscriptions.Data;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Terminal.Output("Twitch: Failed to Fetch Subscriber List -> " + ex.Message);
+        //        Logs.Instance.NewLog(LogLevel.Error, ex);
+        //    }
+        //    return new Subscription[0];
+        //}
+
+        //Get user subscription state
+        //public async static Task<Subscription> CheckUserSubscription(string userID)
+        //public async static void CheckUserSubscription(string userID)
+        //{
+        //    try
+        //    {
+        //        Terminal.Output("Twitch: Checking User Subscription...");
+        //        Logs.Instance.NewLog(LogLevel.Info, "Twitch Checking User Subscription...");
+        //        var subscription = await api.Helix.Subscriptions.CheckUserSubscriptionAsync(channelID, userID, channelAuthKey);
+        //        //var subscription = await api.Helix.Subscriptions.CheckUserSubscriptionAsync(channelID, userID);
+        //        int i = 0;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Terminal.Output("Twitch: Failed to Check User Subscription -> " + ex.Message);
+        //        Logs.Instance.NewLog(LogLevel.Error, ex);
+        //    }
+        //    //return null;
+        //}
+
+        public async static Task<TwitchSubTier> GetUserSubscriptionTier(string userID)
+        {
+            try
+            {
+                Terminal.Output("Twitch: Fetching User Subscription...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Fetch User Subscription...");
+                var allSubscriptions = await api.Helix.Subscriptions.GetBroadcasterSubscriptionsAsync(channelID, 100, null, channelAuthKey);
+                string tierString = "NONE";
+                foreach (Subscription sub in allSubscriptions.Data)
+                {
+                    if (userID.Equals(sub.UserId))
+                    {
+                        tierString = sub.Tier;
+                        break;
+                    }
+                }
+                switch (tierString)
+                {
+                    case "1000":
+                        return TwitchSubTier.Tier_1;
+                    case "2000":
+                        return TwitchSubTier.Tier_2;
+                    case "3000":
+                        return TwitchSubTier.Tier_3;
+                    default:
+                        return TwitchSubTier.None;
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Fetch User Subscription -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return TwitchSubTier.None;
         }
 
         #endregion

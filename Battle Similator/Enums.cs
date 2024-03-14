@@ -12,3 +12,11 @@
     IO_Load_Error = 22,
     Encounter_Error = 31
 }
+
+public enum TwitchSubTier : byte
+{
+    None,
+    Tier_1,
+    Tier_2,
+    Tier_3
+}

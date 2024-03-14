@@ -41,7 +41,8 @@ namespace Battle_Similator.Models.Encounters
             }
             if (character.IsAlive)
             {
-                return new EncounterResult(character, monster, encounterType, character.ID, monster.XPValue);
+                int xpGained = character.ApplySubBonusXP(monster.XPValue);
+                return new EncounterResult(character, monster, encounterType, character.ID, xpGained);
             }
             else
             {

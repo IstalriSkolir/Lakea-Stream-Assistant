@@ -13,16 +13,17 @@ namespace Battle_Similator.Models.Encounters
             this.io = io;
         }
 
-        public void Start(string monsterStrength, string characterID, string characterName)
+        public void Start(string monsterStrength, string characterID, string characterName, string subTier)
         {
-            Encounter encounter = preEncounter(monsterStrength, characterID, characterName);
+            Encounter encounter = preEncounter(monsterStrength, characterID, characterName, subTier);
             EncounterResult result = encounter.Run();
             postEncounter(result);
         }
 
-        private Encounter preEncounter(string monsterStrength, string characterID, string characterName)
+        private Encounter preEncounter(string monsterStrength, string characterID, string characterName, string subTier)
         {
             Character character = io.LoadCharacterData(characterID, characterName);
+            character.SetTwitchSubTier(subTier);
             Monster monster = getMonster(monsterStrength);
             return new Encounter(character, monster, monsterStrength + "MONSTER");
         }
