@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lakea_Stream_Assistant.Enums
+﻿namespace Lakea_Stream_Assistant.Enums
 {
     public enum LogLevel : byte
     {
@@ -12,5 +6,13 @@ namespace Lakea_Stream_Assistant.Enums
         Warning,
         Error,
         Fatal
+    }
+
+    public enum TwitchSubTier : byte
+    {
+        None,
+        Tier_1,
+        Tier_2,
+        Tier_3
     }
 }

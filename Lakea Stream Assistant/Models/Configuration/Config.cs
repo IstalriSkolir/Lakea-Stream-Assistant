@@ -670,6 +670,8 @@ public partial class ConfigTwitchStreamingChannel
 
     private int idField;
 
+    private string clientIDField;
+
     private string authKeyField;
 
     /// <remarks/>
@@ -695,6 +697,19 @@ public partial class ConfigTwitchStreamingChannel
         set
         {
             this.idField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string ClientID
+    {
+        get
+        {
+            return this.clientIDField;
+        }
+        set
+        {
+            this.clientIDField = value;
         }
     }
 

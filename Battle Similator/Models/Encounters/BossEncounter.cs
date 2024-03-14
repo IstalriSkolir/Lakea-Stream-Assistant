@@ -16,16 +16,17 @@ namespace Battle_Similator.Models.Encounters
             this.bossList = io.LoadBossList();
         }
 
-        public void Start(string characterID, string characterName)
+        public void Start(string characterID, string characterName, string subTier)
         {
-            Encounter encounter = preEncounter(characterID, characterName);
+            Encounter encounter = preEncounter(characterID, characterName, subTier);
             EncounterResult result = encounter.Run();
             postEncounter(result);
         }
 
-        private Encounter preEncounter(string characterID, string characterName)
+        private Encounter preEncounter(string characterID, string characterName, string subTier)
         {
             Character character = io.LoadCharacterData(characterID, characterName);
+            character.SetTwitchSubTier(subTier);
             character.ResetOnDeath = false;
             Monster monster;
             if (io.CurrentBossFileExists())

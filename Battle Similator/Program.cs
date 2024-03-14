@@ -19,42 +19,42 @@ namespace Battle_Similator
             }
             else
             {
-                IO io = new IO(args[0], args[4]);
+                IO io = new IO(args[0], args[5]);
                 switch(args[1])
                 {
                     case "ENVIRONMENTRESET":
-                        EnvironmentReset reset = new EnvironmentReset(io, args[0], args[4]);
+                        EnvironmentReset reset = new EnvironmentReset(io, args[0], args[5]);
                         reset.Start();
                         exitCode(0);
                         break;
                     case "CHARACTERTRAINING":
                         Training trainer = new Training(io);
-                        trainer.Start(args[2], args[3]);
+                        trainer.Start(args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Character_Training);
                         break;
                     case "WEAKMONSTER":
                         MonsterEncounter weakMonster = new MonsterEncounter(io);
-                        weakMonster.Start("WEAK", args[2], args[3]);
+                        weakMonster.Start("WEAK", args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "NORMALMONSTER":
                         MonsterEncounter normalMonster = new MonsterEncounter(io);
-                        normalMonster.Start("NORMAL", args[2], args[3]);
+                        normalMonster.Start("NORMAL", args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "HARDMONSTER":
                         MonsterEncounter hardMonster = new MonsterEncounter(io);
-                        hardMonster.Start("HARD", args[2], args[3]);
+                        hardMonster.Start("HARD", args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "RANDOMMONSTER":
                         MonsterEncounter randomMonster = new MonsterEncounter(io);
-                        randomMonster.Start("RANDOM", args[2], args[3]);
+                        randomMonster.Start("RANDOM", args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "BOSSBATTLE":
-                        BossEncounter bossEncounter = new BossEncounter(io, args[0], args[4]);
-                        bossEncounter.Start(args[2], args[3]);
+                        BossEncounter bossEncounter = new BossEncounter(io, args[0], args[5]);
+                        bossEncounter.Start(args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Boss_Battle);
                         break;
                     case "CHARACTERPRESTIGE":

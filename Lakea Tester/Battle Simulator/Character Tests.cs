@@ -120,7 +120,7 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
-        public void CharacterDeathResetLevel10()
+        public void CharacterDeathResetLevel10Test()
         {
             Character character = new Character("Character", "Character_ID", 1350, 10, 50, 15, 15, 15, RandomSeed);
             character.TakeDamage(50);
@@ -135,7 +135,7 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
-        public void CharacterDeathResetLevel30()
+        public void CharacterDeathResetLevel30Test()
         {
             Character character = new Character("Character", "Character_ID", 13050, 30, 100, 25, 25, 25, RandomSeed);
             character.TakeDamage(100);
@@ -150,7 +150,7 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
-        public void CharacterDeathResetLevel60()
+        public void CharacterDeathResetLevel60Test()
         {
             Character character = new Character("Character", "Character_ID", 53100, 60, 300, 40, 40, 40, RandomSeed);
             character.TakeDamage(300);
@@ -165,21 +165,48 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
+        public void CharacterApplyBonusXPNoSubTest()
+        {
+            Character character = new Character(CharProps);
+            character.SetTwitchSubTier("NONE");
+            int xpGain = character.ApplySubBonusXP(100);
+            Assert.AreEqual(100, xpGain, "xpGain");
+        }
+
+        [TestMethod]
+        public void CharacterApplyBonusXPTier1Test()
+        {
+            Character character = new Character(CharProps);
+            character.SetTwitchSubTier("Tier_1");
+            int xpGain = character.ApplySubBonusXP(100);
+            Assert.AreEqual(120, xpGain, "xpGain");
+        }
+
+        [TestMethod]
+        public void CharacterApplyBonusXPTier2Test()
+        {
+            Character character = new Character(CharProps);
+            character.SetTwitchSubTier("Tier_2");
+            int xpGain = character.ApplySubBonusXP(100);
+            Assert.AreEqual(160, xpGain, "xpGain");
+        }
+
+        [TestMethod]
+        public void CharacterApplyBonusXPTier3Test()
+        {
+            Character character = new Character(CharProps);
+            character.SetTwitchSubTier("Tier_3");
+            int xpGain = character.ApplySubBonusXP(100);
+            Assert.AreEqual(200, xpGain, "xpGain");
+        }
+
+        [TestMethod]
         public void CharacterIncreaseXPNoLevelUpTest()
         {
-            Char1 = new Character("Char1", "ID1");
-            Char2 = new Character("Char2", "ID2");
-            Char3 = new Character("Char3", "ID3", 90, 3, 30, 10, 11, 10);
-            Char1.IncreaseXP(5);
-            Char2.IncreaseXP(10);
-            Char3.IncreaseXP(10);
-            Char3.IncreaseXP(25);
-            Assert.AreEqual(1, Char1.Level, "Char1.Level");
-            Assert.AreEqual(5, Char1.XP, "Char1.XP");
-            Assert.AreEqual(1, Char2.Level, "Char2.Level");
-            Assert.AreEqual(10, Char2.XP, "Char2.XP");
-            Assert.AreEqual(3, Char3.Level, "Char3.Level");
-            Assert.AreEqual(125, Char3.XP, "Char3.XP");
+            Character character = new Character(CharProps);
+            character.IncreaseXP(100);
+            Assert.AreEqual(5, character.Level, "character.Level");
+            Assert.AreEqual(400, character.XP, "character.XP");
         }
 
         [TestMethod]
@@ -210,7 +237,7 @@ namespace Lakea_Tester.Battle_Simulator
         }
 
         [TestMethod]
-        public void CharacterLevelUpOver100()
+        public void CharacterLevelUpOver100Test()
         {
             Character character = new Character("Character", "Character_ID", 148500, 100, 700, 80, 80, 80);
             character.IncreaseXP(3000);
