@@ -113,7 +113,8 @@ namespace Battle_Similator.Models.Encounters
             {
                 Character character = io.LoadCharacterData(fighter);
                 character.NewBossBeaten();
-                character.IncreaseXP(xpGain);
+                int characterXPGain = character.ApplySubBonusXP(xpGain);
+                character.IncreaseXP(characterXPGain);
                 io.SaveCharacterData(character);
             }
             io.DeleteCurrentBossFighters();

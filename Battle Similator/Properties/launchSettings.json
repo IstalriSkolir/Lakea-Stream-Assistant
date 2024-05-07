@@ -2,7 +2,7 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"LAKEA\"\r\n\"CHARACTERTRAINING\"\r\n\"106861102\"\r\n\"IstalriSkolir\"\r\n\"Tier_3\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"",
+      "commandLineArgs": "\"LAKEA\"\r\n\"BOSSBATTLE\"\r\n\"106861102\"\r\n\"IstalriSkolir\"\r\n\"Tier_3\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\LIVEDATA\\\\Creatures\\\\\"",
       "remoteDebugEnabled": true
     }
   }
