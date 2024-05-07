@@ -57,6 +57,11 @@ namespace Battle_Similator
                         bossEncounter.Start(args[2], args[3], args[4]);
                         exitCode((int)ExitCode.Boss_Battle);
                         break;
+                    case "BOSSHEALTHBARUPDATE":
+                        UpdateBossHealthbar bossHealthbar = new UpdateBossHealthbar(io, args[0], args[5]);
+                        bossHealthbar.Start();
+                        exitCode((int)ExitCode.Boss_Healthbar_Update);
+                        break;
                     case "CHARACTERPRESTIGE":
                         CharacterPrestige prestige = new CharacterPrestige(io);
                         prestige.Start(args[2], args[3]);
