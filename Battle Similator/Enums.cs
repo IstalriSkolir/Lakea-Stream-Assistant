@@ -5,7 +5,6 @@
     Boss_Battle = 3,
     Boss_Healthbar_Update = 4,
     Character_Prestige = 8,
-    Character_Reset = 9,
     No_Args_Given = 11,
     Not_Enough_Args = 12,
     Invalid_Args = 13,

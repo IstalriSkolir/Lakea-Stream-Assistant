@@ -13,11 +13,9 @@ D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Microsoft.TestPlatform.AdapterUtilities.dll
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\BossHealthBarBorder.png
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Quotes.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\BadConfig.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\Config.xml
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Configurations\ConfigExample.xml
-D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Resources\Python\TestPython.py
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.deps.json
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.runtimeconfig.json
 D:\Visual Studio\Lakea-Stream-Assistant\Lakea Tester\bin\Debug\net6.0\Lakea Tester.dll

@@ -97,22 +97,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             try
             {
-                TwitchSubTier subTier = TwitchSubTier.None;
-                if(eve == "CHARACTERRESET")
-                {
-                    Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
-                    int level = Int32.Parse(character["LEVEL"]);
-                    if(level < 5)
-                    {
-                        Dictionary<string, string> args = new Dictionary<string, string>
-                        {
-                            { "Message", "You're not a high enough level yet @" + displayName + ", you can't reset until you're level 5!" }
-                        };
-                        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Failed_Character_Reset", args: args));
-                        return;
-                    }
-                } 
-                else if(eve == "CHARACTERPRESTIGE")
+                TwitchSubTier subTier = TwitchSubTier.None; 
+                if(eve == "CHARACTERPRESTIGE")
                 {
                     Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
                     int level = Int32.Parse(character["LEVEL"]);
@@ -241,9 +227,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     case (int)ExitCode.Character_Prestige:
                         characterPrestiageEnded(results);
                         break;
-                    case (int)ExitCode.Character_Reset:
-                        characterResetEnded(results);
-                        break;
                     default:
                         Terminal.Output("Lakea: Battle Simulator Error");
                         Logs.Instance.NewLog(LogLevel.Error, "Battle Simulator Error Code -> " + exitCode + ", " + (ExitCode)exitCode);
@@ -356,29 +339,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 { "Message", message }
             };
             eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Character Prestige", "Battle_Simulator_Character_Prestige", args: args));
-        }
-
-        //Read the reset results and send them to Twitch
-        private void characterResetEnded(Dictionary<string, string> results)
-        {
-            if(results.Count > 0)
-            {
-                Dictionary<string, string> args = new Dictionary<string, string>();
-                int level = Int32.Parse(results["CHARACTER_LEVEL"]);
-                int nextLevel = 0;
-                for (int count = 1; count <= level; count++)
-                {
-                    nextLevel += count * 30;
-                }
-                int strMod = Int32.Parse(results["CHARACTER_STR"]) / 3;
-                int dexMod = Int32.Parse(results["CHARACTER_DEX"]) / 3;
-                int conMod = Int32.Parse(results["CHARACTER_CON"]) / 3;
-                string message = "@" + results["CHARACTER_NAME"] + " is starting their training afresh! LEVEL: " + results["CHARACTER_LEVEL"] + ", XP: " +
-                    results["CHARACTER_XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " + results["CHARACTER_HP"] + ", STR: " + results["CHARACTER_STR"] + "(+" +
-                    strMod + "), DEX: " + results["CHARACTER_DEX"] + "(+" + dexMod + "), CON: " + results["CHARACTER_CON"] + "(+" + conMod + ")";
-                args.Add("Message", message);
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
-            }
         }
 
         #endregion
