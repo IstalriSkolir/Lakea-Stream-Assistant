@@ -33,11 +33,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\CopyBattleEntities.py&quot; &quot;$(ConfigurationName)&quot;&#xD;&#xA;if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
-  </Target>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="python &quot;$(SolutionDir)..\Build Scripts\ClearBuildFolder.py&quot; &quot;$(ProjectName)&quot; &quot;$(ConfigurationName)&quot;" />
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   del /S *.pdb&#xD;&#xA;)" />
   </Target>
 
 </Project>

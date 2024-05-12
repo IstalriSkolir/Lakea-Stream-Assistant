@@ -67,11 +67,6 @@ namespace Battle_Similator
                         prestige.Start(args[2], args[3]);
                         exitCode((int)ExitCode.Character_Prestige);
                         break;
-                    case "CHARACTERRESET":
-                        CharacterReset characterReset = new CharacterReset(io);
-                        characterReset.Start(args[2], args[3]);
-                        exitCode((int)ExitCode.Character_Reset);
-                        break;
                     default:
                         Environment.Exit((int)ExitCode.Invalid_Args);
                         break;
