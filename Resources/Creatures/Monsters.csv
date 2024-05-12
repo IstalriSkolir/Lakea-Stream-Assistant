@@ -1,0 +1,116 @@
+﻿Monster,Rating,Level
+Weak Skeleton,WEAK,1
+Blob,WEAK,1
+Weak Goblin,WEAK,2
+Giant Beetle,WEAK,2
+Weak Zombie,WEAK,3
+Giant Rat,WEAK,3
+Weak Bug Bear,WEAK,4
+Drunk Bandit,WEAK,4
+Skeleton,WEAK,5
+Giant Fire Beetle,WEAK,5
+Weak Imp,WEAK,5
+Kidnapper,WEAK,5
+Wererat,WEAK,6
+Thief,WEAK,6
+Goblin,WEAK,6
+Quasit,WEAK,7
+Burglar,WEAK,7
+Mugger,WEAK,7
+Luddite,WEAK,7
+Brute,WEAK,8
+Bandit,WEAK,8
+Goblin Warrior,WEAK,8
+Zombie,WEAK,9
+Bug Bear,WEAK,9
+Goblin Shaman,WEAK,9
+Giant Spider,WEAK,10
+Acolyte,WEAK,10
+Goblin Boss,WEAK,10
+Specter,NORMAL,11
+Imp,NORMAL,11
+Hobgoblin,NORMAL,12
+Cultist,NORMAL,12
+Goblin Warlord,NORMAL,12
+Bug Bear Warrior,NORMAL,13
+Wereboar,NORMAL,13
+Thug,NORMAL,14
+Cult Fanatic,NORMAL,14
+Pirate,NORMAL,14
+Ogre Zombie,NORMAL,15
+Hobgoblin Captain,NORMAL,15
+Scout,NORMAL,15
+Airship Pirate,NORMAL,15
+Orc,NORMAL,16
+Spy,NORMAL,16
+Bandit Captain,NORMAL,17
+Archer,NORMAL,17
+Master Thief,NORMAL,18
+Wood Golem,NORMAL,18
+Gladiator,NORMAL,19
+Merfolk,NORMAL,19
+Mephit,NORMAL,19
+Mercenary,NORMAL,20
+Orc Warrior,NORMAL,20
+Time Travelling Assassin,NORMAL,20
+Half Ogre,NORMAL,21
+Minotaur Skeleton,NORMAL,21
+Veteran,NORMAL,22
+Bronze Golem,NORMAL,22
+Wight,NORMAL,23
+Ghoul,NORMAL,23
+Harpy,NORMAL,24
+Wraith,NORMAL,24
+Orc Warlord,NORMAL,25
+Assassin,NORMAL,26
+Clockwork Defender,NORMAL,26
+Mummy,NORMAL,27
+Knight,NORMAL,28
+Troll,NORMAL,28
+Merfolk Lord,NORMAL,29
+Vampire Spawn,NORMAL,29
+Ogre,NORMAL,30
+Succubus,HARD,31
+Incubbus,HARD,31
+Mimic,HARD,32
+Tripod,HARD,32
+Stone Golem,HARD,33
+Death Knight,HARD,34
+Sea Hag,HARD,34
+Mercenary Warlord,HARD,35
+Blackguard,HARD,35
+Warlord,HARD,36
+Werewolf,HARD,37
+Vampire,HARD,37
+Giant,HARD,38
+Bodak,HARD,39
+Lord,HARD,40
+Lady,HARD,40
+Hell Hound,HARD,41
+Banshee,HARD,41
+Gargoyle,HARD,42
+Treant,HARD,42
+Drakeling,HARD,43
+Demon,HARD,44
+Minotaur,HARD,45
+Iron Golem,HARD,46
+Cyclops,HARD,46
+Gorgon,HARD,47
+Medusa,HARD,47
+Earth Elemental,HARD,48
+Air Elemental,HARD,48
+Fire Elemental,HARD,49
+Water Elemental,HARD,49
+Mountain Giant,HARD,50
+Lich,HARD,50
+Stone Giant,MISC,55
+Giant Sea Serpent,MISC,60
+Dragon,MISC,65
+Hydra,MISC,65
+Titan,MISC,70
+Kraken,MISC,75
+Air Kraken,MISC,75
+Phoenix,MISC,80
+Arch Demon,MISC,80
+Balrog,MISC,85
+Killer Bunny,MISC,90

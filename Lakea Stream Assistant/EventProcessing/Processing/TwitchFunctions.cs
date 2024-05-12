@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
@@ -17,9 +18,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> raids;
         private Dictionary<string, EventItem> subscriptions;
         private List<Tuple<int, string>> bitsOrder;
+        private BitsCommand bitsCommands;
 
         //Contructor stores list of events to check against when it receives a new event
-        public TwitchFunctions(ConfigEvent[] events, EventPassArguments passArgs)
+        public TwitchFunctions(ConfigEvent[] events, EventPassArguments passArgs, DefaultCommands defaultCommands)
         {
             this.passArgs = passArgs;
             follows = new Dictionary<string, EventItem>();
@@ -28,6 +30,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             commands = new Dictionary<string, EventItem>();
             raids = new Dictionary<string, EventItem>();
             subscriptions = new Dictionary<string, EventItem>();
+            bitsCommands = defaultCommands.BitsCommands;
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in events)
             {
@@ -119,6 +122,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
         public EventItem NewBits(TwitchBits eve)
         {
+            bitsCommands.NewBitsEvent(eve);
             bool eventFound = false;
             int bitAmount = eve.Args.BitsUsed;
             for (int i = 0; i < bitsOrder.Count; i++)

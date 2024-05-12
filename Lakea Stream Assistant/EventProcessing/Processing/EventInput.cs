@@ -25,7 +25,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             passArgs = new EventPassArguments();
             lakea = new LakeaFunctions(config.Events, passArgs, commands, this);
             obs = new OBSFunctions(config.Events, passArgs);
-            twitch = new TwitchFunctions(config.Events, passArgs);
+            twitch = new TwitchFunctions(config.Events, passArgs, commands);
             captured = new LakeaCaptured(this, lakea, config.Settings.CapturedEventRetorts);
             outputs = new EventOutputs(this, config.Settings, captured);
         }
