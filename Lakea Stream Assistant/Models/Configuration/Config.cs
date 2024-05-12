@@ -5,7 +5,7 @@ xml file and regenerating this structure from the editted xml. To regenerate str
 in the xml file before returning here and selecting Edit -> Paste Special -> Paste XML As Classes
 
 NOTE: For some reason, the last several changes using the above method have cause Visual Studio to produce the code in a invalid setup, changes
-have no been applied by hand until this issue is resolved
+have now been applied by hand until this issue is resolved
 
 */
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
@@ -206,6 +206,8 @@ public partial class ConfigSettings
 public partial class SettingsCommands
 {
 
+    private CommandsTotalBits totalBitsField;
+
     private CommandsResetTerminal resetTerminalField;
 
     private CommandsProcess processField;
@@ -217,6 +219,19 @@ public partial class SettingsCommands
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    /// <remarks/>
+    public CommandsTotalBits TotalBits
+    {
+        get
+        {
+            return this.totalBitsField;
+        }
+        set
+        {
+            this.totalBitsField = value;
+        }
+    }
 
     /// <remarks/>
     public CommandsResetTerminal ResetTerminal
@@ -319,6 +334,44 @@ public partial class SettingsCapturedEventRetort
         set
         {
             this.eventTypeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsTotalBits
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
         }
     }
 }

@@ -12,15 +12,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
     //This class handles default commands for Lakea
     public class DefaultCommands
     {
+        private BitsCommand bits;
         private ProcessCommand process;
         private QuoteCommand quotes;
         private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commandFunctions;
         private readonly Dictionary<string, CommandConfiguration> commandConfigs;
         KeepAliveToken keepAliveToken;
 
+        #region Gets
+
+        public BitsCommand BitsCommands { get { return bits; } }
+
+        #endregion
+
         //Constructor takes object references, sets predefined dictionaries and command active/modonly status
         public DefaultCommands(ConfigSettings settings, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
         {
+            this.bits = new BitsCommand(settings.ResourcePath);
             this.process = new ProcessCommand(externalProcesses);
             this.quotes = new QuoteCommand(settings.ResourcePath);
             this.keepAliveToken = keepAliveToken;
@@ -35,7 +43,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "quotefest", quoteCommand },
                 { "resetterminal", resetTerminalCommand },
                 { "so", shoutOutCommand },
-                { "status", statusCommand }
+                { "status", statusCommand },
+                { "totalbits", totalBitsCommand }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
@@ -48,7 +57,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "quotefest", new CommandConfiguration("QuoteFest", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "resetterminal", new CommandConfiguration("ResetTerminal", settings.Commands.ResetTerminal.Enabled, settings.Commands.ResetTerminal.ModOnly) },
                 { "so", new CommandConfiguration("Shout Out", settings.Commands.ShoutOut.Enabled, settings.Commands.ShoutOut.ModOnly) },
-                { "status", new CommandConfiguration("Status", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) }
+                { "status", new CommandConfiguration("Status", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) },
+                { "totalbits", new CommandConfiguration("TotalBits", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) }
             };
         }
 
@@ -185,13 +195,22 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem resetTerminalCommand(LakeaCommand eve)
         {
             Terminal.Output("Lakea: Reset Terminal Command -> Resetting Terminal");
-            Logs.Instance.NewLog(LogLevel.Info, "Reset Terminal COmmand -> Resetting Terminal");
+            Logs.Instance.NewLog(LogLevel.Info, "Reset Terminal Command -> Resetting Terminal");
             Dictionary<string, string> args = new Dictionary<string, string>
             {
                 { "Message", "On it, give me a moment!" }
             };
             Terminal.ResetTerminal();
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Reset Terminal Command", "Lakea_Reset_Terminal_Command", args: args);
+        }
+
+        // Gets the total amount of bits cheered by a user
+        private EventItem totalBitsCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Total Bits Command -> " + eve.Args.Command.ChatMessage.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + eve.Args.Command.ChatMessage.DisplayName);
+            Dictionary<string, string> args = bits.NewTotalBitsCommand(eve);
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Total Bits Command", "Lakea_Total_Bits_Command", args: args);
         }
     }
 }
