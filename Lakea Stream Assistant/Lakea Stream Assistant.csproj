@@ -27,9 +27,6 @@
 
   <ItemGroup>
     <Content Include="Resources\Campfire.ico" />
-    <Content Include="Resources\Quotes.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>

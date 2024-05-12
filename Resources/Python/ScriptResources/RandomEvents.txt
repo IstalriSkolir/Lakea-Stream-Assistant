@@ -1,0 +1,105 @@
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0014-GOBLIN|7-10
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0020-BANDIT|5-8
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0049-MERFOLK|3-6
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0068-MERFOLK_LORD|2-5
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0077-SEA_HAG|2-4
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0101-WATER_ELEMENTAL|2-3
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|00103-LICH|2
+CAPTURESTREAMERGAME:MiniMoise|MiniSit112.png|her|0105-GIANT_SEA_SERPENT|2
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0014-GOBLIN|7-10
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0020-BANDIT|5-8
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0029-IMP|4-7
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0030-HOBGOBLIN|4-7
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0063-ASSASSIN|3-6
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0070-OGRE|2-5
+CAPTURESTREAMERGAME:Winry|WinryGModcheck112.gif,WinryGFear112.png,WinryGSob112.png|her|0092-DEMON|2-4
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0000-WEAK_SKELETON|10-20
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0020-BANDIT|5-8
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0031-CULTIST|4-7
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0054-HALF_OGRE|3-6
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0058-WIGHT|3-6
+CAPTURESTREAMERGAME:LazyFang|FangModCheck.gif,FangFear.png,FangSob.png|him|0104-STONE_GIANT|2
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0014-GOBLIN|7-10
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0021-GOBLIN_WARRIOR|5-8
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0024-GOBLIN_SHAMAN|4-7
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0025-GIANT_SPIDER|4-7
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0029-IMP|4-7
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|0031-CULTIST|4-7
+CAPTURESTREAMERGAME:LiminalGender|NormBlorbNeut.png|them|00103-LICH|2
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0007-DRUNK_BANDIT|5-8
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0018-LUDDITE|4-7
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0041-AIRSHIP_PIRATE|3-6
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0053-TIME_TRAVELLING_ASSASSIN|3-5
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0074-TRIPOD|2-5
+CAPTURESTREAMERGAME:Prof_Flyntlocke|ProfWtf112.png,Prof1000yd112.png,ProfCry112.png|him|0018-AIR_KRAKEN|2
+MONSTERHUNTERGAME:MonsterHunterGame
+OBSACTIVATESOURCE:Wolf Howl 1 - Media Source|Sounds|10
+OBSACTIVATESOURCE:Wolf Howl 2 - Media Source|Sounds|10
+OBSACTIVATESOURCE:Wolf Howl 3 - Media Source|Sounds|10
+OBSACTIVATESOURCE:Fire Spiral - Media Source|Overlays|10
+OBSACTIVATESOURCE:Arrow Volley - Media Source|Overlays|10
+OBSACTIVATESOURCE:Net - Media Source|Overlays|30
+OBSACTIVATESOURCE:Tea - Image|Overlays|300
+OBSACTIVATESOURCE:Moustache - Image|Overlays|300
+OBSCREATESOURCE:MiniMoisePopCorn|MiniPopcorn.png|image_source|Canvas|0-0|0.25|15
+OBSCREATESOURCE:MiniMoisePopCorn|MiniSit112.png|image_source|Canvas|0-900|1.5|15
+OBSCREATESOURCE:WinryGames|WinryGModcheck112.gif|image_source|Canvas|1450-0|1.1|15
+OBSCREATESOURCE:LazyFang|FangLurk.png|image_source|Canvas|0-0|0.225|15
+OBSCREATESOURCE:LazyFang|FangModCheck.gif|image_source|Canvas|1450-0|1.1|15
+OBSCREATESOURCE:ShootingStar|ShootingStar.gif|image_source|Canvas|0-0|1.5|3
+RANDOMCHARACTERXP:5
+RANDOMCHARACTERXP:50
+RANDOMCHARACTERXP:500
+RANDOMCHARACTERXP:1000
+RANDOMCHARACTERXP:5000
+#RANDOMCHARACTERXP:10000
+#RANDOMCHARACTERXP:50000
+#RANDOMCHARACTERXP:100000
+#RANDOMCHARACTERXP:148500
+RANDOMCHARACTERXP:5|1000
+RANDOMCHARACTERXP:5|5000
+RANDOMCHARACTERXP:250|1000
+RANDOMCHARACTERXP:1000|2000
+RANDOMCHARACTERXP:2000|3000
+RANDOMCHARACTERXP:3000|5000
+RANDOMCHARACTERXP:5000|10000
+#RANDOMCHARACTERXP:10000|20000
+#RANDOMCHARACTERXP:5|148500
+SENDTWITCHMESSAGE:So when are you going to get more art of me Materies?
+SENDTWITCHMESSAGE:You guys don't appreciate me enough, maybe I should leave you to try doing all this work yourselves...
+SENDTWITCHMESSAGE:Hey Materies, the blorb's stole your stew again...
+SENDTWITCHMESSAGE:Hey Materies, your net traps finally caught the blorb! We've stuck them in the cage to keep them out of trouble.
+SENDTWITCHMESSAGE:@MateriesCoil, if you get the other rangers to catch me again then I'll tell the blorb where you keep the best snacks!
+SENDTWITCHMESSAGE:Materies, why do we have a message from Winry to a "Mattress Coil"?
+SENDTWITCHMESSAGE:Have you guys seen Winry's latest craft project? She's done an amazing job with it!
+SENDTWITCHMESSAGE:Minimoise has stolen your drink again Materies...
+SENDTWITCHMESSAGE:Don't you dare steal my drink Minimoise!
+SENDTWITCHMESSAGE:Why is Looping sending Minimoise a dozen kitchen roll holders?
+SENDTWITCHMESSAGE:Lazy Fang has gathered up all the pillows in the camp again...
+SENDTWITCHMESSAGE:Lazy Fang has borrowed your hammock for a bit Materies!
+SENDTWITCHMESSAGE:Where's the Ramen gone? Surely SethWuffer hasn't eaten it all?
+SENDTWITCHMESSAGE:SethWuffer did a great job on our emotes, shame Materies hasn't got more art of me...
+SENDTWITCHMESSAGE:Looping, did you give Azra my nintendo games without asking again!?!
+SENDTWITCHMESSAGE:!quotefest
+SENDTWITCHMESSAGE:There's too many guys around here and not enough women, time to give some women representation!|!so Minimoise3
+SENDTWITCHMESSAGE:There's too many guys around here and not enough women, time to give some women representation!|!so WinryGames
+SENDTWITCHMESSAGE:Time to show some non-binary representation, share the love!|!so liminal_gender
+SENDTWITCHMESSAGE:Time to show some non-binary representation, share the love!|!so SethWuffer
+SENDTWITCHMESSAGE:Lets share some love with our fellow streamers!|!so Lazy_Fang_Games
+SENDTWITCHMESSAGE:Shout out to genderfluid folk!|!so Azrafox
+SENDTWITCHMESSAGE:Time to shout out our fellow furs!|!so Minimoise3|!so SethWuffer|!so Lazy_Fang_Games|!so Azrafox
+SENDTWITCHMESSAGE:Lets not leave out non-furry friends out|!so WinryGames|!so liminal_gender|!so prof_flyntlocke|!so PixelSword
+SENDTWITCHMESSAGE:Lets spread the love, mass shoutout time!|!so Minimoise3|!so WinryGames|!so liminal_gender|!so SethWuffer|!so Lazy_Fang_Games|!so Azrafox|!so prof_flyntlocke|!so PixelSword
+SHOWRANDOMART:ShowRandomArt
+SHOWRANDOMCLIP:ShowRandomClip
+STREAMONFIRE:5|0.9-1.1
+STREAMONFIRE:10|0.4-0.59
+STREAMONFIRE:20|0.15-0.25
+STREAMONFIRE:25|0.15-0.2
+STREAMONFIRE:30|0.05-0.15
+STREAMONFIRE:2-3|1.6-3.1
+STREAMONFIRE:3-5|0.1-1.1
+STREAMONFIRE:5-10|0.4-1.1
+STREAMONFIRE:3-10|0.1-1.6
+STREAMONFIRE:4-8|0.1-1.1
+STREAMONFIRE:4-6|0.5-1.1
