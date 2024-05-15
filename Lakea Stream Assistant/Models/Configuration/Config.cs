@@ -115,7 +115,9 @@ public partial class ConfigSettings
 
     private SettingsCommands commandsField;
 
-    private SettingsCapturedEventRetort capturedEventRetorts;
+    private SettingsCapturedEventRetort capturedEventRetortsField;
+
+    private SettingsWebSocket webSocketField;
 
     /// <remarks/>
     public string LogLevel
@@ -187,15 +189,26 @@ public partial class ConfigSettings
     {
         get
         {
-            return this.capturedEventRetorts;
+            return this.capturedEventRetortsField;
         }
         set
         {
-            this.capturedEventRetorts = value;
+            this.capturedEventRetortsField = value;
+        }
+    }
+
+    public SettingsWebSocket WebSocket
+    {
+        get
+        {
+            return this.webSocketField;
+        }
+        set
+        {
+            this.webSocketField = value;
         }
     }
 }
-
 
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
@@ -600,6 +613,60 @@ public partial class CommandsExit
         set
         {
             this.modOnlyField = value;
+        }
+    }
+}
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class SettingsWebSocket
+{
+    private bool enabledField;
+
+    private string ipField;
+
+    private ushort portField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        { 
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string IP
+    {
+        get
+        {
+            return this.ipField;
+        }
+        set
+        {
+            this.ipField = value;
+        }
+    }
+
+    /// <remarks/>
+    public ushort Port
+    {
+        get
+        {
+            return this.portField;
+        }
+        set
+        {
+            this.portField = value;
         }
     }
 }

@@ -30,6 +30,30 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             outputs = new EventOutputs(this, config.Settings, captured);
         }
 
+        #region Update Events
+
+        public void UpdateEventDictionaries(string key, EventItem item, bool remove)
+        {
+            switch (item.Source)
+            {
+                case EventSource.Lakea:
+                    obs.UpdateDictionary(key, item, remove);
+                    break;
+                case EventSource.OBS:
+                    obs.UpdateDictionary(key, item, remove);
+                    break;
+                case EventSource.Twitch:
+                    twitch.UpdateDictionary(key, item, remove);
+                    break;
+                default:
+                    Terminal.Output("Lakea: Unsupported Source Dictionary Update -> " + item.Source);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unsupported Source Dictionary Update -> " + item.Source);
+                    break;
+            }
+        }
+
+        #endregion
+
         //Called on a new event, checks event type before calling relevent function
         public void NewEvent(Event eve)
         {

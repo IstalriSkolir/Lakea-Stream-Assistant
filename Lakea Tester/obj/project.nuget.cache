@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XoXL/OiwY2sTkv6XspbMmQKL9mQb2wrh6mFjXEE+ls6vdnVKFoilDIS7fsvorG59lsiT87LYT4y+z+W00w5t2Q==",
+  "dgSpecHash": "yGSxvXTVSAyN77Sr+SpoIiOIXaTLGtmgAailV0yPcUqMC1uSBoob3D19oAsJpA3KcR2OqnPn5214URK9qL+iYA==",
   "success": true,
   "projectFilePath": "D:\\Visual Studio\\Lakea-Stream-Assistant\\Lakea Tester\\Lakea Tester.csproj",
   "expectedPackageFiles": [
@@ -123,7 +123,8 @@
     "C:\\Users\\johnc\\.nuget\\packages\\twitchlib.eventsub.core\\2.0.0\\twitchlib.eventsub.core.2.0.0.nupkg.sha512",
     "C:\\Users\\johnc\\.nuget\\packages\\twitchlib.eventsub.websockets\\0.0.3\\twitchlib.eventsub.websockets.0.0.3.nupkg.sha512",
     "C:\\Users\\johnc\\.nuget\\packages\\twitchlib.pubsub\\3.2.6\\twitchlib.pubsub.3.2.6.nupkg.sha512",
-    "C:\\Users\\johnc\\.nuget\\packages\\websocket.client\\4.4.43\\websocket.client.4.4.43.nupkg.sha512"
+    "C:\\Users\\johnc\\.nuget\\packages\\websocket.client\\4.4.43\\websocket.client.4.4.43.nupkg.sha512",
+    "C:\\Users\\johnc\\.nuget\\packages\\websocketsharp-netstandard\\1.0.1\\websocketsharp-netstandard.1.0.1.nupkg.sha512"
   ],
   "logs": []
 }

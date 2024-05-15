@@ -14,6 +14,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private EventInput input;
         private EventPassArguments passArgs;
         private DefaultCommands commands;
+        private Dictionary<EventType, Dictionary<string, EventItem>> events;
         private Dictionary<string, EventItem> callbacks;
         private Dictionary<string, EventItem> timers;
         private Dictionary<string, EventItem> applications;
@@ -23,7 +24,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private List<EventItem> shutdownEvents;
 
         //Contructor stores list of events to check against when it receives a new event
-        public LakeaFunctions(ConfigEvent[] events, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
+        public LakeaFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands commands, EventInput input)
         {
             this.input = input;
             this.passArgs = passArgs;
@@ -33,10 +34,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             applications = new Dictionary<string, EventItem>();
             lakeaReleased = new Dictionary<string, EventItem>();
             lakeaRetort = new Dictionary<string, EventItem>();
+            events = new Dictionary<EventType, Dictionary<string, EventItem>>();
+            events.Add(EventType.Lakea_Callback, callbacks);
+            events.Add(EventType.Lakea_Released, lakeaReleased);
+            events.Add(EventType.Lakea_Retort, lakeaRetort);
             startupEvents = new List<EventItem>();
             shutdownEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
-            foreach (ConfigEvent eve in events)
+            foreach (ConfigEvent eve in newEvents)
             {
                 try
                 {
@@ -82,6 +87,38 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
             }
             this.input = input;
+        }
+
+        // Update Lakea's events during runtime
+        public void UpdateDictionary(string id, EventItem item, bool remove)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[item.Type];
+                if (remove)
+                {
+                    if (toUpdate.ContainsKey(id))
+                    {
+                        Terminal.Output("Lakea: Removing Lakea Event -> " + toUpdate[id].Name);
+                        Logs.Instance.NewLog(LogLevel.Info, "Removing Lakea Event -> " + toUpdate[id].Name);
+                        toUpdate.Remove(id);
+                    }
+                    else
+                    {
+                        Terminal.Output("Lakea: No Lakea Event Found -> " + id);
+                        Logs.Instance.NewLog(LogLevel.Warning, "No Lakea Event Found -> " + id);
+                    }
+                }
+                else
+                {
+                    toUpdate.Add(id, item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Updating Lakea Events -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
+            }
         }
 
         //When Lakea finishes setting up, run all start up events in config

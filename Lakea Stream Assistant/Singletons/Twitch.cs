@@ -40,7 +40,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initiliases the Singleton by connecting to Twitch with the settings in the config object
-        public static async void Init(Config config, EventInput newEventsObj, DefaultCommands commands)
+        public static async void Initialise(Config config, EventInput newEventsObj, DefaultCommands commands)
         {
             try
             {

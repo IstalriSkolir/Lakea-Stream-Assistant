@@ -8,6 +8,7 @@ using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Tokens;
 using Lakea_Stream_Assistant.Static;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
+using Lakea_Stream_Assistant.WebSocket;
 
 namespace Lakea_Stream_Assistant
 {
@@ -51,7 +52,7 @@ namespace Lakea_Stream_Assistant
             if (config != null)
             {
                 Terminal.Output("Lakea is waking up...");
-                Terminal.StartTerminalThread();
+                Task.Run(() => Terminal.StartTerminalThread());
                 Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
                 Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
                 Terminal.UpdateLogLevel(config.Settings.LogLevel);
@@ -60,11 +61,13 @@ namespace Lakea_Stream_Assistant
                 externalProcesses = new ExternalProcesses(config.Applications);
                 DefaultCommands lakeaCommands = new DefaultCommands(config.Settings, externalProcesses, keepAliveToken);
                 eventHandler = new EventInput(config, lakeaCommands);
-                externalProcesses.StartAllExternalProcesses();
-                OBS.Init(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password);
-                Twitch.Init(config, eventHandler, lakeaCommands);
-                eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start));
-                eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up"));
+                Task.Run(() => externalProcesses.StartAllExternalProcesses());
+                var obsInit = Task.Run(() => OBS.Initialise(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password));
+                var twitchInit = Task.Run(() => Twitch.Initialise(config, eventHandler, lakeaCommands));
+                var serverInit = Task.Run(() => Server.Initialise(config, eventHandler));
+                Task.WaitAll(obsInit, twitchInit, serverInit);
+                Task.Run(() => eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start)));
+                Task.Run(() => eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up")));
                 Terminal.Output("Lakea: All set and ready to go!");
                 Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
             }
@@ -158,8 +161,9 @@ namespace Lakea_Stream_Assistant
 
         static void shutdown()
         {
-            externalProcesses.StopAllExternalProcesses();
             eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit"));
+            var externalTasks = Task.Run(() => externalProcesses.StopAllExternalProcesses());
+            var serverTask = Task.Run(() => Server.Shutdown());
             Terminal.EndRefresh();
         }
 
