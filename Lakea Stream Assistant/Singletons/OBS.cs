@@ -35,7 +35,7 @@ namespace Lakea_Stream_Assistant.Singletons
         #region Initiliase
 
         //Initialises the connected with the passed in configuration data
-        public static async void Init(EventInput newEventHandler, string newIP, int newPort, string newPassword)
+        public static async void Initialise(EventInput newEventHandler, string newIP, int newPort, string newPassword)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("OBS: Disconnected -> " + e.DisconnectReason);
             Logs.Instance.NewLog(LogLevel.Warning, "Disconnected from OBS, " + e.DisconnectReason);
             Terminal.Output("OBS: Attempting to reconnected...");
-            Init(eventHandler, ip, port, password);
+            Initialise(eventHandler, ip, port, password);
         }
 
         //Once connected, gether source and scene information that can be referred back to later in the 'resources' object

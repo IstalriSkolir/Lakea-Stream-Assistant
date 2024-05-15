@@ -11,6 +11,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     public class TwitchFunctions
     {
         private EventPassArguments passArgs;
+        private Dictionary<EventType, Dictionary<string, EventItem>> events;
         private Dictionary<string, EventItem> follows;
         private Dictionary<string, EventItem> bits;
         private Dictionary<string, EventItem> redeems;
@@ -21,7 +22,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private BitsCommand bitsCommands;
 
         //Contructor stores list of events to check against when it receives a new event
-        public TwitchFunctions(ConfigEvent[] events, EventPassArguments passArgs, DefaultCommands defaultCommands)
+        public TwitchFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands defaultCommands)
         {
             this.passArgs = passArgs;
             follows = new Dictionary<string, EventItem>();
@@ -30,9 +31,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             commands = new Dictionary<string, EventItem>();
             raids = new Dictionary<string, EventItem>();
             subscriptions = new Dictionary<string, EventItem>();
+            events = new Dictionary<EventType, Dictionary<string, EventItem>>();
+            events.Add(EventType.Twitch_Follow, follows);
+            events.Add(EventType.Twitch_Bits, bits);
+            events.Add(EventType.Twitch_Redeem, redeems);
+            events.Add(EventType.Twitch_Command, commands);
+            events.Add(EventType.Twitch_Raid, raids);
+            events.Add(EventType.Twitch_Subscription, subscriptions);
             bitsCommands = defaultCommands.BitsCommands;
             EnumConverter enums = new EnumConverter();
-            foreach (ConfigEvent eve in events)
+            foreach (ConfigEvent eve in newEvents)
             {
                 try
                 {
@@ -74,6 +82,38 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
             }
             bitsOrder = sortBitsOrder();
+        }
+
+        // Update the Twitch events during runtime
+        public void UpdateDictionary(string id, EventItem item, bool remove)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[item.Type];
+                if (remove)
+                {
+                    if (toUpdate.ContainsKey(id))
+                    {
+                        Terminal.Output("Lakea: Removing Twitch Event -> " + toUpdate[id].Name);
+                        Logs.Instance.NewLog(LogLevel.Info, "Removing Twitch Event -> " + toUpdate[id].Name);
+                        toUpdate.Remove(id);
+                    }
+                    else
+                    {
+                        Terminal.Output("Lakea: No Twitch Event Found -> " + id);
+                        Logs.Instance.NewLog(LogLevel.Warning, "No Twitch Event Found -> " + id);
+                    }
+                }
+                else
+                {
+                    toUpdate.Add(id, item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Updating Twitch Events -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
+            }
         }
 
         // Sort out bits in order of amount so that we can call events based on bit amount

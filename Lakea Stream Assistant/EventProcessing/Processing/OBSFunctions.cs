@@ -11,17 +11,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     public class OBSFunctions
     {
         private EventPassArguments passArgs;
+        private Dictionary<EventType, Dictionary<string, EventItem>> events;
         private Dictionary<string, EventItem> sceneChanges;
         private Dictionary<string, EventItem> sourceActiveStatus;
 
         //Contructor stores list of events to check against when it receives a new event
-        public OBSFunctions(ConfigEvent[] events, EventPassArguments passArgs)
+        public OBSFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs)
         {
             this.passArgs = passArgs;
             sceneChanges = new Dictionary<string, EventItem>();
             sourceActiveStatus = new Dictionary<string, EventItem>();
+            events = new Dictionary<EventType, Dictionary<string, EventItem>>();
+            events.Add(EventType.OBS_Scene_Changed, sceneChanges);
+            events.Add(EventType.OBS_Source_Active_Status, sourceActiveStatus);
             EnumConverter enums = new EnumConverter();
-            foreach(ConfigEvent eve in events)
+            foreach(ConfigEvent eve in newEvents)
             {
                 try
                 {
@@ -49,6 +53,38 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     Terminal.Output("Lakea: Error Loading Event -> " + eve.EventDetails.Name);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
                 }
+            }
+        }
+
+        // Update the OBS events during runtime
+        public void UpdateDictionary(string id, EventItem item, bool remove)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[item.Type];
+                if (remove)
+                {
+                    if (toUpdate.ContainsKey(id))
+                    {
+                        Terminal.Output("Lakea: Removing OBS Event -> " + toUpdate[id].Name);
+                        Logs.Instance.NewLog(LogLevel.Info, "Removing OBS Event -> " + toUpdate[id].Name);
+                        toUpdate.Remove(id);
+                    }
+                    else
+                    {
+                        Terminal.Output("Lakea: No OBS Event Found -> " + id);
+                        Logs.Instance.NewLog(LogLevel.Warning, "No OBS Event Found -> " + id);
+                    }
+                }
+                else
+                {
+                    toUpdate.Add(id, item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Updating OBS Events -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }
 

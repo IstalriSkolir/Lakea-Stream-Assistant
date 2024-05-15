@@ -2,6 +2,7 @@
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Resources.Lakea;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.WebSocket;
 using System.Runtime.InteropServices;
 
 namespace Lakea_Stream_Assistant.Static
@@ -160,6 +161,7 @@ namespace Lakea_Stream_Assistant.Static
             writeText("OBS           ->", 2, 4);
             writeText("Twitch Client ->", 2, 5);
             writeText("Twitch PubSub ->", 2, 6);
+            writeText("Web Socket    ->", 2, 7);
             writeText("Events:", 2, 10);
             writeText("Twitch ->", 2, 12);
             writeText("OBS    ->", 2, 13);
@@ -212,15 +214,19 @@ namespace Lakea_Stream_Assistant.Static
             bool obs;
             bool twitchClient;
             bool twitchPubSub;
+            bool webSocket;
             try { obs = OBS.IsConnected; } catch { obs = false; }
             try { twitchClient = Twitch.IsClientConnected; } catch { twitchClient = false; }
             try { twitchPubSub = Twitch.IsPubSubConnected; } catch { twitchPubSub = false; }
+            try { webSocket = Server.Enabled; } catch { webSocket = false; }
             if(obs) { writeText("Connected   ", 19, 4, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 4, ConsoleColor.Red); }
             if(twitchClient) { writeText("Connected   ", 19, 5, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 5, ConsoleColor.Red); }
             if(twitchPubSub) { writeText("Connected   ", 19, 6, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 6, ConsoleColor.Red); }
+            if(webSocket) { writeText("Enabled     ", 19, 7, ConsoleColor.Green); }
+            else { writeText("Disabled    ", 19, 7, ConsoleColor.Red); }
             writeText(EventStats.TwitchEventCount.ToString(), 12, 12, ConsoleColor.Cyan);
             writeText(EventStats.OBSEventCount.ToString(), 12, 13, ConsoleColor.Cyan);
             writeText(EventStats.LakeaEventCount.ToString(), 12, 14, ConsoleColor.Cyan);

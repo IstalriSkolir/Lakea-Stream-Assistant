@@ -2299,6 +2299,19 @@
           }
         }
       },
+      "WebSocketSharp-netstandard/1.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/websocket-sharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/websocket-sharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Battle Similator/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -2320,6 +2333,7 @@
           "System.Diagnostics.PerformanceCounter": "7.0.0",
           "System.Management": "7.0.2",
           "TwitchLib": "3.5.3",
+          "WebSocketSharp-netstandard": "1.0.1",
           "obs-websocket-dotnet": "5.0.0.3"
         },
         "compile": {
@@ -8625,6 +8639,23 @@
         "lib/netstandard2.1/Websocket.Client.xml",
         "websocket.client.4.4.43.nupkg.sha512",
         "websocket.client.nuspec"
+      ]
+    },
+    "WebSocketSharp-netstandard/1.0.1": {
+      "sha512": "knoinAv31vbdxXdypnzN2MPX5hyntVLWceq6OdWRXkr9zzqp/RWbxSuLFGbkW8De1061URgNAN43BUTlgMx1CA==",
+      "type": "package",
+      "path": "websocketsharp-netstandard/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/websocket-sharp.dll",
+        "lib/net35/websocket-sharp.xml",
+        "lib/net45/websocket-sharp.dll",
+        "lib/net45/websocket-sharp.xml",
+        "lib/netstandard2.0/websocket-sharp.dll",
+        "lib/netstandard2.0/websocket-sharp.xml",
+        "websocketsharp-netstandard.1.0.1.nupkg.sha512",
+        "websocketsharp-netstandard.nuspec"
       ]
     },
     "Battle Similator/1.0.0": {
