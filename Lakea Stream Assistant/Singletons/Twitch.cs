@@ -13,7 +13,9 @@ using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Events;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.Subscriptions;
-using System.Drawing;
+using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
+using Lakea_Stream_Assistant.WebSocket.Services;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -297,6 +299,49 @@ namespace Lakea_Stream_Assistant.Singletons
         #endregion
 
         #region Twitch API
+
+        public async static Task<CreateCustomRewardsResponse> CreateChannelRedeem(CreateCustomRewardsRequest requestData)
+        {
+            try
+            {
+                CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewardsAsync(channelID, requestData, channelAuthKey);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Creating Channel Redeem -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        public async static Task<UpdateCustomRewardResponse> UpdateChannelRedeem(string redeemID, UpdateCustomRewardRequest requestData)
+        {
+            try
+            {
+                UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(channelID, redeemID, requestData, channelAuthKey);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Updating Channel Redeem -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        public async static void DeleteChannelRedeem(string redeemID)
+        {
+            try
+            {
+                await api.Helix.ChannelPoints.DeleteCustomRewardAsync(channelID, redeemID, channelAuthKey);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Deleting Channel Redeem -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
 
         //Get list of channel subscribers
         //public async static Task<Subscription[]> GetSubscriberList(int size = 20)

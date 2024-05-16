@@ -12,12 +12,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
     public class RemoveEvent : WebSocketBehavior
     {
         private EventInput eventInput;
-        private JSONToEventItem convertor;
+        private JSONConvertor convertor;
 
         public RemoveEvent()
         {
             eventInput = Server.EventInput;
-            convertor = new JSONToEventItem();
+            convertor = Server.JSONConvertor;
         }
 
         protected override void OnOpen()
