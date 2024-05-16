@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Lakea_Stream_Assistant.WebSocket.Utilities
 {
-    public class JSONToEventItem
+    public class JSONConvertor
     {
         public EventItem CreateEventItem(JObject json)
         {
