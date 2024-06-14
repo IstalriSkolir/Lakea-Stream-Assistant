@@ -9,12 +9,12 @@ using WebSocketSharp.Server;
 
 namespace Lakea_Stream_Assistant.WebSocket.Services
 {
-    public class AddEvent : WebSocketBehavior
+    public class RunEvent : WebSocketBehavior
     {
         private EventInput eventInput;
         private JSONConvertor convertor;
 
-        public AddEvent()
+        public RunEvent()
         {
             eventInput = Server.EventInput;
             convertor = Server.JSONConvertor;
@@ -23,50 +23,49 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         protected override void OnOpen()
         {
             base.OnOpen();
-            Send("LakeaWebsocket: AddEvent -> Connection Confirmed");
-            Terminal.Output("Socket: Open Service -> AddEvent");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> AddEvent");
+            Send("LakeaWebsocket: RunEvent -> Connection Confirmed");
+            Terminal.Output("Socket: Open Service -> RunEvent");
+            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> RunEvent");
         }
 
         protected override void OnMessage(MessageEventArgs e)
         {
             base.OnMessage(e);
-            Send("LakeaWebsocket: AddEvent -> Message Received");
-            Terminal.Output("Socket: Message Service -> AddEvent, " + e.Data);
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> AddEvent, " +  e.Data);
-            createNewEvent(e);
+            Send("LakeaWebsocket: RunEvent -> Message Received");
+            Terminal.Output("Socket: Message Service -> RunEvent, " + e.Data);
+            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> RunEvent, " + e.Data);
+            runNewEvent(e);
         }
 
         protected override void OnClose(CloseEventArgs e)
         {
             base.OnClose(e);
-            if(e.Reason == "")
+            if (e.Reason == "")
             {
-                Terminal.Output("Socket: Close Service -> AddEvent");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Close -> AddEvent");
+                Terminal.Output("Socket: Close Service -> RunEvent");
+                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Close -> RunEvent");
             }
             else
             {
-                Terminal.Output("Socket: Close Service -> AddEvent, " + e.Reason);
-                Logs.Instance.NewLog(Enums.LogLevel.Warning, "Socket Service Close -> AddEvent, " + e.Reason);
+                Terminal.Output("Socket: Close Service -> RunEvent, " + e.Reason);
+                Logs.Instance.NewLog(Enums.LogLevel.Warning, "Socket Service Close -> RunEvent, " + e.Reason);
             }
         }
 
         protected override void OnError(WebSocketSharp.ErrorEventArgs e)
         {
             base.OnError(e);
-            Terminal.Output("Socket: Errored Service -> AddEvent, " + e.Message);
+            Terminal.Output("Socket: Errored Service -> RunEvent, " + e.Message);
             Logs.Instance.NewLog(Enums.LogLevel.Error, e.Message);
         }
 
-        private void createNewEvent(MessageEventArgs args)
+        private void runNewEvent(MessageEventArgs args)
         {
             try
             {
                 JObject json = JObject.Parse(args.Data);
-                string key = (string)json["Key"];
                 EventItem item = convertor.CreateEventItem(json);
-                eventInput.UpdateEventDictionaries(key, item, remove: false);
+                eventInput.NewEvent(item);
             }
             catch (Exception ex)
             {

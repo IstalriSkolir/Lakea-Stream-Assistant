@@ -2,7 +2,7 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"LAKEA\"\r\n\"BOSSHEALTHBARUPDATE\"\r\n\"106861102\"\r\n\"IstalriSkolir\"\r\n\"Tier_3\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\LIVEDATA\\\\Creatures\\\\\"",
+      "commandLineArgs": "\"LAKEA\"\r\n\"BOSSHEALTHBARUPDATE\"\r\n\"0\"\r\n\"NA\"\r\n\"None\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"",
       "remoteDebugEnabled": true
     }
   }
