@@ -1,5 +1,4 @@
-﻿using Battle_Similator.Models.Creatures;
-using Lakea_Stream_Assistant.Enums;
+﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
@@ -223,6 +222,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                         break;
                     case (int)ExitCode.Boss_Battle:
                         bossBattleEnded(results);
+                        break;
+                    case (int)ExitCode.Boss_Healthbar_Update:
                         break;
                     case (int)ExitCode.Character_Prestige:
                         characterPrestiageEnded(results);

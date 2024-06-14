@@ -5,7 +5,6 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
-using System;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {

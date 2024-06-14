@@ -20,6 +20,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> applications;
         private Dictionary<string, EventItem> lakeaReleased;
         private Dictionary<string, EventItem> lakeaRetort;
+        private Dictionary<string, EventItem> webSocketEvents;
         private List<EventItem> startupEvents;
         private List<EventItem> shutdownEvents;
 
@@ -34,10 +35,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             applications = new Dictionary<string, EventItem>();
             lakeaReleased = new Dictionary<string, EventItem>();
             lakeaRetort = new Dictionary<string, EventItem>();
+            webSocketEvents = new Dictionary<string, EventItem>();
             events = new Dictionary<EventType, Dictionary<string, EventItem>>();
             events.Add(EventType.Lakea_Callback, callbacks);
             events.Add(EventType.Lakea_Released, lakeaReleased);
             events.Add(EventType.Lakea_Retort, lakeaRetort);
+            events.Add(EventType.Lakea_Web_Socket, webSocketEvents);
             startupEvents = new List<EventItem>();
             shutdownEvents = new List<EventItem>();
             EnumConverter enums = new EnumConverter();
@@ -72,6 +75,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 break;
                             case EventType.Lakea_Exit:
                                 shutdownEvents.Add(new EventItem(eve));
+                                break;
+                            case EventType.Lakea_Web_Socket:
+                                webSocketEvents.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Console.WriteLine("Lakea: Invalid 'EventType' in 'LakeaFunctions' Constructor -> " + type);
@@ -297,6 +303,24 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             catch(Exception ex)
             {
                 Terminal.Output("Lakea: Supporting Application Event Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        //When a Web Socket event is fired
+        public EventItem NewWebSocketEvent(EventItem eve)
+        {
+            try
+            {
+                if (webSocketEvents.ContainsKey(eve.ID))
+                {
+                    return webSocketEvents[eve.ID];
+                }
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Lakea: Web Socket Event Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;

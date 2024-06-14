@@ -10,7 +10,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         protected override void OnOpen()
         {
             base.OnOpen();
-            Send("LakeaWebsocket: DeleteChannelRedeem -> ConnectionConfirmed");
+            Send("LakeaWebsocket: DeleteChannelRedeem -> Connection Confirmed");
             Terminal.Output("Socket: Open Service -> DeleteChannelRedeem");
             Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> DeleteChannelRedeem");
         }

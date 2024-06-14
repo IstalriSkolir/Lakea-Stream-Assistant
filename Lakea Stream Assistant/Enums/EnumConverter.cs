@@ -38,6 +38,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "lakearetort": return EventType.Lakea_Retort;
                 case "lakeastartup": return EventType.Lakea_Start_Up;
                 case "lakeatimer": return EventType.Lakea_Timer_Start;
+                case "lakeawebsocket": return EventType.Lakea_Web_Socket;
                 case "obsscenechanged": return EventType.OBS_Scene_Changed;
                 case "obssourceactivestatus": return EventType.OBS_Source_Active_Status;
                 case "twitchbits": return EventType.Twitch_Bits;

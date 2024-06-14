@@ -33,9 +33,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnMessage(e);
             try
             {
+                Send("LakeaWebsocket: RemoveEvent -> Message Received");
                 JObject json = JObject.Parse(e.Data);
                 string key = (string)json["Key"];
                 EventItem item = convertor.CreateEventItem(json);
+                Terminal.Output("Socket: Message Service -> RemoveEvent, " + e.Data);
+                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> RemoveEvent, " + e.Data);
                 eventInput.UpdateEventDictionaries(key, item, remove: true);
             }
             catch (Exception ex)

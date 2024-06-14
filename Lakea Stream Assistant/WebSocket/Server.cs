@@ -57,6 +57,7 @@ namespace Lakea_Stream_Assistant.WebSocket
             convertor = new JSONConvertor();
             server = new WebSocketServer("ws://" + ip + ":" + port);
             server.AddWebSocketService<AddEvent>("/AddEvent");
+            server.AddWebSocketService<RunEvent>("/RunEvent");
             server.AddWebSocketService<RemoveEvent>("/RemoveEvent");
             server.AddWebSocketService<CreateChannelRedeem>("/CreateChannelRedeem");
             server.AddWebSocketService<DeleteChannelRedeem>("/DeleteChannelRedeem");

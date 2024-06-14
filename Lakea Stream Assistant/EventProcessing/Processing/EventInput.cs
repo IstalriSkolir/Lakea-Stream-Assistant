@@ -89,6 +89,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     case EventType.Lakea_Timer_Fired:
                         item = lakea.NewTimer((LakeaTimer)eve);
                         break;
+                    case EventType.Lakea_Web_Socket:
+                        item = lakea.NewWebSocketEvent((EventItem)eve);
+                        break;
                     case EventType.OBS_Scene_Changed:
                         item = obs.NewChangedScene((OBSSceneChange)eve);
                         break;

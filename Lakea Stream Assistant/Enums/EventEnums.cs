@@ -21,6 +21,7 @@
         Lakea_Start_Up,
         Lakea_Timer_Start,
         Lakea_Timer_Fired,
+        Lakea_Web_Socket,
         OBS_Scene_Changed,
         OBS_Source_Active_Status,
         Twitch_Bits,

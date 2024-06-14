@@ -13,7 +13,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         protected override void OnOpen()
         {
             base.OnOpen();
-            Send("LakeaWebsocket: UpdateChannelRedeem -> ConnectionConfirmed");
+            Send("LakeaWebsocket: UpdateChannelRedeem -> Connection Confirmed");
             Terminal.Output("Socket: Open Service -> UpdateChannelRedeem");
             Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> UpdateChannelRedeem");
         }
