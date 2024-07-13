@@ -20,3 +20,10 @@ public enum TwitchSubTier : byte
     Tier_2,
     Tier_3
 }
+
+public enum CreatureType : byte
+{
+    Character,
+    Monster,
+    Boss
+}

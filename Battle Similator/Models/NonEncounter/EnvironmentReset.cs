@@ -42,7 +42,7 @@ namespace Battle_Similator.Models.NonEncounter
                 io.DeleteCurrentBossFighters();
             }
             string[] bosses = io.LoadBossList();
-            Monster firstBoss = io.LoadNPCData("Bosses", bosses[0]);
+            Monster firstBoss = io.LoadNPCData(CreatureType.Boss, bosses[0]);
             healthBar.GenerateHealthBarImage(firstBoss);
         }
     }

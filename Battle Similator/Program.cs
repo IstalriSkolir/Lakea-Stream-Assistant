@@ -34,22 +34,27 @@ namespace Battle_Similator
                         break;
                     case "WEAKMONSTER":
                         MonsterEncounter weakMonster = new MonsterEncounter(io);
-                        weakMonster.Start("WEAK", args[2], args[3], args[4]);
+                        weakMonster.Start(args[2], args[3], args[4], monsterStrength: "WEAK");
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "NORMALMONSTER":
                         MonsterEncounter normalMonster = new MonsterEncounter(io);
-                        normalMonster.Start("NORMAL", args[2], args[3], args[4]);
+                        normalMonster.Start(args[2], args[3], args[4], monsterStrength: "NORMAL");
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "HARDMONSTER":
                         MonsterEncounter hardMonster = new MonsterEncounter(io);
-                        hardMonster.Start("HARD", args[2], args[3], args[4]);
+                        hardMonster.Start(args[2], args[3], args[4], monsterStrength: "HARD");
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "RANDOMMONSTER":
                         MonsterEncounter randomMonster = new MonsterEncounter(io);
-                        randomMonster.Start("RANDOM", args[2], args[3], args[4]);
+                        randomMonster.Start(args[2], args[3], args[4], monsterStrength: "RANDOM");
+                        exitCode((int)ExitCode.Monster_Battle);
+                        break;
+                    case "SPECIFICMONSTER":
+                        MonsterEncounter specificMonster = new MonsterEncounter(io);
+                        specificMonster.Start(args[2], args[3], args[4], randomMonster: false, monsterFile: args[6]);
                         exitCode((int)ExitCode.Monster_Battle);
                         break;
                     case "BOSSBATTLE":
