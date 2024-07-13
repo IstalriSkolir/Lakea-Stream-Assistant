@@ -31,11 +31,11 @@ namespace Battle_Similator.Models.Encounters
             Monster monster;
             if (io.CurrentBossFileExists())
             {
-                monster = io.LoadNPCData("Bosses", "CURRENTBOSS");
+                monster = io.LoadNPCData(CreatureType.Boss, "CURRENTBOSS");
             }
             else
             {
-                monster = io.LoadNPCData("Bosses", bossList[0]);
+                monster = io.LoadNPCData(CreatureType.Boss, bossList[0]);
             }
             return new Encounter(character, monster, "BOSSBATTLE");
         }
@@ -71,7 +71,7 @@ namespace Battle_Similator.Models.Encounters
                             index++;
                         }
                     }
-                    Monster nextBoss = io.LoadNPCData("Bosses", nextBossString);
+                    Monster nextBoss = io.LoadNPCData(CreatureType.Boss, nextBossString);
                     io.SaveCurrentBossData(nextBoss);
                 }
                 io.SaveCharacterData(result.Character);

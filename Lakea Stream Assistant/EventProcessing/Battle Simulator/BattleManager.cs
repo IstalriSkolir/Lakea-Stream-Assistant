@@ -115,7 +115,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 {
                     subTier = Twitch.GetUserSubscriptionTier(accountID).Result;
                 }
-                string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\"";
+                string item = "\"LAKEA\" \"" + eve + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\" \"" + resourcePath + "\"";
                 queue.Add(item);
                 if (!active)
                 {
@@ -130,7 +130,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         }
 
         //Add a battle to the Battle Sim Queue
-        public void Battle(string type, string accountID, string displayName)
+        public void Battle(string type, string accountID, string displayName, List<string> battleArgs)
         {
             try
             {
@@ -139,7 +139,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 if(level >= 5)
                 {
                     TwitchSubTier subTier = Twitch.GetUserSubscriptionTier(accountID).Result;
-                    string item = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\"";
+                    string item = "\"LAKEA\" \"" + type + "\" \"" + accountID + "\" \"" + displayName + "\" \"" + subTier.ToString() + "\" \"" + resourcePath + "\"";
+                    foreach (string arg in battleArgs)
+                    {
+                        item += " \"" + arg + "\"";
+                    }
                     queue.Add(item);
                     if(!active)
                     {
@@ -168,7 +172,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             try
             {
                 active = true;
-                string parameters = queue[0] + " \"" + resourcePath + "\"";
+                string parameters = queue[0];
                 queue.RemoveAt(0);
                 Terminal.Output("Lakea: Starting Battle Simulator -> " + parameters);
                 Logs.Instance.NewLog(LogLevel.Info, "Starting Battle Simulator -> " + parameters);

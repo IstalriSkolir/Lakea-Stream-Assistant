@@ -297,7 +297,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //Function to call the Battle Manager for a monster encounter
         public void Battle(Dictionary<string, string> args, Callbacks callback)
         {
-            battleManager.Battle(args["Type"], args["AccountID"], args["DisplayName"]);
+            List<string> battleArgs = new List<string>();
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (args.ContainsKey("Arg" + i))
+                {
+                    battleArgs.Add(args["Arg" + i]);
+                }
+            }
+            battleManager.Battle(args["Type"], args["AccountID"], args["DisplayName"], battleArgs);
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();

@@ -196,11 +196,20 @@ namespace Battle_Similator.Models.Resources
             }
         }
 
-        public Monster LoadNPCData(string type, string id)
+        public Monster LoadNPCData(CreatureType type, string id)
         {
             try
             {
-                string filePath = path + type + "\\" + id + ".txt";
+                string filePath = "";
+                if (type == CreatureType.Boss)
+                {
+                    filePath = path + "Bosses\\" + id + ".txt";
+                }
+                else if (type == CreatureType.Monster)
+                {
+                    filePath = path + "Monsters\\" + id + ".txt";
+                }
+                //string filePath = path + type + "\\" + id + ".txt";
                 string[] lines = File.ReadAllLines(filePath);
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (string line in lines)

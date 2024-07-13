@@ -21,11 +21,11 @@ namespace Battle_Similator.Models.NonEncounter
             Monster monster;
             if (io.CurrentBossFileExists())
             {
-                monster = io.LoadNPCData("Bosses", "CURRENTBOSS");
+                monster = io.LoadNPCData(CreatureType.Boss, "CURRENTBOSS");
             }
             else
             {
-                monster = io.LoadNPCData("Bosses", bossList[0]);
+                monster = io.LoadNPCData(CreatureType.Boss, bossList[0]);
             }
             healthBar.GenerateHealthBarImage(monster);
         }

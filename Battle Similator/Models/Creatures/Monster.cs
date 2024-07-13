@@ -3,8 +3,10 @@
     public class Monster : Creature
     {
         private int xpValue;
+        private string difficulty;
 
         public int XPValue { get { return xpValue; } }
+        public string Difficulty {  get { return difficulty; } }
 
         public Monster(string name, string id, int level, int hp, int hpMax, int strength, int dexterity, int contitution, int xpValue)
         {
@@ -19,6 +21,7 @@
             this.xpValue = xpValue;
             this.isAlive = true;
             this.updateAbilityModifiers();
+            this.determineDifficulty();
         }
 
         public override void TakeDamage(int damage)
@@ -27,6 +30,26 @@
             if (this.hp <= 0)
             {
                 this.isAlive = false;
+            }
+        }
+
+        private void determineDifficulty()
+        {
+            if (this.level <= 10)
+            {
+                this.difficulty = "WEAK";
+            }
+            else if (this.level <= 30)
+            {
+                this.difficulty = "NORMAL";
+            }
+            else if (this.level <= 50)
+            {
+                this.difficulty = "HARD";
+            }
+            else
+            {
+                this.difficulty = "RANDOM";
             }
         }
     }

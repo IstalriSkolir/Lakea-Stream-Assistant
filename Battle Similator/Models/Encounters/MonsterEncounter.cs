@@ -13,19 +13,35 @@ namespace Battle_Similator.Models.Encounters
             this.io = io;
         }
 
-        public void Start(string monsterStrength, string characterID, string characterName, string subTier)
+        public void Start(string characterID, string characterName, string subTier, string monsterStrength = "", string monsterFile = "", bool randomMonster = true)
         {
-            Encounter encounter = preEncounter(monsterStrength, characterID, characterName, subTier);
+            Encounter encounter = null;
+            if (randomMonster)
+            {
+                encounter = preEncounter(characterID, characterName, subTier, randomMonster, monsterStrength: monsterStrength);
+            }
+            else
+            {
+                encounter = preEncounter(characterID, characterName,subTier, randomMonster, monsterFile: monsterFile);
+            }
             EncounterResult result = encounter.Run();
             postEncounter(result);
         }
 
-        private Encounter preEncounter(string monsterStrength, string characterID, string characterName, string subTier)
+        private Encounter preEncounter(string characterID, string characterName, string subTier, bool randomMonster, string monsterStrength = "", string monsterFile = "")
         {
             Character character = io.LoadCharacterData(characterID, characterName);
             character.SetTwitchSubTier(subTier);
-            Monster monster = getMonster(monsterStrength);
-            return new Encounter(character, monster, monsterStrength + "MONSTER");
+            if(randomMonster)
+            {
+                Monster monster = getMonster(monsterStrength);
+                return new Encounter(character, monster, monsterStrength + "MONSTER");
+            }
+            else
+            {
+                Monster monster = io.LoadNPCData(CreatureType.Monster, monsterFile);
+                return new Encounter(character, monster, monster.Difficulty + "MONSTER");
+            }
         }
 
         private Monster getMonster(string strength)
@@ -34,7 +50,7 @@ namespace Battle_Similator.Models.Encounters
             Random random = new Random();
             int index = random.Next(0, monsters.Length);
             string id = monsters[index];
-            return io.LoadNPCData("Monsters", id);
+            return io.LoadNPCData(CreatureType.Monster, id);
         }
 
         private void postEncounter(EncounterResult result)
