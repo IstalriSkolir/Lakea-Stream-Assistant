@@ -2,7 +2,7 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"LAKEA\"\r\n\"SPECIFICMONSTER\"\r\n\"123\"\r\n\"TEST\"\r\n\"None\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"\r\n\"0014-GOBLIN\"",
+      "commandLineArgs": "\"LAKEA\"\r\n\"ENVIRONMENTRESET\"\r\n\"123\"\r\n\"TEST\"\r\n\"None\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"\r\n\"0014-GOBLIN\"",
       "remoteDebugEnabled": true
     }
   }

@@ -248,7 +248,7 @@ namespace Battle_Similator.Models.Resources
                             break;
                     }
                 }
-                if ("Bosses".Equals(type))
+                if (type == CreatureType.Boss)
                 {
                     return new Monster(props["NAME"], props["ID"], int.Parse(props["LEVEL"]), int.Parse(props["CURRENT_HP"]), int.Parse(props["MAX_HP"]),
                         int.Parse(props["STR"]), int.Parse(props["DEX"]), int.Parse(props["CON"]), int.Parse(props["LEVEL"]) * 60);
