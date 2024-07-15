@@ -134,13 +134,22 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 if(startupEvents.Count > 0)
                 {
-                    EventItem item = startupEvents[startupEvents.Count - 1];
-                    startupEvents.RemoveAt(startupEvents.Count - 1);
+                    EventItem item = startupEvents[0];
+                    startupEvents.RemoveAt(0);
                     item = passArgs.GetEventArgs(item, eve);
-                    input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up"));
+                    Task.Run(() => input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up")));
                     if (item != null)
                     {
-                        return item;
+                        if (item.Duration == 0)
+                        {
+                            return item;
+                        }
+                        else
+                        {
+                            //Bad practice, could have multiple hanging threads, will need refactoring at later date
+                            Thread.Sleep(TimeSpan.FromSeconds(item.Duration));
+                            return item;
+                        }
                     }                  
                 }
             }
