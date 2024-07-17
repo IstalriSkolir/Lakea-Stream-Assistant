@@ -219,6 +219,8 @@ public partial class ConfigSettings
 public partial class SettingsCommands
 {
 
+    private CommandsTitle titleField;
+
     private CommandsTotalBits totalBitsField;
 
     private CommandsResetTerminal resetTerminalField;
@@ -232,6 +234,19 @@ public partial class SettingsCommands
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    /// <remarks/>
+    public CommandsTitle Title
+    {
+        get
+        {
+            return this.titleField;
+        }
+        set
+        {
+            this.titleField = value;
+        }
+    }
 
     /// <remarks/>
     public CommandsTotalBits TotalBits
@@ -584,6 +599,44 @@ public partial class CommandsQuotes
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 public partial class CommandsExit
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsTitle
 {
 
     private bool enabledField;
