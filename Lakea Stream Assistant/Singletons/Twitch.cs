@@ -18,6 +18,8 @@ using Lakea_Stream_Assistant.WebSocket.Services;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
+using TwitchLib.PubSub.Models.Responses;
+using TwitchLib.Api.Helix.Models.Games;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -376,6 +378,22 @@ namespace Lakea_Stream_Assistant.Singletons
                 Terminal.Output("Twitch: Error Updating Stream Title -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+        }
+
+        // Get stream category data from Twitch
+        public async static Task<GetGamesResponse> GetCategoryInformation(List<string> games)
+        {
+            try
+            {
+                GetGamesResponse response = await api.Helix.Games.GetGamesAsync(gameNames: games, accessToken: channelAuthKey);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Getting Category Information -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
         }
 
         //Get list of channel subscribers

@@ -8,6 +8,8 @@ using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
+using TwitchLib.Api.Helix.Models.Games;
+using TwitchLib.PubSub.Models.Responses;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
@@ -36,6 +38,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             this.keepAliveToken = keepAliveToken;
             this.commandFunctions = new Dictionary<string, Func<LakeaCommand, EventItem>>
             {
+                { "category", categoryCommand },
                 { "exit", exitCommand },
                 { "process", processCommand },
                 { "quote", quoteCommand },
@@ -51,6 +54,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
+                { "category", new CommandConfiguration("Category", settings.Commands.Category.Enabled, settings.Commands.Category.ModOnly) },
                 { "exit", new CommandConfiguration("Exit", settings.Commands.Exit.Enabled, settings.Commands.Exit.ModOnly) },
                 { "process", new CommandConfiguration("Process", settings.Commands.Process.Enabled, settings.Commands.Process.ModOnly) },
                 { "quote", new CommandConfiguration("Quote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
@@ -116,6 +120,36 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
+        }
+
+        // Calls on the Twitch API to update the stream category
+        private EventItem categoryCommand(LakeaCommand eve)
+        {
+            Terminal.Output("Lakea: Update Stream Category Command -> Updating Stream Category");
+            Logs.Instance.NewLog(LogLevel.Info, "Update Stream Category Command -> Updating Stream Category");
+            Dictionary<string, string> args = new Dictionary<string, string>();
+            if (eve.Args.Command.ArgumentsAsList.Count > 0)
+            {
+                GetGamesResponse response = Twitch.GetCategoryInformation(new List<string>() { eve.Args.Command.ArgumentsAsString }).Result;
+                if(response.Games.Count() > 0)
+                {
+                    args.Add("Message", "On it, give me a moment!");
+                    ModifyChannelInformationRequest request = new ModifyChannelInformationRequest();
+                    request.GameId = response.Games[0].Id;
+                    Twitch.UpdateChannelInformation(request);
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Category Command", "Lakea_Update_Stream_Category", args: args);
+                }
+                else
+                {
+                    args.Add("Message", "Twitch doesn't seem to have any categories of the name '" + eve.Args.Command.ArgumentsAsString + "', are you sure that's the right one?");
+                }
+            }
+            else
+            {
+                GetChannelInformationResponse response = Twitch.GetChannelInformation().Result;
+                args.Add("Message", "The current stream title is '" + response.Data[0].GameName + "', don't know why you didn't just look at it though!");
+            }
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Category Command", "Lakea_Update_Stream_Category", args: args);
         }
 
         // Checks if it was the broadcaster that called the command, then kills the keep alive token so the main thread can end the application
@@ -213,12 +247,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             Terminal.Output("Lakea: Update Stream Title Command -> Updating Stream Title");
             Logs.Instance.NewLog(LogLevel.Info, "Update Stream Title Command -> Updating Stream Title");
+            Dictionary<string, string> args = new Dictionary<string, string>();
             if(eve.Args.Command.ArgumentsAsList.Count > 0)
-            {
-                Dictionary<string, string> args = new Dictionary<string, string>
-                {   
-                    { "Message", "On it, give me a moment!" }
-                };
+            {  
+                args.Add("Message", "On it, give me a moment!");
                 ModifyChannelInformationRequest request = new ModifyChannelInformationRequest();
                 request.Title = eve.Args.Command.ArgumentsAsString;
                 Twitch.UpdateChannelInformation(request);
@@ -227,12 +259,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             else
             {
                 GetChannelInformationResponse response = Twitch.GetChannelInformation().Result;
-                Dictionary<string, string> args = new Dictionary<string, string>
-                {
-                    { "Message", "The current stream title is '" + response.Data[0].Title + "', don't know why you didn't just look at it though!" }
-                };
-                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Title Command", "Lakea_Update_Stream_Title", args: args);
+                args.Add("Message", "The current stream title is '" + response.Data[0].Title + "', don't know why you didn't just look at it though!");
             }
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Title Command", "Lakea_Update_Stream_Title", args: args);
         }
 
         // Returns a new EventItem that sends a message to Twitch chat with the users total bits cheered
