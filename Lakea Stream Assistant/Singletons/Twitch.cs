@@ -16,6 +16,8 @@ using TwitchLib.Api.Helix.Models.Subscriptions;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using Lakea_Stream_Assistant.WebSocket.Services;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
+using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
+using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -300,6 +302,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Twitch API
 
+        // Create a new Channel Redeem
         public async static Task<CreateCustomRewardsResponse> CreateChannelRedeem(CreateCustomRewardsRequest requestData)
         {
             try
@@ -315,6 +318,7 @@ namespace Lakea_Stream_Assistant.Singletons
             return null;
         }
 
+        // Update a channel redeem
         public async static Task<UpdateCustomRewardResponse> UpdateChannelRedeem(string redeemID, UpdateCustomRewardRequest requestData)
         {
             try
@@ -330,6 +334,7 @@ namespace Lakea_Stream_Assistant.Singletons
             return null;
         }
 
+        // Delete a channel redeem
         public async static void DeleteChannelRedeem(string redeemID)
         {
             try
@@ -339,6 +344,36 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Deleting Channel Redeem -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
+        // Get stream information such as stream title or game category
+        public async static Task<GetChannelInformationResponse> GetChannelInformation()
+        {
+            try
+            {
+                GetChannelInformationResponse response = await api.Helix.Channels.GetChannelInformationAsync(channelID, channelAuthKey);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Getting Stream Information -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // Update stream information such as stream title or game category
+        public async static void UpdateChannelInformation(ModifyChannelInformationRequest request)
+        {
+            try
+            {
+                await api.Helix.Channels.ModifyChannelInformationAsync(channelID, request, channelAuthKey);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Updating Stream Title -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
