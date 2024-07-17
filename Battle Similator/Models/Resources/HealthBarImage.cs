@@ -57,6 +57,10 @@ namespace Battle_Similator.Models.Resources
                 graphics.DrawImage(borderImage, borderXPos, borderYPos);
                 graphics.DrawImage(profilePic, profileXPos, profileYPos);
                 graphics = drawNameAndLevel(graphics, boss);
+                if (boss.HP <= 0)
+                {
+                    graphics = drawCrossOnProfilePicture(graphics);
+                }
                 healthBar.Save(path + "..\\CurrentBossHealthBar.png");
                 graphics.Dispose();
                 healthBar.Dispose();
@@ -141,5 +145,30 @@ namespace Battle_Similator.Models.Resources
             graphics.DrawString(toWrite, font, Brushes.DeepSkyBlue, textXPos, textYPos);
             return graphics;
         }
+
+        private Graphics drawCrossOnProfilePicture(Graphics graphics)
+        {
+            Pen redPen = new Pen(Color.Red, 50f);
+            PointF point1 = new PointF(-50f, -50f);
+            PointF point2 = new PointF(550f, 550f);
+            PointF point3 = new PointF(-50f, 550f);
+            PointF point4 = new PointF(550f, -50f);
+            graphics.DrawLine(redPen, point1, point2);
+            graphics.DrawLine(redPen, point3, point4);
+            return graphics;
+        }
+
+        //// Defines pen 
+        //Pen pen = new Pen(ForeColor);
+
+        //// Defines the both points to connect 
+        //// pt1 is (30.0, 30.0) which represents (x1, y1) 
+        //PointF pt1 = new PointF(30.0F, 30.0F);
+
+        //// pt2 is (200.0, 300.0) which represents (x2, y2) 
+        //PointF pt2 = new PointF(200.0F, 300.0F);
+
+        //// Draws the line 
+        //pea.Graphics.DrawLine(pen, pt1, pt2); 
     }
 }
