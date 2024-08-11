@@ -161,10 +161,11 @@ namespace Lakea_Stream_Assistant
 
         static void shutdown()
         {
-            eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit"));
+            var exitTasks = Task.Run(() => eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit")));
             var externalTasks = Task.Run(() => externalProcesses.StopAllExternalProcesses());
             var serverTask = Task.Run(() => Server.Shutdown());
-            Terminal.EndRefresh();
+            var terminalTask = Task.Run(() => Terminal.EndRefresh());
+            Task.WaitAll(exitTasks, externalTasks, serverTask, terminalTask);
         }
 
         #endregion
