@@ -1,7 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using TwitchLib.Client.Events;
-using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.Models.Events
 {
@@ -26,8 +25,10 @@ namespace Lakea_Stream_Assistant.Models.Events
                 { "IsModerator", args.Subscriber.IsModerator.ToString() },
                 { "IsSubscriber", args.Subscriber.IsSubscriber.ToString() },
                 { "IsPartner", args.Subscriber.IsPartner.ToString() },
+                { "IsTurbo", args.Subscriber.IsTurbo.ToString() },
                 { "SubscriptionPlan", args.Subscriber.SubscriptionPlanName },
-                { "AccountID", args.Subscriber.UserId }
+                { "AccountID", args.Subscriber.UserId },
+                { "SubscriptionMessage", args.Subscriber.ResubMessage }
             };
             return redeemArgs;
         }

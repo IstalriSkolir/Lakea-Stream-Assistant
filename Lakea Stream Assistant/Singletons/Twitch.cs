@@ -14,7 +14,6 @@ using TwitchLib.Communication.Events;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.Subscriptions;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
-using Lakea_Stream_Assistant.WebSocket.Services;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
@@ -81,7 +80,7 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Client Connecting...");
                 Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
-                ConnectionCredentials crednetials = new ConnectionCredentials(botUsername, botAuthKey);
+                ConnectionCredentials credentials = new ConnectionCredentials(botUsername, botAuthKey);
                 var clientOptions = new ClientOptions
                 {
                     MessagesAllowedInPeriod = 750,
@@ -89,13 +88,17 @@ namespace Lakea_Stream_Assistant.Singletons
                 };
                 WebSocketClient customClient = new WebSocketClient(clientOptions);
                 client = new TwitchClient(customClient);
-                client.Initialize(crednetials, botChannelToJoin);
+                client.Initialize(credentials, botChannelToJoin);
                 client.AddChatCommandIdentifier(commandIdentifier);
                 client.OnConnected += onClientConnected;
                 client.OnDisconnected += onClientDisconnected;
                 client.OnChatCommandReceived += onChatCommand;
                 client.OnRaidNotification += onRaid;
                 client.OnNewSubscriber += onSubscription;
+                client.OnReSubscriber += onResubscription;
+                client.OnPrimePaidSubscriber += onPrimePaidSubscription;
+                client.OnGiftedSubscription += onGiftedSubscription;
+                client.OnContinuedGiftedSubscription += onContinuedGiftedSubscription;
                 client.Connect();
             }
             catch (Exception ex)
@@ -119,7 +122,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 pubSub.OnFollow += onChannelFollow;
                 pubSub.OnBitsReceivedV2 += onChannelBitsV2;
                 pubSub.OnChannelPointsRewardRedeemed += onChannelPointsRedeemed;
-                pubSub.OnChannelSubscription += onChannelSubscription;
+                //pubSub.OnChannelSubscription += onChannelSubscription;
                 pubSub.ListenToFollows(channelID);
                 pubSub.ListenToBitsEventsV2(channelID);
                 pubSub.ListenToChannelPoints(channelID);
@@ -160,13 +163,14 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Called when the client successfully connects to Twitch
+        // Called when the client successfully connects to Twitch
         private static void onClientConnected(object sender, OnConnectedArgs e)
         {
             Terminal.Output("Twitch: Client Connected");
             Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch Client...");
         }
 
+        // Called when the client disconnects from Twitch
         private static void onClientDisconnected(object sender, OnDisconnectedEventArgs e)
         {
             Terminal.Output("Twitch: Client Disconnected, Attempting to Reconnect...");
@@ -174,7 +178,7 @@ namespace Lakea_Stream_Assistant.Singletons
             initiliaseClient();
         }
 
-        //Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
+        // Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
             if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
@@ -191,7 +195,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Called on a command event, passes event info to the eventHandler
+        // Called on a command event, passes event info to the eventHandler
         private static void onRaid(object sender, OnRaidNotificationArgs e)
         {
             Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
@@ -199,7 +203,7 @@ namespace Lakea_Stream_Assistant.Singletons
             eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
         }
 
-        //Called on a subscription event, passes event info to the eventHandler
+        // Called on a subscription event, passes event info to the eventHandler
         private static void onSubscription(object sender, OnNewSubscriberArgs e)
         {
             Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
@@ -207,7 +211,39 @@ namespace Lakea_Stream_Assistant.Singletons
             eventHandler.NewEvent(new TwitchClientSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
         }
 
-        //Write a message to Twitch chat
+        // Called on a resubscription event, passes event info to the eventHandler
+        private static void onResubscription(object sender, OnReSubscriberArgs e)
+        {
+            Terminal.Output("Twitch: Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
+            eventHandler.NewEvent(new TwitchClientResubscriptioncs(EventSource.Twitch, EventType.Twitch_Resubscription, e));
+        }
+
+        // Called on a prime paid subscription event, passes event info to the eventHandler
+        private static void onPrimePaidSubscription(object sender, OnPrimePaidSubscriberArgs e)
+        {
+            Terminal.Output("Twitch: Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
+            eventHandler.NewEvent(new TwitchClientPrimePaidSubscription(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, e));
+        }
+
+        // Called on a gifted subscription event, passes event info to the eventHandler
+        private static void onGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
+        {
+            Terminal.Output("Twitch: Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
+            eventHandler.NewEvent(new TwitchClientGiftedSubscription(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, e));
+        }
+
+        // Called on a continued gift subscription event, passes event info to the event handler
+        private static void onContinuedGiftedSubscription(object sender, OnContinuedGiftedSubscriptionArgs e)
+        {
+            Terminal.Output("Twitch: Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
+            eventHandler.NewEvent(new TwitchClientContinuedGiftSubscription(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, e));
+        }
+
+        // Write a message to Twitch chat
         public static void WriteToChat(string message)
         {
             Terminal.Output("Twitch: Sending Message -> '" + message + "'");
@@ -215,7 +251,7 @@ namespace Lakea_Stream_Assistant.Singletons
             client.SendMessage(client.JoinedChannels[0], $"" + message);
         }
 
-        //Write a whisper message to a Twitch user
+        // Write a whisper message to a Twitch user
         //Currently not working, Todo issue #70
         public static void WriteWhisperToUser(string message, string user)
         {
@@ -228,6 +264,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Twitch Pubsub
 
+        // When disconnected from the PubSub service
         private static void onPubSubServiceDisconnected(object sender, EventArgs e)
         {
             pubSubConnected = false;
@@ -236,7 +273,7 @@ namespace Lakea_Stream_Assistant.Singletons
             initiliasePubSub();
         }
 
-        //Once connected, send auth key to verify connection
+        // Once connected, send auth key to verify connection
         private static void onPubSubServiceConnected(object sender, EventArgs e)
         {
             try
@@ -292,13 +329,15 @@ namespace Lakea_Stream_Assistant.Singletons
             eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
         }
 
-        //Called on a channel subscription, passes event info to the eventHandler
-        private static void onChannelSubscription(object sender, OnChannelSubscriptionArgs e)
-        {
-            Terminal.Output("Twitch: Subscription -> " + e.Subscription.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscription);
-            eventHandler.NewEvent(new TwitchPubSubSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
-        }
+
+        // Commented out to test Twitch Client Subscriptions
+        // Called on a channel subscription, passes event info to the eventHandler
+        //private static void onChannelSubscription(object sender, OnChannelSubscriptionArgs e)
+        //{
+        //    Terminal.Output("Twitch: Subscription -> " + e.Subscription.DisplayName);
+        //    Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscription);
+        //    eventHandler.NewEvent(new TwitchPubSubSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+        //}
 
         #endregion
 
