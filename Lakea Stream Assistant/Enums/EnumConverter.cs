@@ -47,6 +47,10 @@ namespace Lakea_Stream_Assistant.Enums
                 case "twitchraid": return EventType.Twitch_Raid;
                 case "twitchredeem": return EventType.Twitch_Redeem;
                 case "twitchsubscription": return EventType.Twitch_Subscription;
+                case "twitchresubscription": return EventType.Twitch_Resubscription;
+                case "twitchprimepaidsubscription": return EventType.Twitch_Prime_Paid_Subscription;
+                case "twitchgiftedsubscription": return EventType.Twitch_Gifted_Subscription;
+                case "twitchcontinuedgiftedsubscription": return EventType.Twitch_Continued_Gifted_Subscription;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventType'");
             }
         }

@@ -32,12 +32,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Update Events
 
+        // Update event dictionaries in the different platform objects
         public void UpdateEventDictionaries(string key, EventItem item, bool remove)
         {
             switch (item.Source)
             {
                 case EventSource.Lakea:
-                    obs.UpdateDictionary(key, item, remove);
+                    lakea.UpdateDictionary(key, item, remove);
                     break;
                 case EventSource.OBS:
                     obs.UpdateDictionary(key, item, remove);
@@ -111,10 +112,27 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         item = twitch.NewRaid((TwitchRaid)eve);
                         break;
                     case EventType.Twitch_Subscription:
-                        item = twitch.newSubscription((TwitchPubSubSubscription)eve);
+                        //item = twitch.newSubscription((TwitchPubSubSubscription)eve);
+                        item = twitch.NewSubscription((TwitchClientSubscription)eve);
+                        break;
+                    case EventType.Twitch_Resubscription:
+                        item = twitch.NewResubscription((TwitchClientResubscriptioncs)eve);
+                        break;
+                    case EventType.Twitch_Prime_Paid_Subscription:
+                        item = twitch.NewPrimePaidSubscription((TwitchClientPrimePaidSubscription)eve);
+                        break;
+                    case EventType.Twitch_Gifted_Subscription:
+                        item = twitch.NewGiftedSubscription((TwitchClientGiftedSubscription)eve);
+                        break;
+                    case EventType.Twitch_Continued_Gifted_Subscription:
+                        item = twitch.NewGiftedSubscriptionContinued((TwitchClientContinuedGiftSubscription)eve);
                         break;
                     case EventType.Twitch_Redeem:
                         item = twitch.NewRedeem((TwitchRedeem)eve);
+                        break;
+                    default:
+                        Terminal.Output("EventHandler: Unrecognised Event Type -> " + eve.Type);
+                        Logs.Instance.NewLog(LogLevel.Warning, "EventHandler Unrecognised Event Type");
                         break;
                 }
                 if(item != null)

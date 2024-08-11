@@ -7,7 +7,7 @@ using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
-    //Functions for handling Twitch Events
+    // Functions for handling Twitch Events
     public class TwitchFunctions
     {
         private EventPassArguments passArgs;
@@ -18,10 +18,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> commands;
         private Dictionary<string, EventItem> raids;
         private Dictionary<string, EventItem> subscriptions;
+        private Dictionary<string, EventItem> resubscriptions;
+        private Dictionary<string, EventItem> primePaidSubscriptions;
+        private Dictionary<string, EventItem> giftedSubscriptions;
+        private Dictionary<string, EventItem> continuedGiftedSubscriptions;
         private List<Tuple<int, string>> bitsOrder;
         private BitsCommand bitsCommands;
 
-        //Contructor stores list of events to check against when it receives a new event
+        // Contructor stores list of events to check against when it receives a new event
         public TwitchFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands defaultCommands)
         {
             this.passArgs = passArgs;
@@ -31,13 +35,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             commands = new Dictionary<string, EventItem>();
             raids = new Dictionary<string, EventItem>();
             subscriptions = new Dictionary<string, EventItem>();
-            events = new Dictionary<EventType, Dictionary<string, EventItem>>();
-            events.Add(EventType.Twitch_Follow, follows);
-            events.Add(EventType.Twitch_Bits, bits);
-            events.Add(EventType.Twitch_Redeem, redeems);
-            events.Add(EventType.Twitch_Command, commands);
-            events.Add(EventType.Twitch_Raid, raids);
-            events.Add(EventType.Twitch_Subscription, subscriptions);
+            resubscriptions = new Dictionary<string, EventItem>();
+            primePaidSubscriptions = new Dictionary<string, EventItem>();
+            giftedSubscriptions = new Dictionary<string, EventItem>();
+            continuedGiftedSubscriptions = new Dictionary<string, EventItem>();
+            events = new Dictionary<EventType, Dictionary<string, EventItem>>
+            {
+                { EventType.Twitch_Follow, follows },
+                { EventType.Twitch_Bits, bits },
+                { EventType.Twitch_Redeem, redeems },
+                { EventType.Twitch_Command, commands },
+                { EventType.Twitch_Raid, raids },
+                { EventType.Twitch_Subscription, subscriptions },
+                { EventType.Twitch_Resubscription, resubscriptions },
+                { EventType.Twitch_Prime_Paid_Subscription, primePaidSubscriptions },
+                { EventType.Twitch_Gifted_Subscription, giftedSubscriptions },
+                { EventType.Twitch_Continued_Gifted_Subscription, continuedGiftedSubscriptions }
+            };
             bitsCommands = defaultCommands.BitsCommands;
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in newEvents)
@@ -67,6 +81,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 break;
                             case EventType.Twitch_Subscription:
                                 subscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_Resubscription:
+                                resubscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_Prime_Paid_Subscription:
+                                primePaidSubscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_Gifted_Subscription:
+                                giftedSubscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Terminal.Output("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
@@ -131,7 +154,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return bitsOrder;
         }
 
-        //When a follow event is triggered, checks the follow dictionary for event before triggering events effect
+        // When a follow event is triggered, checks the follow dictionary for event before triggering events effect
         public EventItem NewFollow(TwitchFollow eve)
         {
             try
@@ -159,7 +182,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return null;
         }
 
-        //When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
+        // When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
         public EventItem NewBits(TwitchBits eve)
         {
             bitsCommands.NewBitsEvent(eve);
@@ -202,7 +225,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return null;
         }
 
-        //When a channel redeem event is triggered, checks the redeem dictionary for event before triggering the events effect
+        // When a channel redeem event is triggered, checks the redeem dictionary for event before triggering the events effect
         public EventItem NewRedeem(TwitchRedeem eve)
         {
             try
@@ -229,7 +252,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return null;
         }
 
-        //When a chat command event is triggered, checks the commands dictionary for event before triggering the events effect
+        // When a chat command event is triggered, checks the commands dictionary for event before triggering the events effect
         public EventItem NewCommand(TwitchCommand eve)
         {
             try
@@ -257,7 +280,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return null;
         }
 
-        //When a channel raid event is triggered, checks the raid dictionary for event before triggering the events effect
+        // When a channel raid event is triggered, checks the raid dictionary for event before triggering the events effect
         public EventItem NewRaid(TwitchRaid eve)
         {
             try
@@ -300,47 +323,33 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return null;
         }
 
-        //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
-        public EventItem newSubscription(TwitchPubSubSubscription eve)
+        // When a subscription event is triggered, check the subscription dictionary for event before triggering the events effect
+        public EventItem NewSubscription(TwitchClientSubscription eve)
         {
             try
             {
-                string id = "Twitch_Subscription_";
-                if(eve.Args.Subscription.IsGift ==  true)
+                if (subscriptions.ContainsKey(eve.Args.Subscriber.SubscriptionPlanName))
                 {
-                    id += "Gifted";
-                }
-                else
-                {
-                    id += eve.Args.Subscription.SubscriptionPlan.ToString();
-                }
-                if (subscriptions.ContainsKey(id))
-                {
-                    EventItem item = subscriptions[id];
+                    EventItem item = subscriptions[eve.Args.Subscriber.SubscriptionPlanName];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
                         return item;
                     }
                 }
-                else if (subscriptions.ContainsKey("Twitch_Subscription_Default"))
+                else if (subscriptions.ContainsKey("Twitch_Subscriber_Default"))
                 {
-                    EventItem item = subscriptions["Twitch_Subscription_Default"];
+                    EventItem item = subscriptions["Twitch_Subscriber_Default"];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
                         return item;
                     }
                 }
-                else if (subscriptions.Count > 0)
-                {
-                    Terminal.Output("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
-                    Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
-                }
                 else
                 {
-                    Terminal.Output("Lakea: No Subscription Events Configured");
-                    Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
+                    Terminal.Output("Lakea: Unrecognised Twitch Subscription -> " + eve.Args.Subscriber.SubscriptionPlanName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Twitch Subscription Event -> " + eve.Args.Subscriber.SubscriptionPlanName);
                 }
             }
             catch (Exception ex)
@@ -350,5 +359,195 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             return null;
         }
+
+        // When a resubscription event is triggered, check the resubscription dictionary for event before triggering the events effects
+        public EventItem NewResubscription(TwitchClientResubscriptioncs eve)
+        {
+            try
+            {
+                if (resubscriptions.ContainsKey(eve.Args.ReSubscriber.SubscriptionPlanName))
+                {
+                    EventItem item = resubscriptions[eve.Args.ReSubscriber.SubscriptionPlanName];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else if (resubscriptions.ContainsKey("Twitch_Resubscriber_Default"))
+                {
+                    EventItem item = resubscriptions["Twitch_Resubscriber_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else
+                {
+                    Terminal.Output("Lakea: Unrecognised Twitch Resubscription -> " + eve.Args.ReSubscriber.SubscriptionPlanName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Twitch Resubscription Event -> " + eve.Args.ReSubscriber.SubscriptionPlanName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Twitch Resubscription Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // When a prime paid subscription event is triggered, check the prime paid subscription dictionary for event before triggering the events effects
+        public EventItem NewPrimePaidSubscription(TwitchClientPrimePaidSubscription eve)
+        {
+            try
+            {
+                if (primePaidSubscriptions.ContainsKey(eve.Args.PrimePaidSubscriber.SubscriptionPlanName))
+                {
+                    EventItem item = primePaidSubscriptions[eve.Args.PrimePaidSubscriber.SubscriptionPlanName];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else if (primePaidSubscriptions.ContainsKey("Twitch_Prime_Paid_Subscriber_Default"))
+                {
+                    EventItem item = primePaidSubscriptions["Twitch_Prime_Paid_Subscriber_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else
+                {
+                    Terminal.Output("Lakea: Unrecognised Twitch Prime Paid Subscription -> " + eve.Args.PrimePaidSubscriber.SubscriptionPlanName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Twitch Prime Paid Subscription Event -> " + eve.Args.PrimePaidSubscriber.SubscriptionPlanName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Twitch Prime Paid Subscription Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // When a gifted subscription event is triggered, check the gifted subscription dictionary for event before triggering the events effects
+        public EventItem NewGiftedSubscription(TwitchClientGiftedSubscription eve)
+        {
+            try
+            {
+                if (giftedSubscriptions.ContainsKey(eve.Args.GiftedSubscription.MsgParamSubPlanName))
+                {
+                    EventItem item = giftedSubscriptions[eve.Args.GiftedSubscription.MsgParamSubPlanName];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else if (giftedSubscriptions.ContainsKey("Twitch_Gifted_Subscriber_Default"))
+                {
+                    EventItem item = giftedSubscriptions["Twitch_Gifted_Subscriber_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else
+                {
+                    Terminal.Output("Lakea: Unrecognised Twitch Gifted Subscription -> " + eve.Args.GiftedSubscription.MsgParamSubPlanName);
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Twitch Gift Subscription Event -> " + eve.Args.GiftedSubscription.MsgParamSubPlanName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Twitch Gift Subscription Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // When a gifted subscription continued event is triggered, check the gifted subscription dictionary for event before triggering the events effects
+        public EventItem NewGiftedSubscriptionContinued(TwitchClientContinuedGiftSubscription eve)
+        {
+            try
+            {
+                if (continuedGiftedSubscriptions.ContainsKey("Twitch_Gifted_Subscriber_Continued_Default"))
+                {
+                    EventItem item = continuedGiftedSubscriptions["Twitch_Gifted_Subscriber_Continued_Default"];
+                    item = passArgs.GetEventArgs(item, eve);
+                    if (item != null)
+                    {
+                        return item;
+                    }
+                }
+                else
+                {
+                    Terminal.Output("Lakea: Unrecognised Twitch Gifted Subscription Continued -> " + eve.Args.ContinuedGiftedSubscription.ToString());
+                    Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Twitch Gifted Subscription Continued Event -> " + eve.Args.ContinuedGiftedSubscription.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Twitch Gifted Subscription Continued Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        //When a subscription event is triggered, checks the subscription dictionary for event before triggering the events effect
+        //public EventItem newSubscription(TwitchPubSubSubscription eve)
+        //{
+        //    try
+        //    {
+        //        string id = "Twitch_Subscription_";
+        //        if(eve.Args.Subscription.IsGift ==  true)
+        //        {
+        //            id += "Gifted";
+        //        }
+        //        else
+        //        {
+        //            id += eve.Args.Subscription.SubscriptionPlan.ToString();
+        //        }
+        //        if (subscriptions.ContainsKey(id))
+        //        {
+        //            EventItem item = subscriptions[id];
+        //            item = passArgs.GetEventArgs(item, eve);
+        //            if (item != null)
+        //            {
+        //                return item;
+        //            }
+        //        }
+        //        else if (subscriptions.ContainsKey("Twitch_Subscription_Default"))
+        //        {
+        //            EventItem item = subscriptions["Twitch_Subscription_Default"];
+        //            item = passArgs.GetEventArgs(item, eve);
+        //            if (item != null)
+        //            {
+        //                return item;
+        //            }
+        //        }
+        //        else if (subscriptions.Count > 0)
+        //        {
+        //            Terminal.Output("Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
+        //            Logs.Instance.NewLog(LogLevel.Warning, "Lakea: Unrecognised Subscription Event, No Default Event Set -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
+        //        }
+        //        else
+        //        {
+        //            Terminal.Output("Lakea: No Subscription Events Configured");
+        //            Logs.Instance.NewLog(LogLevel.Info, "No Subscription Events Configured -> " + eve.Args.Subscription.SubscriptionPlan.ToString() + ", " + eve.Args.Subscription.DisplayName);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Terminal.Output("Lakea: Twitch Subscription Error -> " + ex.Message);
+        //        Logs.Instance.NewLog(LogLevel.Error, ex);
+        //    }
+        //    return null;
+        //}
     }
 }
