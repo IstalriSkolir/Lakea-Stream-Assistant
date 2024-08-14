@@ -15,4 +15,12 @@
         Tier_2,
         Tier_3
     }
+
+    public enum ScamActionMode : byte
+    {
+        Nothing,
+        SendChatMessage,
+        DeleteMessage,
+        BanUser
+    }
 }

@@ -17,8 +17,10 @@ using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
-using TwitchLib.PubSub.Models.Responses;
 using TwitchLib.Api.Helix.Models.Games;
+using Lakea_Stream_Assistant.EventProcessing.Misc;
+using TwitchLib.Client.Extensions;
+using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -27,6 +29,7 @@ namespace Lakea_Stream_Assistant.Singletons
     {
         private static DefaultCommands lakeaCommands;
         private static EventInput eventHandler;
+        private static ScamMessageDetector scamMessageDetector;
         private static TwitchPubSub pubSub;
         private static TwitchClient client;
         private static TwitchAPI api;
@@ -36,6 +39,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static string clientID;
         private static string botUsername;
         private static string botAuthKey;
+        private static string botID;
         private static string botChannelToJoin;
         private static char commandIdentifier;
         private static bool pubSubConnected = false;
@@ -49,6 +53,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
+                scamMessageDetector = new ScamMessageDetector(config.Settings.ScamMessageDetection);
                 eventHandler = newEventsObj;
                 lakeaCommands = commands;
                 channelUsername = config.Twitch.StreamingChannel.UserName;
@@ -57,6 +62,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 clientID = config.Twitch.StreamingChannel.ClientID;
                 botUsername = config.Twitch.BotChannel.UserName;
                 botAuthKey = config.Twitch.BotChannel.UserToken;
+                botID = config.Twitch.BotChannel.UserID;
                 botChannelToJoin = config.Twitch.BotChannel.ChannelConnection;
                 commandIdentifier = config.Twitch.CommandIdentifier.ToCharArray()[0];
                 initiliaseClient();
@@ -73,7 +79,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Initiliase Twitch's Client connection
+        // Initiliase Twitch's Client connection
         private static void initiliaseClient()
         {
             try
@@ -99,6 +105,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 client.OnPrimePaidSubscriber += onPrimePaidSubscription;
                 client.OnGiftedSubscription += onGiftedSubscription;
                 client.OnContinuedGiftedSubscription += onContinuedGiftedSubscription;
+                client.OnMessageReceived += onChatMessage;
                 client.Connect();
             }
             catch (Exception ex)
@@ -108,7 +115,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Initiliase Twitch's PubSub connection
+        // Initiliase Twitch's PubSub connection
         private static void initiliasePubSub()
         {
             try
@@ -136,7 +143,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Initiliase Twitch's API connection
+        // Initiliase Twitch's API connection
         private static void initialiseAPI()
         {
             Terminal.Output("Twitch: API Connecting...");
@@ -176,6 +183,14 @@ namespace Lakea_Stream_Assistant.Singletons
             Terminal.Output("Twitch: Client Disconnected, Attempting to Reconnect...");
             Logs.Instance.NewLog(LogLevel.Info, "Disconnected from Twitch Client: " + e);
             initiliaseClient();
+        }
+
+        // Called on a message event, calls on the ScamMessageDetector to check for a scam message
+        private static void onChatMessage(object sender, OnMessageReceivedArgs e)
+        {
+            Terminal.Output("Twitch: Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
+            scamMessageDetector.CheckChatMessage(e);
         }
 
         // Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
@@ -246,9 +261,33 @@ namespace Lakea_Stream_Assistant.Singletons
         // Write a message to Twitch chat
         public static void WriteToChat(string message)
         {
-            Terminal.Output("Twitch: Sending Message -> '" + message + "'");
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message -> " + message);
-            client.SendMessage(client.JoinedChannels[0], $"" + message);
+            try
+            {
+                Terminal.Output("Twitch: Sending Message -> '" + message + "'");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message -> " + message);
+                client.SendMessage(client.JoinedChannels[0], $"" + message);
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Twitch: Error Sending Chat Message -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
+        // Reply to a Twitch chat message
+        public static void ReplyToChatMessage(string messageID, string reply)
+        {
+            try
+            {
+                Terminal.Output("Twitch: Replying To Message -> '" + reply + "'");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message Reply -> " + reply);
+                client.SendReply(client.JoinedChannels[0], messageID, $"" + reply);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Error Replying to Chat Message -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
         }
 
         // Write a whisper message to a Twitch user
@@ -507,6 +546,41 @@ namespace Lakea_Stream_Assistant.Singletons
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return TwitchSubTier.None;
+        }
+
+        // Delete a message from Twitch chat
+        public static async void DeleteChatMessage(string messageID)
+        {
+            try
+            {
+                Terminal.Output("Twitch: Deleting Chat Message...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Deleting Chat Message...");
+                await api.Helix.Moderation.DeleteChatMessagesAsync(channelID, channelID, messageID);
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Delete Chat Message -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+        }
+
+        // Ban a user from Twitch chat for a specified reason
+        public static async void BanChatUser(string accountID, string reason)
+        {
+            try
+            {
+                BanUserRequest request = new BanUserRequest();
+                request.UserId = accountID;
+                request.Reason = reason;
+                Terminal.Output("Twitch: Banning User from Chat...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Banning User from Chat...");
+                await api.Helix.Moderation.BanUserAsync(channelID, channelID, request, channelAuthKey);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Ban User from Chat -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
         }
 
         #endregion
