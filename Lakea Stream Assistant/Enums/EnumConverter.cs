@@ -3,13 +3,13 @@ using System.Diagnostics;
 
 namespace Lakea_Stream_Assistant.Enums
 {
-    //This class converts string to their respective enum types
+    // This class converts string to their respective enum types
     public class EnumConverter
     {
 
         #region Event Enums
 
-        //Returns 'EventSource' type from string
+        // Returns 'EventSource' type from string
         public EventSource ConvertEventSourceString(string source)
         {
             source = prepareString(source);
@@ -24,7 +24,7 @@ namespace Lakea_Stream_Assistant.Enums
             }
         }
 
-        //Returns 'EventType' type from string
+        // Returns 'EventType' type from string
         public EventType ConvertEventTypeString(string source)
         {
             source = prepareString(source);
@@ -55,7 +55,7 @@ namespace Lakea_Stream_Assistant.Enums
             }
         }
 
-        //Returns 'EventTarget' type from string
+        // Returns 'EventTarget' type from string
         public EventTarget ConvertEventTargetString(string source)
         {
             source = prepareString(source);
@@ -72,7 +72,7 @@ namespace Lakea_Stream_Assistant.Enums
             }
         }
 
-        //Returns 'EventGoal' type from string
+        // Returns 'EventGoal' type from string
         public EventGoal ConvertEventGoalString(string source)
         {
             source = prepareString(source);
@@ -104,7 +104,7 @@ namespace Lakea_Stream_Assistant.Enums
 
         #region Lakea Enums
 
-        //Returns 'LogLevel' type from string
+        // Returns 'LogLevel' type from string
         public LogLevel ConvertLogLevelString(string source)
         {
             source = prepareString(source);
@@ -115,6 +115,20 @@ namespace Lakea_Stream_Assistant.Enums
                 case "error": return LogLevel.Error;
                 case "fatal": return LogLevel.Fatal;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'LogLevel'");
+            }
+        }
+
+        // Returns 'ScamActionMode' type from string
+        public ScamActionMode ConvertScamActionModeString(string source)
+        {
+            source = prepareString(source);
+            switch (source)
+            {
+                case "nothing": return ScamActionMode.Nothing;
+                case "sendchatmessage": return ScamActionMode.SendChatMessage;
+                case "deletemessage": return ScamActionMode.DeleteMessage;
+                case "banuser": return ScamActionMode.BanUser;
+                default: throw new EnumConversionException("Can not convert '" + source + "' to type 'ScamActionMode'");
             }
         }
 
@@ -137,7 +151,7 @@ namespace Lakea_Stream_Assistant.Enums
 
         #endregion
 
-        //Cuts source string down to minimise chance of user error
+        // Cuts source string down to minimise chance of user error
         private string prepareString(string source)
         {
             source = source.ToLower();

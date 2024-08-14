@@ -119,6 +119,8 @@ public partial class ConfigSettings
 
     private SettingsWebSocket webSocketField;
 
+    private SettingsScamMessageDetection scamMessageDetectionField;
+
     /// <remarks/>
     public string LogLevel
     {
@@ -197,6 +199,7 @@ public partial class ConfigSettings
         }
     }
 
+    /// <remarks/>
     public SettingsWebSocket WebSocket
     {
         get
@@ -206,6 +209,19 @@ public partial class ConfigSettings
         set
         {
             this.webSocketField = value;
+        }
+    }
+
+    /// <remarks/>
+    public SettingsScamMessageDetection ScamMessageDetection
+    {
+        get
+        {
+            return this.scamMessageDetectionField;
+        }
+        set
+        {
+            this.scamMessageDetectionField = value;
         }
     }
 }
@@ -777,6 +793,193 @@ public partial class SettingsWebSocket
 }
 
 
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class SettingsScamMessageDetection
+{
+
+    private string actionModeField;
+
+    private decimal actionThresholdField;
+
+    private SettingsScamMessageDetectionKeyWord[] keyWordsField;
+
+    private SettingsScamMessageDetectionMultipliers multipliersField;
+
+    private SettingsScamDetectionBannedPhrases bannedPhrasesField;
+
+    /// <remarks/>
+    public string ActionMode
+    {
+        get
+        {
+            return this.actionModeField;
+        }
+        set
+        {
+            this.actionModeField = value;
+        }
+    }
+
+    /// <remarks/>
+    public decimal ActionThreshold
+    {
+        get
+        {
+            return this.actionThresholdField;
+        }
+        set
+        {
+            this.actionThresholdField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("KeyWord", IsNullable = false)]
+    public SettingsScamMessageDetectionKeyWord[] KeyWords
+    {
+        get
+        {
+            return this.keyWordsField;
+        }
+        set
+        {
+            this.keyWordsField = value;
+        }
+    }
+
+    /// <remarks/>
+    public SettingsScamMessageDetectionMultipliers Multipliers
+    {
+        get
+        {
+            return this.multipliersField;
+        }
+        set
+        {
+            this.multipliersField = value;
+        }
+    }
+
+    /// <remarks/>
+    public SettingsScamDetectionBannedPhrases BannedPhrases
+    {
+        get
+        {
+            return this.bannedPhrasesField;
+        }
+        set
+        {
+            this.bannedPhrasesField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class SettingsScamMessageDetectionKeyWord
+{
+
+    private string wordField;
+
+    private decimal scoreField;
+
+    /// <remarks/>
+    public string Word
+    {
+        get
+        {
+            return this.wordField;
+        }
+        set
+        {
+            this.wordField = value;
+        }
+    }
+
+    /// <remarks/>
+    public decimal Score
+    {
+        get
+        {
+            return this.scoreField;
+        }
+        set
+        {
+            this.scoreField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class SettingsScamMessageDetectionMultipliers
+{
+
+    private decimal firstTimeMessageField;
+
+    private decimal hasLinkField;
+
+    /// <remarks/>
+    public decimal FirstTimeMessage
+    {
+        get
+        {
+            return this.firstTimeMessageField;
+        }
+        set
+        {
+            this.firstTimeMessageField = value;
+        }
+    }
+
+    /// <remarks/>
+    public decimal HasLink
+    {
+        get
+        {
+            return this.hasLinkField;
+        }
+        set
+        {
+            this.hasLinkField = value;
+        }
+    }
+}
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class SettingsScamDetectionBannedPhrases
+{
+
+    private string[] phraseField;
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Phrase")]
+    public string[] Phrase
+    {
+        get
+        {
+            return this.phraseField;
+        }
+        set
+        {
+            this.phraseField = value;
+        }
+    }
+}
 
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -963,6 +1166,8 @@ public partial class ConfigTwitchBotChannel
 
     private string userTokenField;
 
+    private string userIDField;
+
     private string channelConnectionField;
 
     /// <remarks/>
@@ -988,6 +1193,19 @@ public partial class ConfigTwitchBotChannel
         set
         {
             this.userTokenField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string UserID
+    {
+        get
+        {
+            return this.userIDField;
+        }
+        set
+        {
+            this.userIDField = value;
         }
     }
 

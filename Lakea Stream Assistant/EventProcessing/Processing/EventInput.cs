@@ -6,7 +6,6 @@ using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
-using System.Linq;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -55,7 +54,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #endregion
 
-        //Called on a new event, checks event type before calling relevent function
+        // Called on a new event, checks event type before calling relevent function
         public void NewEvent(Event eve)
         {
             try
