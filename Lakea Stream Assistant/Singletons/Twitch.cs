@@ -27,6 +27,7 @@ namespace Lakea_Stream_Assistant.Singletons
     //Sealed class for Twitch Integration
     public sealed class Twitch
     {
+        private static HashChecker hashChecker;
         private static DefaultCommands lakeaCommands;
         private static EventInput eventHandler;
         private static ScamMessageDetector scamMessageDetector;
@@ -53,6 +54,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
+                hashChecker = new HashChecker();
                 scamMessageDetector = new ScamMessageDetector(config.Settings.ScamMessageDetection);
                 eventHandler = newEventsObj;
                 lakeaCommands = commands;
@@ -196,66 +198,94 @@ namespace Lakea_Stream_Assistant.Singletons
         // Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
         private static void onChatCommand(object sender, OnChatCommandReceivedArgs e)
         {
-            if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
+            string propToHash = e.Command.ChatMessage.UserId + e.Command.CommandText + e.Command.ChatMessage.TmiSentTs;
+            if (hashChecker.CheckPayloadIsntDuplicate("Twitch Command", propToHash))
             {
-                Terminal.Output("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                eventHandler.NewEvent(new LakeaCommand(EventSource.Twitch, EventType.Lakea_Command, e));
-            }
-            else
-            {
-                Terminal.Output("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+                if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
+                {
+                    Terminal.Output("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    eventHandler.NewEvent(new LakeaCommand(EventSource.Twitch, EventType.Lakea_Command, e));
+                }
+                else
+                {
+                    Terminal.Output("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+                }
             }
         }
 
         // Called on a command event, passes event info to the eventHandler
         private static void onRaid(object sender, OnRaidNotificationArgs e)
         {
-            Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
-            eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
+            string propToHash = e.RaidNotification.UserId + e.RaidNotification.RoomId + e.RaidNotification.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Raid", propToHash))
+            {
+                Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
+                eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
+            }
         }
 
         // Called on a subscription event, passes event info to the eventHandler
         private static void onSubscription(object sender, OnNewSubscriberArgs e)
         {
-            Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
-            eventHandler.NewEvent(new TwitchClientSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+            string propToHash = e.Subscriber.UserId + e.Subscriber.SubscriptionPlanName + e.Subscriber.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Subscriber", propToHash))
+            {
+                Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+                eventHandler.NewEvent(new TwitchClientSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+            }
         }
 
         // Called on a resubscription event, passes event info to the eventHandler
         private static void onResubscription(object sender, OnReSubscriberArgs e)
         {
-            Terminal.Output("Twitch: Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
-            eventHandler.NewEvent(new TwitchClientResubscriptioncs(EventSource.Twitch, EventType.Twitch_Resubscription, e));
+            string propToHash = e.ReSubscriber.UserId + e.ReSubscriber.SubscriptionPlanName + e.ReSubscriber.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Resubscriber", propToHash))
+            {
+                Terminal.Output("Twitch: Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
+                eventHandler.NewEvent(new TwitchClientResubscriptioncs(EventSource.Twitch, EventType.Twitch_Resubscription, e));
+            }
         }
 
         // Called on a prime paid subscription event, passes event info to the eventHandler
         private static void onPrimePaidSubscription(object sender, OnPrimePaidSubscriberArgs e)
         {
-            Terminal.Output("Twitch: Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
-            eventHandler.NewEvent(new TwitchClientPrimePaidSubscription(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, e));
+            string propToHash = e.PrimePaidSubscriber.UserId + e.PrimePaidSubscriber.SubscriptionPlanName + e.PrimePaidSubscriber.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Prime Paid Subscription", propToHash))
+            {
+                Terminal.Output("Twitch: Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
+                eventHandler.NewEvent(new TwitchClientPrimePaidSubscription(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, e));
+            }
         }
 
         // Called on a gifted subscription event, passes event info to the eventHandler
         private static void onGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
         {
-            Terminal.Output("Twitch: Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
-            eventHandler.NewEvent(new TwitchClientGiftedSubscription(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, e));
+            string propToHash = e.GiftedSubscription.UserId + e.GiftedSubscription.MsgParamRecipientId + e.GiftedSubscription.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Gifted Subscription", propToHash))
+            {
+                Terminal.Output("Twitch: Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
+                eventHandler.NewEvent(new TwitchClientGiftedSubscription(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, e));
+            }
         }
 
         // Called on a continued gift subscription event, passes event info to the event handler
         private static void onContinuedGiftedSubscription(object sender, OnContinuedGiftedSubscriptionArgs e)
         {
-            Terminal.Output("Twitch: Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
-            eventHandler.NewEvent(new TwitchClientContinuedGiftSubscription(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, e));
+            string propToHash = e.ContinuedGiftedSubscription.UserId + e.ContinuedGiftedSubscription.RoomId + e.ContinuedGiftedSubscription.TmiSentTs;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Continued Gifted Subscription", propToHash))
+            {
+                Terminal.Output("Twitch: Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
+                eventHandler.NewEvent(new TwitchClientContinuedGiftSubscription(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, e));
+            }
         }
 
         // Write a message to Twitch chat
@@ -328,7 +358,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Listen for if connection and auth key were succesful
+        // Listen for if connection and auth key were succesful
         private static void onPubSubListenResponse(object sender, OnListenResponseArgs e)
         {
             if (e.Successful)
@@ -344,28 +374,40 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        //Called on a follow event, passes event info to the eventHandler
+        // Called on a follow event, passes event info to the eventHandler
         private static void onChannelFollow(object sender, OnFollowArgs e)
         {
-            Terminal.Output("Twitch: Follow -> " + e.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.DisplayName);
-            eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
+            string properToHash = e.UserId + e.FollowedChannelId + "ChannelFollow";
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Follow", properToHash))
+            {
+                Terminal.Output("Twitch: Follow -> " + e.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.DisplayName);
+                eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
+            }
         }
 
-        //Called on a bits event, passes event info to the eventHandler
+        // Called on a bits event, passes event info to the eventHandler
         private static void onChannelBitsV2(object sender, OnBitsReceivedV2Args e)
         {
-            Terminal.Output("Twitch: Bits -> " + e.BitsUsed);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Bits -> " + e.BitsUsed);
-            eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
+            string propToHash = e.UserId + e.TotalBitsUsed + e.Time.Ticks;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Bits", propToHash))
+            {
+                Terminal.Output("Twitch: Bits -> " + e.BitsUsed);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Bits -> " + e.BitsUsed);
+                eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
+            }
         }
 
-        //Called on a channel redeem event, passes event info to the eventHandler
+        // Called on a channel redeem event, passes event info to the eventHandler
         private static void onChannelPointsRedeemed(object sender, OnChannelPointsRewardRedeemedArgs e)
         {
-            Terminal.Output("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
-            Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
-            eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
+            string propToHash = e.RewardRedeemed.Redemption.User.Id + e.RewardRedeemed.Redemption.Reward.Id + e.RewardRedeemed.Redemption.RedeemedAt.Ticks;
+            if(hashChecker.CheckPayloadIsntDuplicate("Twitch Redeem", propToHash))
+            {
+                Terminal.Output("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
+                eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
+            }
         }
 
 
