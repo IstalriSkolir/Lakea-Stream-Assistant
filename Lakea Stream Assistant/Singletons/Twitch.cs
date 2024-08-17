@@ -19,7 +19,6 @@ using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Games;
 using Lakea_Stream_Assistant.EventProcessing.Misc;
-using TwitchLib.Client.Extensions;
 using TwitchLib.Api.Helix.Models.Moderation.BanUser;
 
 namespace Lakea_Stream_Assistant.Singletons
@@ -326,7 +325,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Terminal.Output("Twitch: Sending Whisper -> '" + user + "' - '" + message + "'");
             Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Whisper Message -> '" + user + "' - '" + message + "'");
-            client.SendWhisper(user, message, true);//https://wiki.streamer.bot/en/Sub-Actions/Code/CSharp/Available-Methods/Twitch#whisper
+            //client.SendWhisper(user, message, true);//https://wiki.streamer.bot/en/Sub-Actions/Code/CSharp/Available-Methods/Twitch#whisper
         }
 
         #endregion

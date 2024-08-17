@@ -328,9 +328,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                if (subscriptions.ContainsKey(eve.Args.Subscriber.SubscriptionPlanName))
+                string subscriptionPlan = eve.Args.Subscriber.SubscriptionPlan.ToString();
+                if (subscriptions.ContainsKey(subscriptionPlan))
                 {
-                    EventItem item = subscriptions[eve.Args.Subscriber.SubscriptionPlanName];
+                    EventItem item = subscriptions[subscriptionPlan];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
@@ -365,9 +366,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                if (resubscriptions.ContainsKey(eve.Args.ReSubscriber.SubscriptionPlanName))
+                string subscriptionPlan = eve.Args.ReSubscriber.SubscriptionPlan.ToString();
+                if (resubscriptions.ContainsKey(subscriptionPlan))
                 {
-                    EventItem item = resubscriptions[eve.Args.ReSubscriber.SubscriptionPlanName];
+                    EventItem item = resubscriptions[subscriptionPlan];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
@@ -402,9 +404,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                if (primePaidSubscriptions.ContainsKey(eve.Args.PrimePaidSubscriber.SubscriptionPlanName))
+                string subscriptionPlan = eve.Args.PrimePaidSubscriber.SubscriptionPlan.ToString();
+                if (primePaidSubscriptions.ContainsKey(subscriptionPlan))
                 {
-                    EventItem item = primePaidSubscriptions[eve.Args.PrimePaidSubscriber.SubscriptionPlanName];
+                    EventItem item = primePaidSubscriptions[subscriptionPlan];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
@@ -439,9 +442,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             try
             {
-                if (giftedSubscriptions.ContainsKey(eve.Args.GiftedSubscription.MsgParamSubPlanName))
+                string subscriptionPlan = eve.Args.GiftedSubscription.MsgParamSubPlan.ToString();
+                if (giftedSubscriptions.ContainsKey(subscriptionPlan))
                 {
-                    EventItem item = giftedSubscriptions[eve.Args.GiftedSubscription.MsgParamSubPlanName];
+                    EventItem item = giftedSubscriptions[subscriptionPlan];
                     item = passArgs.GetEventArgs(item, eve);
                     if (item != null)
                     {
