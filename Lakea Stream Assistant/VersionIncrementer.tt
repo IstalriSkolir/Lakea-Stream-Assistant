@@ -14,9 +14,9 @@ using System.Reflection;
 <#+
 
  int MajorVersion = 0;
- int MinorVersion = 7;
+ int MinorVersion = 8;
  
- static DateTime LastMinorUpdate = new DateTime(year: 2024, month: 06, day: 07);
+ static DateTime LastMinorUpdate = new DateTime(year: 2024, month: 08, day: 17);
  
  int MonthsSinceLastMinorUpdate = (int)((Int32.Parse(DateTime.Now.ToString("yyyy")) * 12) + Int32.Parse(DateTime.Now.ToString("MM"))) - ((LastMinorUpdate.Year * 12) + LastMinorUpdate.Month);
  int DaysSinceLastMinorUpdate = (int)(DateTime.Now - LastMinorUpdate).TotalDays;
