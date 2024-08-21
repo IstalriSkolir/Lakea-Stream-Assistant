@@ -812,6 +812,8 @@ public partial class SettingsScamMessageDetection
 
     private SettingsScamDetectionBannedPhrases bannedPhrasesField;
 
+    private SettingsScamDetectionWebExtensions webExtensionField;
+
     /// <remarks/>
     public string ActionMode
     {
@@ -875,6 +877,18 @@ public partial class SettingsScamMessageDetection
         set
         {
             this.bannedPhrasesField = value;
+        }
+    }
+
+    public SettingsScamDetectionWebExtensions WebExtension
+    {
+        get
+        {
+            return this.webExtensionField;
+        }
+        set
+        {
+            this.webExtensionField = value;
         }
     }
 }
@@ -977,6 +991,32 @@ public partial class SettingsScamDetectionBannedPhrases
         set
         {
             this.phraseField = value;
+        }
+    }
+}
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class SettingsScamDetectionWebExtensions
+{
+
+    private string[] extensionField;
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("Extension")]
+    public string[] Extension
+    {
+        get
+        {
+            return this.extensionField;
+        }
+        set
+        {
+            this.extensionField = value;
         }
     }
 }
