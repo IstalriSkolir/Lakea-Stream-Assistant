@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lakea Tester")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+830af7c97d840a3a366cbd5c094cc88116aca396")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a560f1ee18e8316295f7e7c5fb96f38a56012bef")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lakea Tester")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lakea Tester")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

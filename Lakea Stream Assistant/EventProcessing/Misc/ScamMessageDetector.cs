@@ -1,6 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using System.Text.RegularExpressions;
 using TwitchLib.Client.Events;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Misc
@@ -14,6 +15,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private Dictionary<string, decimal> keyWordValues;
         private List<string> keyWords;
         private List<string> bannedPhrases;
+        private List<string> webExtensions;
         private decimal firstTimeMessageMultiplier;
         private decimal hasLinkMultiplier;
 
@@ -34,6 +36,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             firstTimeMessageMultiplier = settings.Multipliers.FirstTimeMessage;
             hasLinkMultiplier = settings.Multipliers.HasLink;
             bannedPhrases = new List<string>();
+            webExtensions = new List<string>();
             keyWordValues = new Dictionary<string, decimal>();
             keyWords = new List<string>();
             foreach(SettingsScamMessageDetectionKeyWord key in settings.KeyWords)
@@ -45,6 +48,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             foreach(string phrase in settings.BannedPhrases.Phrase)
             {
                 bannedPhrases.Add(phrase.ToLower());
+            }
+            foreach(string webExtension in settings.WebExtension.Extension)
+            {
+                webExtensions.Add(webExtension);
             }
         }
 
@@ -65,8 +72,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private Tuple<bool, string> checkMessageRisk(OnMessageReceivedArgs args)
         {
             // Convert message to lower case
-            string message = args.ChatMessage.Message.ToLower();
-            
+            string messagePreRegex = args.ChatMessage.Message.ToLower();
+
+            // Remove unwanted characters such as special characters
+            string message = Regex.Replace(messagePreRegex, @"[^0-9a-z\ \.\\\/]+", "");
+
             // Check message for banned phrases, return true if message contains banned phrase
             foreach(string phrase in bannedPhrases)
             {
@@ -97,14 +107,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             }
 
             // If the message has a link then apply has link multiplier
-            if(1 == 2)
+            string messageNoSpaces = messagePreRegex.Replace(" ", "");
+            foreach (string extension in webExtensions)
             {
-                risk *= hasLinkMultiplier;
+                if (messageNoSpaces.Contains(extension))
+                {
+                    risk *= hasLinkMultiplier;
+                    break;
+                }
             }
+
+            // If the risk is greater than the action threshold then return true and reason for it
             if (risk >= actionThreshold)
             {
                 return new Tuple<bool, string>(true, "High Risk Value: " + risk + ", Threshold: " + actionThreshold);
             }
+
+            // No bot has been detected so return false
             return new Tuple<bool, string>(false, "No Bot Detected");
         }
 
