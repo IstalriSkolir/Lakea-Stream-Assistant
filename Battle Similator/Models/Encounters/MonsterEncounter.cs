@@ -64,7 +64,8 @@ namespace Battle_Similator.Models.Encounters
             result.Character.UpdateMonsterWinRate();
             string resultString = "ENCOUNTER_TYPE:" + result.EncounterType + "\nCHARACTER_NAME:" + result.Character.Name + "\nCHARACTER_ID:" + result.Character.ID +
                 "\nMONSTER_NAME:" + result.Monster.Name + "\nMONSTER_ID:" + result.Monster.ID + "\nWINNER:" + result.Winner + "\nXP_GAINED:" + result.XPGained +
-                "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level;
+                "\nLEVEL_UP:" + result.LevelUp.ToString().ToUpper() + "\nCHARACTER_LEVEL:" + result.Character.Level + "\nCHARACTER_XP_LOST:" + result.Character.XPLost +
+                "\nCHARACTER_LEVELS_LOST:" + result.Character.LevelsLost;
             io.SaveResultData(resultString);
             io.SaveCharacterData(result.Character);
         }

@@ -260,7 +260,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        //Read the battle results and send them to Twitch
+        // Read the battle results and send them to Twitch
         private void monsterBattleEnded(Dictionary<string, string> results)
         {
             if (results.Count > 0)
@@ -280,7 +280,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 }
                 else if (results["WINNER"].Equals(results["MONSTER_ID"]))
                 {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " was knocked out while fighting a " + monster + "! They should have trained with me more!");
+                    string message = "@" + results["CHARACTER_NAME"] + " was knocked out while fighting a " + monster + "! They should have trained with me more! " + results["CHARACTER_NAME"] + " has lost " + results["CHARACTER_XP_LOST"] + "XP!";
+                    if (results["CHARACTER_LEVELS_LOST"] != "0")
+                    {
+                        message = message.Remove(message.Length - 1);
+                        message += " and " + results["CHARACTER_LEVELS_LOST"] + " levels!";
+                    }
+                    args.Add("Message", message);
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
             }
