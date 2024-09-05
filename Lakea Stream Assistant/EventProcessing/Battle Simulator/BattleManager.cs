@@ -84,7 +84,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             Dictionary<string, string> args = new Dictionary<string, string>()
             {
                 { "Message", "@" + displayName + " -> DEATHS: " + character["DEATHS"] + ", MONSTERS_KILLED: " + character["MONSTERS_KILLED"] + ", MONSTER_WIN_RATE: " +
-                    character["MONSTER_WIN_RATE"] + ", BOSSES_FOUGHT: " + character["BOSSES_FOUGHT"] + ", BOSSES_BEATEN: " + character["BOSSES_BEATEN"] }
+                    character["MONSTER_WIN_RATE"] + ", BOSSES_FOUGHT: " + character["BOSSES_FOUGHT"] + ", BOSSES_BEATEN: " + character["BOSSES_BEATEN"] + ", PRESTIGE: " +
+                    character["PRESTIGE"]}
             };
             return args;
         }
