@@ -280,7 +280,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 }
                 else if (results["WINNER"].Equals(results["MONSTER_ID"]))
                 {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " died while fighting a " + monster + "! They should have trained with me more!");
+                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " was knocked out while fighting a " + monster + "! They should have trained with me more!");
                 }
                 eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
             }
