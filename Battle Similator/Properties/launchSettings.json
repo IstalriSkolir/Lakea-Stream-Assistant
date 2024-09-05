@@ -2,7 +2,7 @@
   "profiles": {
     "Battle Similator": {
       "commandName": "Project",
-      "commandLineArgs": "\"LAKEA\"\r\n\"BOSSHEALTHBARUPDATE\"\r\n\"123\"\r\n\"TEST\"\r\n\"None\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"\r\n\"0014-GOBLIN\"",
+      "commandLineArgs": "\"LAKEA\"\r\n\"HARDMONSTER\"\r\n\"756882056\"\r\n\"MateriesCoil\"\r\n\"None\"\r\n\"X:\\\\1-APPLICATIONDATA\\\\DEVENV\\\\Creatures\\\\\"\r\n\"0014-GOBLIN\"",
       "remoteDebugEnabled": true
     }
   }

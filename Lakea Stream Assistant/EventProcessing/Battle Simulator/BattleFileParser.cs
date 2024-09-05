@@ -243,6 +243,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                         case "PRESTIGE":
                             resultsDict.Add("PRESTIGE", parts[1]);
                             break;
+                        case "CHARACTER_XP_LOST":
+                            resultsDict.Add("CHARACTER_XP_LOST", parts[1]);
+                            break;
+                        case "CHARACTER_LEVELS_LOST":
+                            resultsDict.Add("CHARACTER_LEVELS_LOST", parts[1]);
+                            break;
                         default:
                             Terminal.Output("Lakea: Unrecognised Property in Battle Results -> " + result);
                             Logs.Instance.NewLog(LogLevel.Warning, "Unrecognised Property in Battle Results -> " + result);

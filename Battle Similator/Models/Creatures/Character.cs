@@ -13,6 +13,8 @@
         private bool resetOnDeath = true;
         private Random random;
         private TwitchSubTier subTier = TwitchSubTier.None;
+        private int xpLost;
+        private int levelsLost;
 
         public int XP { get { return xp; } }
         public int Deaths { get { return deaths; } }
@@ -22,6 +24,8 @@
         public float MonsterWinRate { get { return monsterWinRate; } }
         public int Prestige {  get { return prestige; } }
         public bool ResetOnDeath { get { return resetOnDeath; } set { resetOnDeath = value; } }
+        public int XPLost { get { return xpLost; } }
+        public int LevelsLost {  get { return levelsLost; } }
 
         public Character(string name, string id, int randomSeed = -1)
         {
@@ -279,6 +283,7 @@
             }
             int newXP = (int)MathF.Round(perCent * (float)xp);
             int remainder = newXP % 5;
+            xpLost = xp - (newXP - remainder);
             xp = newXP - remainder;
             int requiredXP = 0;
             for (int count = 1; count <= level - 1; count++)
@@ -294,8 +299,10 @@
         private void reduceLevel()
         {
             bool finished = false;
+            levelsLost = 0;
             while (!finished)
             {
+                levelsLost++;
                 level--;
                 for (int point = 0; point < 2; point++)
                 {
