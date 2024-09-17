@@ -26,7 +26,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             try
             {
                 Dictionary<string, string> quote = new Dictionary<string, string>();
-                switch (command.Args.Command.CommandText)
+                switch (command.Args.Command.CommandText.ToLower())
                 {
                     case "quotecount":
                         quote.Add("Message", "We have " + quotes.Count + " quotes stored! Some of these make me wonder why mistakes I made to end up here...");
