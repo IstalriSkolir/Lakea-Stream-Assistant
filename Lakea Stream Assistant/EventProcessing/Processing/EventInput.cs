@@ -75,59 +75,58 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         item = lakea.NewCallback((LakeaCallback)eve);
                         break;
                     case EventType.Lakea_Command:
-                        item = lakea.NewCommand((LakeaCommand)eve);
+                        item = lakea.NewCommand((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Exit:
-                        item = lakea.NewExit((EventItem)eve);
+                        item = lakea.NewExit((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Released:
-                        item = lakea.LakeaReleased((EventItem)eve);
+                        item = lakea.LakeaReleased((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Start_Up:
-                        item = lakea.NewStartup((EventItem)eve);
+                        item = lakea.NewStartup((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Timer_Fired:
-                        item = lakea.NewTimer((LakeaTimer)eve);
+                        item = lakea.NewTimer((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Web_Socket:
                         item = lakea.NewWebSocketEvent((EventItem)eve);
                         break;
                     case EventType.OBS_Scene_Changed:
-                        item = obs.NewChangedScene((OBSSceneChange)eve);
+                        item = obs.NewChangedScene((IncomingEvent)eve);
                         break;
                     case EventType.OBS_Source_Active_Status:
-                        item = obs.NewSourceActiveStatus((OBSSourceActive)eve);
+                        item = obs.NewSourceActiveStatus((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Bits:
-                        item = twitch.NewBits((TwitchBits)eve);
+                        item = twitch.NewBits((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Command:
-                        item = twitch.NewCommand((TwitchCommand)eve);
+                        item = twitch.NewCommand((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Follow:
-                        item = twitch.NewFollow((TwitchFollow)eve);
+                        item = twitch.NewFollow((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Raid:
-                        item = twitch.NewRaid((TwitchRaid)eve);
+                        item = twitch.NewRaid((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Subscription:
-                        //item = twitch.newSubscription((TwitchPubSubSubscription)eve);
-                        item = twitch.NewSubscription((TwitchClientSubscription)eve);
+                        item = twitch.NewSubscription((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Resubscription:
-                        item = twitch.NewResubscription((TwitchClientResubscriptioncs)eve);
+                        item = twitch.NewResubscription((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Prime_Paid_Subscription:
-                        item = twitch.NewPrimePaidSubscription((TwitchClientPrimePaidSubscription)eve);
+                        item = twitch.NewPrimePaidSubscription((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Gifted_Subscription:
-                        item = twitch.NewGiftedSubscription((TwitchClientGiftedSubscription)eve);
+                        item = twitch.NewGiftedSubscription((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Continued_Gifted_Subscription:
-                        item = twitch.NewGiftedSubscriptionContinued((TwitchClientContinuedGiftSubscription)eve);
+                        item = twitch.NewGiftedSubscriptionContinued((IncomingEvent)eve);
                         break;
                     case EventType.Twitch_Redeem:
-                        item = twitch.NewRedeem((TwitchRedeem)eve);
+                        item = twitch.NewRedeem((IncomingEvent)eve);
                         break;
                     default:
                         Terminal.Output("EventHandler: Unrecognised Event Type -> " + eve.Type);

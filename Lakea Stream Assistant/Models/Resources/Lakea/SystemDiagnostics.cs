@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Singletons;
+using System.Diagnostics;
 
 namespace Lakea_Stream_Assistant.Models.Resources.Lakea
 {
@@ -9,18 +11,27 @@ namespace Lakea_Stream_Assistant.Models.Resources.Lakea
 
         public SystemDiagnostics()
         {
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            try
+            {
+                //cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                //ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            }
+            catch (Exception ex)
+            {
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
         }
 
         public int GetCurrentCPUUsage()
         {
-            return (int)cpuCounter.NextValue(); ;
+            return int.MinValue;
+            //return (int)cpuCounter.NextValue();
         }
 
         public int GetCurrentRamAvaliable()
         {
-            return (int)ramCounter.NextValue();
+            return int.MinValue;
+            //return (int)ramCounter.NextValue();
         }
     }
 }

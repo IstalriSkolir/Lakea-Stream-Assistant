@@ -14,7 +14,7 @@ namespace Lakea_Stream_Assistant
 {
 
     //Start Object
-    class Program
+    class StreamAssistant
     {
         static KeepAliveToken keepAliveToken;
         static EventInput eventHandler;
@@ -66,8 +66,9 @@ namespace Lakea_Stream_Assistant
                 var twitchInit = Task.Run(() => Twitch.Initialise(config, eventHandler, lakeaCommands));
                 var serverInit = Task.Run(() => Server.Initialise(config, eventHandler));
                 Task.WaitAll(obsInit, twitchInit, serverInit);
-                Task.Run(() => eventHandler.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Start)));
-                Task.Run(() => eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up")));
+                Dictionary<string, string> empty = new Dictionary<string, string>();
+                Task.Run(() => eventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Timer_Start, empty)));
+                Task.Run(() => eventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Start_Up, empty)));
                 Terminal.Output("Lakea: All set and ready to go!");
                 Logs.Instance.NewLog(LogLevel.Info, "Lakeas all set and ready to go!");
             }
@@ -161,7 +162,9 @@ namespace Lakea_Stream_Assistant
 
         static void shutdown()
         {
-            var exitTasks = Task.Run(() => eventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit")));
+            Dictionary<string, string> empty = new Dictionary<string, string>();
+            IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Exit, empty);
+            var exitTasks = Task.Run(() => eventHandler.NewEvent(eve));
             var externalTasks = Task.Run(() => externalProcesses.StopAllExternalProcesses());
             var serverTask = Task.Run(() => Server.Shutdown());
             var terminalTask = Task.Run(() => Terminal.EndRefresh());

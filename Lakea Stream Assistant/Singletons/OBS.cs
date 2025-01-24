@@ -14,6 +14,7 @@ namespace Lakea_Stream_Assistant.Singletons
     // Singleton that connects to OBS and manages calls via the OBS Web Socket library
     public sealed class OBS
     {
+        private static StandardiseInput standardiseInput;
         private static EventInput eventHandler;
         private static OBSResources resources;
         private static OBSWebsocket client;
@@ -39,6 +40,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
+                standardiseInput = new StandardiseInput();
                 eventHandler = newEventHandler;
                 ip = newIP;
                 port = newPort;
@@ -172,7 +174,9 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Terminal.Output("OBS: Scene Change -> " + e.SceneName);
             Logs.Instance.NewLog(LogLevel.Info, "OBS Scene Change -> " + e.SceneName);
-            eventHandler.NewEvent(new OBSSceneChange(EventSource.OBS, EventType.OBS_Scene_Changed, e));
+            Dictionary<string, string> data = standardiseInput.ConvertOBSSceneChangeData(e);
+            IncomingEvent eve = new IncomingEvent(EventSource.OBS, EventType.OBS_Scene_Changed, data);
+            eventHandler.NewEvent(eve);
         }
 
         // Fired when a OBS source becomes active/inactive
@@ -181,7 +185,9 @@ namespace Lakea_Stream_Assistant.Singletons
             string sourceName = resources.GetSourceName(e.SceneItemId);
             Terminal.Output("OBS: Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
             Logs.Instance.NewLog(LogLevel.Info, "OBS Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
-            eventHandler.NewEvent(new OBSSourceActive(EventSource.OBS, EventType.OBS_Source_Active_Status, e, sourceName));
+            Dictionary<string, string> data = standardiseInput.ConvertOBSSourceActiveData(e, sourceName);
+            IncomingEvent eve = new IncomingEvent(EventSource.OBS, EventType.OBS_Source_Active_Status, data);
+            eventHandler.NewEvent(eve);
         }
 
         #endregion

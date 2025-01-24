@@ -89,13 +89,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a scene changes, checks the scenes dictionary for event before triggering events effect
-        public EventItem NewChangedScene(OBSSceneChange eve)
+        public EventItem NewChangedScene(IncomingEvent eve)
         {
             try
             {
-                if(sceneChanges.ContainsKey(eve.Args.SceneName))
+                string sceneName = eve.Args["SceneName"];
+                if(sceneChanges.ContainsKey(sceneName))
                 {
-                    EventItem item = passArgs.GetEventArgs(sceneChanges[eve.Args.SceneName], eve);
+                    EventItem item = passArgs.GetEventArgs(sceneChanges[sceneName], eve);
                     if (item != null)
                     {
                         return item;
@@ -111,18 +112,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a source active status changes, checks the source active status dictionary for event before triggering events effect
-        public EventItem NewSourceActiveStatus(OBSSourceActive eve)
+        public EventItem NewSourceActiveStatus(IncomingEvent eve)
         {
             try
             {
-                if (sourceActiveStatus.ContainsKey(eve.SourceName))
+                string sourceName = eve.Args["SourceName"];
+                bool enabled = bool.Parse(eve.Args["Enabled"]);
+                if (sourceActiveStatus.ContainsKey(sourceName))
                 {
-                    if (sourceActiveStatus[eve.SourceName].Args.ContainsKey("Active"))
+                    if (sourceActiveStatus[sourceName].Args.ContainsKey("Active"))
                     {
-                        bool target = Convert.ToBoolean(sourceActiveStatus[eve.SourceName].Args["Active"]);
-                        if(target == eve.Args.SceneItemEnabled)
+                        bool target = Convert.ToBoolean(sourceActiveStatus[sourceName].Args["Active"]);
+                        if(target == enabled)
                         {
-                            EventItem item = passArgs.GetEventArgs(sourceActiveStatus[eve.SourceName], eve);
+                            EventItem item = passArgs.GetEventArgs(sourceActiveStatus[sourceName], eve);
                             if (item != null)
                             {
                                 return item;
@@ -131,7 +134,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     }
                     else
                     {
-                        EventItem item = passArgs.GetEventArgs(sourceActiveStatus[eve.SourceName], eve);
+                        EventItem item = passArgs.GetEventArgs(sourceActiveStatus[sourceName], eve);
                         if (item != null)
                         {
                             return item;

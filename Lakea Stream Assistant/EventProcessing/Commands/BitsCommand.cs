@@ -16,29 +16,33 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             totalBits = InitialiseBits(resourcePath);
         }
 
-        public Dictionary<string, string> NewTotalBitsCommand(LakeaCommand command)
+        public Dictionary<string, string> NewTotalBitsCommand(IncomingEvent eve)
         {
+            string userID = eve.Args["AccountID"];
+            string displayName = eve.Args["DisplayName"];
             int userBits = 0;
-            if (totalBits.ContainsKey(command.Args.Command.ChatMessage.UserId))
+            if (totalBits.ContainsKey(userID))
             {
-                userBits = totalBits[command.Args.Command.ChatMessage.UserId];
+                userBits = totalBits[userID];
             }
             Dictionary<string, string> args = new Dictionary<string, string>()
             {
-                { "Message", "@" + command.Args.Command.ChatMessage.DisplayName + " has cheered a total of " + userBits + " bits! Thank you for supporting Materies"}
+                { "Message", "@" + displayName + " has cheered a total of " + userBits + " bits! Thank you for supporting Materies materi33Lakeaheart"}
             };
             return args;
         }
 
-        public void NewBitsEvent(TwitchBits eve)
+        public void NewBitsEvent(IncomingEvent eve)
         {
-            if (totalBits.ContainsKey(eve.Args.UserId))
+            string userID = eve.Args["AccountID"];
+            int totalBitsUsed = int.Parse(eve.Args["TotalBits"]);
+            if (totalBits.ContainsKey(userID))
             {
-                totalBits[eve.Args.UserId] = eve.Args.TotalBitsUsed;
+                totalBits[userID] = totalBitsUsed;
             }
             else
             {
-                totalBits.Add(eve.Args.UserId, eve.Args.TotalBitsUsed);
+                totalBits.Add(userID, totalBitsUsed);
             }
             saveTotalBits();
         }

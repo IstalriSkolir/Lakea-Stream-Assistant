@@ -40,7 +40,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             else
             {
                 Terminal.Output("Socket: Close Service -> UpdateChannelRedeem, " + e.Reason);
-                Logs.Instance.NewLog(Enums.LogLevel.Warning, "Socket Service Close -> UpdateChannelRedeem, " + e.Reason);
+                Logs.Instance.NewLog(Enums.LogLevel.Error, "Socket Service Close -> UpdateChannelRedeem, " + e.Reason);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         {
             base.OnError(e);
             Terminal.Output("Socket: Errored Service -> UpdateChannelRedeem, " + e.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Error, e.Message);
+            Logs.Instance.NewLog(Enums.LogLevel.Error, e.Exception);
         }
 
         private string processMessage(MessageEventArgs args)

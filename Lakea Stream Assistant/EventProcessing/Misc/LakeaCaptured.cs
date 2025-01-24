@@ -1,5 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
@@ -55,7 +56,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             Terminal.Output("Lakea: Captured -> False");
             Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> False");
             isCaught = false;
-            input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Released, EventTarget.Lakea, EventGoal.Lakea_Released, "Lakea Released", "Lakea_Released"));
+            Dictionary<string, string> data = new Dictionary<string, string>()
+            {
+                { "EventID", "Lakea_Released" }
+            };
+            IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Released, data);
+            input.NewEvent(eve);
         }
     }
 }
