@@ -26,6 +26,7 @@ namespace Lakea_Stream_Assistant.Singletons
     //Sealed class for Twitch Integration
     public sealed class Twitch
     {
+        private static StandardiseInput standardiseInput;
         private static HashChecker hashChecker;
         private static DefaultCommands lakeaCommands;
         private static EventInput eventHandler;
@@ -53,6 +54,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
+                standardiseInput = new StandardiseInput();
                 hashChecker = new HashChecker();
                 scamMessageDetector = new ScamMessageDetector(config.Settings.ScamMessageDetection);
                 eventHandler = newEventsObj;
@@ -200,18 +202,21 @@ namespace Lakea_Stream_Assistant.Singletons
             string propToHash = e.Command.ChatMessage.UserId + e.Command.CommandText + e.Command.ChatMessage.TmiSentTs;
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Command", propToHash))
             {
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchCommandData(e);
+                IncomingEvent eve;
                 if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
                 {
                     Terminal.Output("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                     Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                    eventHandler.NewEvent(new LakeaCommand(EventSource.Twitch, EventType.Lakea_Command, e));
+                    eve = new IncomingEvent(EventSource.Twitch, EventType.Lakea_Command, data);
                 }
                 else
                 {
                     Terminal.Output("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                     Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                    eventHandler.NewEvent(new TwitchCommand(EventSource.Twitch, EventType.Twitch_Command, e));
+                    eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Command, data);
                 }
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -223,7 +228,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
-                eventHandler.NewEvent(new TwitchRaid(EventSource.Twitch, EventType.Twitch_Raid, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchRaidData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Raid, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -235,7 +242,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
-                eventHandler.NewEvent(new TwitchClientSubscription(EventSource.Twitch, EventType.Twitch_Subscription, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchSubscriptionData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Subscription, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -247,7 +256,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
-                eventHandler.NewEvent(new TwitchClientResubscriptioncs(EventSource.Twitch, EventType.Twitch_Resubscription, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchResubscriptionData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Resubscription, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -259,7 +270,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
-                eventHandler.NewEvent(new TwitchClientPrimePaidSubscription(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchPrimePaidSubscriptionData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -271,7 +284,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
-                eventHandler.NewEvent(new TwitchClientGiftedSubscription(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchGiftedSubscriptionData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -283,7 +298,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
-                eventHandler.NewEvent(new TwitchClientContinuedGiftSubscription(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchContinuedGiftedSubscriptionData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -381,7 +398,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Follow -> " + e.DisplayName);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.DisplayName);
-                eventHandler.NewEvent(new TwitchFollow(EventSource.Twitch, EventType.Twitch_Follow, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchFollowData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Follow, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -393,7 +412,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Bits -> " + e.BitsUsed);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Bits -> " + e.BitsUsed);
-                eventHandler.NewEvent(new TwitchBits(EventSource.Twitch, EventType.Twitch_Bits, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchBitsData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Bits, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -405,7 +426,9 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Twitch: Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
                 Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.RewardRedeemed.Redemption.Reward.Title);
-                eventHandler.NewEvent(new TwitchRedeem(EventSource.Twitch, EventType.Twitch_Redeem, e));
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchRedeemData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Redeem, data);
+                eventHandler.NewEvent(eve);
             }
         }
 
@@ -445,6 +468,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(channelID, redeemID, requestData, channelAuthKey);
+                //UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(clientID, redeemID, requestData, channelAuthKey);
                 return response;
             }
             catch (Exception ex)

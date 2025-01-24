@@ -11,6 +11,10 @@ namespace Lakea_Stream_Assistant.Models.Events.EventAbstracts
         public EventSource Source { get { return source; } }
         public EventType Type { get { return type; } }
 
-        public abstract Dictionary<string, string> GetArgs();
+        // To Delete when there are no references left;
+        public virtual Dictionary<string, string> GetArgs()
+        {
+            return null;
+        }
     }
 }

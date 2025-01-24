@@ -19,7 +19,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private BitsCommand bits;
         private ProcessCommand process;
         private QuoteCommand quotes;
-        private readonly Dictionary<string, Func<LakeaCommand, EventItem>> commandFunctions;
+        private readonly Dictionary<string, Func<IncomingEvent, EventItem>> commandFunctions;
         private readonly Dictionary<string, CommandConfiguration> commandConfigs;
         KeepAliveToken keepAliveToken;
 
@@ -36,7 +36,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             this.process = new ProcessCommand(externalProcesses);
             this.quotes = new QuoteCommand(settings.ResourcePath);
             this.keepAliveToken = keepAliveToken;
-            this.commandFunctions = new Dictionary<string, Func<LakeaCommand, EventItem>>
+            this.commandFunctions = new Dictionary<string, Func<IncomingEvent, EventItem>>
             {
                 { "category", categoryCommand },
                 { "exit", exitCommand },
@@ -78,40 +78,45 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Called when a Lakea command is received, checks if the command is enabled and modonly before call relevant function from commandFunctions dictionary
-        public EventItem NewLakeaCommand(LakeaCommand eve)
+        public EventItem NewLakeaCommand(IncomingEvent eve)
         {
             try
             {
-                string command = eve.Args.Command.CommandText.ToLower();
-                if (commandConfigs[command].IsEnabled)
+                string commandIdentifier = eve.Args["CommandIdentifier"];
+                string commandLower = eve.Args["CommandText"].ToLower();
+                string command = eve.Args["CommandText"];
+                string displayName = eve.Args["DisplayName"];
+                bool isBroadcaster = bool.Parse(eve.Args["IsBroadcaster"]);
+                bool isModerator = bool.Parse(eve.Args["IsModerator"]);
+                if (commandConfigs[commandLower].IsEnabled)
                 {
-                    if (commandConfigs[command].ModOnly)
+                    if (commandConfigs[commandLower].ModOnly)
                     {
-                        if (eve.Args.Command.ChatMessage.IsModerator || eve.Args.Command.ChatMessage.IsBroadcaster)
+                        if (isModerator || isBroadcaster)
                         {
-                            return commandFunctions[command].Invoke(eve);
+                            return commandFunctions[commandLower].Invoke(eve);
                         }
                         else
                         {
-                            Terminal.Output("Lakea: " + eve.Args.Command.CommandText + " Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
-                            Logs.Instance.NewLog(LogLevel.Warning, eve.Args.Command.CommandText + " Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
+                            Terminal.Output("Lakea: " + command + " Command -> Access Denied, " + displayName);
+                            Logs.Instance.NewLog(LogLevel.Warning, command + " Command -> Access Denied, " + displayName);
                             Dictionary<string, string> args = new Dictionary<string, string>
                             {
-                                { "Message", "Sorry @" + eve.Args.Command.ChatMessage.DisplayName + ", only moderators can use that command!" }
+                                { "Message", "Sorry @" + displayName + ", only moderators can use that command!" }
                             };
-                            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eve.Args.Command.CommandText + " Command", "Lakea_Command_Access_Denied", args: args);
+                            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, command + " Command", "Lakea_Command_Access_Denied", args: args);
                         }
                     }
                     else
                     {
-                        return commandFunctions[command].Invoke(eve);
+                        return commandFunctions[commandLower].Invoke(eve);
                     }
                 }
                 else
                 {
-                    Terminal.Output("Lakea: Default Command " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText + " is Disabled");
-                    Logs.Instance.NewLog(LogLevel.Info, "Default Command " + eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText + " is Disabled");
-                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Null, EventGoal.Null, eve.Args.Command.CommandIdentifier + eve.Args.Command.CommandText);
+                    Terminal.Output("Lakea: Default Command " + commandIdentifier + command + " is Disabled");
+                    Logs.Instance.NewLog(LogLevel.Info, "Default Command " + commandIdentifier + command + " is Disabled");
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Null, EventGoal.Null, commandIdentifier + command);
                 }
             }
             catch (Exception ex)
@@ -123,14 +128,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Calls on the Twitch API to update the stream category
-        private EventItem categoryCommand(LakeaCommand eve)
+        private EventItem categoryCommand(IncomingEvent eve)
         {
+            string argumentsAsString = eve.Args["ArgumentsAsString"];
             Terminal.Output("Lakea: Update Stream Category Command -> Updating Stream Category");
             Logs.Instance.NewLog(LogLevel.Info, "Update Stream Category Command -> Updating Stream Category");
             Dictionary<string, string> args = new Dictionary<string, string>();
-            if (eve.Args.Command.ArgumentsAsList.Count > 0)
+            if(eve.Args.ContainsKey("CommandArg1"))
+            //if (eve.Args.Command.ArgumentsAsList.Count > 0)
             {
-                GetGamesResponse response = Twitch.GetCategoryInformation(new List<string>() { eve.Args.Command.ArgumentsAsString }).Result;
+                GetGamesResponse response = Twitch.GetCategoryInformation(new List<string>() { argumentsAsString }).Result;
                 if(response.Games.Count() > 0)
                 {
                     args.Add("Message", "On it, give me a moment!");
@@ -141,7 +148,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
                 else
                 {
-                    args.Add("Message", "Twitch doesn't seem to have any categories of the name '" + eve.Args.Command.ArgumentsAsString + "', are you sure that's the right one?");
+                    args.Add("Message", "Twitch doesn't seem to have any categories of the name '" + argumentsAsString + "', are you sure that's the right one?");
                 }
             }
             else
@@ -153,43 +160,60 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Checks if it was the broadcaster that called the command, then kills the keep alive token so the main thread can end the application
-        private EventItem exitCommand(LakeaCommand eve)
+        private EventItem exitCommand(IncomingEvent eve)
         {
-            Terminal.Output("Lakea: Exit Command -> " + eve.Args.Command.CommandText);
-            Logs.Instance.NewLog(LogLevel.Info, "Exit Command -> " + eve.Args.Command.CommandText);
-            if (eve.Args.Command.ChatMessage.IsBroadcaster)
+            string command = eve.Args["CommandText"];
+            string displayName = eve.Args["DisplayName"];
+            string channel = eve.Args["Channel"];
+            bool isBroadcaster = bool.Parse(eve.Args["IsBroadcaster"]);
+            Terminal.Output("Lakea: Exit Command -> " + command);
+            Logs.Instance.NewLog(LogLevel.Info, "Exit Command -> " + command);
+            if (isBroadcaster)
             {
                 keepAliveToken.Kill();
                 return null;
             }
             else
             {
-                Terminal.Output("Lakea: Exit Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
-                Logs.Instance.NewLog(LogLevel.Warning, "Exit Command -> Access Denied, " + eve.Args.Command.ChatMessage.DisplayName);
+                Terminal.Output("Lakea: Exit Command -> Access Denied, " + displayName);
+                Logs.Instance.NewLog(LogLevel.Warning, "Exit Command -> Access Denied, " + displayName);
                 Dictionary<string, string> args = new Dictionary<string, string>
                 {
-                    { "Message", "Sorry @" + eve.Args.Command.ChatMessage.DisplayName + ", only @" + eve.Args.Command.ChatMessage.Channel + " can use that command!" }
+                    { "Message", "Sorry @" + displayName + ", only @" + channel + " can use that command!" }
                 };
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Exit Command", "Lakea_Exit_Command", args: args);
             }
         }
 
         // Calls the Processes object to process the command before returning the output in a new EventItem object
-        private EventItem processCommand(LakeaCommand eve)
+        private EventItem processCommand(IncomingEvent eve)
         {
-            Terminal.Output("Lakea: Process Command -> " + eve.Args.Command.ArgumentsAsString);
-            Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " + eve.Args.Command.ArgumentsAsString);
-            Dictionary<string, string> args = process.NewProcessCommand(eve);
+            // Needs fixing for process.NewProcessCommand to use IncomingEvent class instead of legacy LakeaCommand class - Issue #297
+
+            string argumentsAsString = eve.Args["ArgumentsAsString"];
+            Terminal.Output("Lakea: Process Command -> " + argumentsAsString);
+            Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " + argumentsAsString);
+
+            //Dictionary<string, string> args = process.NewProcessCommand(eve);
+            Dictionary<string, string> args = new Dictionary<string, string>();
+
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
         }
 
         // Calls on the Quotes object to process the quote command before returning the output in a new EventItem object
-        private EventItem quoteCommand(LakeaCommand eve)
+        private EventItem quoteCommand(IncomingEvent eve)
         {
-            Terminal.Output("Lakea: Quote Command -> " + eve.Args.Command.CommandText);
-            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + eve.Args.Command.CommandText);
-            Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
-            if ("quotefest".Equals(eve.Args.Command.CommandText))
+            // Needs fixing for quotes.NewQuoteCommand to use IncomingEvent class instead of legacy LakeaCommand class - Issue #298
+
+            string command = eve.Args["CommandText"];
+
+            Terminal.Output("Lakea: Quote Command -> " + command);
+            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + command);
+
+            //Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
+            Dictionary<string, string> args = new Dictionary<string, string>();
+
+            if ("quotefest".Equals(command))
             {
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
             }
@@ -200,7 +224,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Resets the terminal with a full refresh on a new thread
-        private EventItem resetTerminalCommand(LakeaCommand eve)
+        private EventItem resetTerminalCommand(IncomingEvent eve)
         {
             Terminal.Output("Lakea: Reset Terminal Command -> Resetting Terminal");
             Logs.Instance.NewLog(LogLevel.Info, "Reset Terminal Command -> Resetting Terminal");
@@ -213,13 +237,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Returns a new EvenItem object that sends a shoutout message for the entered username to the Twitch chat
-        private EventItem shoutOutCommand(LakeaCommand eve)
+        private EventItem shoutOutCommand(IncomingEvent eve)
         {
+            string argumentsAsString = eve.Args["ArgumentsAsString"];
+
             Dictionary<string, string> args = new Dictionary<string, string>();
-            Terminal.Output("Lakea: Shout Out Command -> " + eve.Args.Command.ArgumentsAsString);
-            if(eve.Args.Command.ArgumentsAsList.Count > 0)
+            Terminal.Output("Lakea: Shout Out Command -> " + argumentsAsString);
+            if(eve.Args.ContainsKey("CommandArg1"))
             {
-                args.Add("Message", "Hey guys, go give @" + eve.Args.Command.ArgumentsAsList[0] + " some love and support! You can find them at https://www.twitch.tv/" + eve.Args.Command.ArgumentsAsList[0]);
+                string commandArg1 = eve.Args["CommandArg1"];
+                args.Add("Message", "Hey guys, go give @" + commandArg1 + " some love and support! You can find them at https://www.twitch.tv/" + commandArg1);
             }
             else
             {
@@ -231,7 +258,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Returns a new EventItem that sends a message to the Twitchchat to confirm Lakea is still active
-        private EventItem statusCommand(LakeaCommand eve)
+        private EventItem statusCommand(IncomingEvent eve)
         {
             Terminal.Output("Lakea: Status Command -> Active");
             Logs.Instance.NewLog(LogLevel.Info, "Status Command -> Active");
@@ -243,16 +270,17 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Calls on the Twitch API to update the stream title
-        private EventItem titleCommand(LakeaCommand eve)
+        private EventItem titleCommand(IncomingEvent eve)
         {
+            string argumentsAsString = eve.Args["ArgumentsAsString"];
             Terminal.Output("Lakea: Update Stream Title Command -> Updating Stream Title");
             Logs.Instance.NewLog(LogLevel.Info, "Update Stream Title Command -> Updating Stream Title");
             Dictionary<string, string> args = new Dictionary<string, string>();
-            if(eve.Args.Command.ArgumentsAsList.Count > 0)
+            if(eve.Args.ContainsKey("CommandArg1"))
             {  
                 args.Add("Message", "On it, give me a moment!");
                 ModifyChannelInformationRequest request = new ModifyChannelInformationRequest();
-                request.Title = eve.Args.Command.ArgumentsAsString;
+                request.Title = argumentsAsString;
                 Twitch.UpdateChannelInformation(request);
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Title Command", "Lakea_Update_Stream_Title", args: args);
             }
@@ -265,10 +293,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         // Returns a new EventItem that sends a message to Twitch chat with the users total bits cheered
-        private EventItem totalBitsCommand(LakeaCommand eve)
+        private EventItem totalBitsCommand(IncomingEvent eve)
         {
-            Terminal.Output("Lakea: Total Bits Command -> " + eve.Args.Command.ChatMessage.DisplayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + eve.Args.Command.ChatMessage.DisplayName);
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output("Lakea: Total Bits Command -> " + displayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + displayName);
             Dictionary<string, string> args = bits.NewTotalBitsCommand(eve);
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Total Bits Command", "Lakea_Total_Bits_Command", args: args);
         }

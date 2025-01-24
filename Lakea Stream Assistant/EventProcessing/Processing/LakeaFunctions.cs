@@ -128,7 +128,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When Lakea finishes setting up, run all start up events in config
-        public EventItem NewStartup(EventItem eve)
+        public EventItem NewStartup(IncomingEvent eve)
         {
             try
             {
@@ -137,7 +137,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = startupEvents[0];
                     startupEvents.RemoveAt(0);
                     item = passArgs.GetEventArgs(item, eve);
-                    Task.Run(() => input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Start_Up, EventTarget.Null, EventGoal.Null, "Lakea Start Up")));
+                    Dictionary<string, string> empty = new Dictionary<string, string>();
+                    IncomingEvent newEvent = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Start_Up, empty);
+                    Task.Run(() => input.NewEvent(newEvent));
                     if (item != null)
                     {
                         if (item.Duration == 0)
@@ -162,7 +164,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When Lakea shuts down, run all exit events in config
-        public EventItem NewExit(EventItem eve)
+        public EventItem NewExit(IncomingEvent eve)
         {
             try
             {
@@ -171,7 +173,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem item = shutdownEvents[shutdownEvents.Count - 1];
                     shutdownEvents.RemoveAt(shutdownEvents.Count - 1);
                     item = passArgs.GetEventArgs(item, eve);
-                    input.NewEvent(new EventItem(EventSource.Lakea, EventType.Lakea_Exit, EventTarget.Null, EventGoal.Null, "Lakea Exit"));
+                    Dictionary<string, string> empty = new Dictionary<string, string>();
+                    IncomingEvent newEvent = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Exit, empty);
+                    input.NewEvent(newEvent);
                     if(item != null)
                     {
                         return item;
@@ -232,7 +236,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a command event that is a inbuilt Lake command, call the commands object to call the relevant 'EventItem' for it
-        public EventItem NewCommand(LakeaCommand eve)
+        public EventItem NewCommand(IncomingEvent eve)
         {
             try
             {
@@ -251,13 +255,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When Lakea is freed, check for events for it
-        public EventItem LakeaReleased(EventItem eve)
+        public EventItem LakeaReleased(IncomingEvent eve)
         {
             try
             {
-                if (lakeaReleased.ContainsKey(eve.ID))
+                string eventID = eve.Args["EventID"];
+                if (lakeaReleased.ContainsKey(eventID))
                 {
-                    EventItem item = passArgs.GetEventArgs(lakeaReleased[eve.ID], eve);
+                    EventItem item = passArgs.GetEventArgs(lakeaReleased[eventID], eve);
                     if(item != null)
                     {
                         return item;
@@ -336,11 +341,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         //When a timer event is fired, process the event item it carries
-        public EventItem NewTimer(LakeaTimer eve)
+        public EventItem NewTimer(IncomingEvent eve)
         {
             try
             {
-                return eve.EventItem;
+                return timers[eve.Args["TimerID"]];
             }
             catch (Exception ex)
             {
@@ -394,7 +399,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 if (timers.ContainsKey(timerID))
                 {
-                    input.NewEvent(new LakeaTimer(EventSource.Lakea, EventType.Lakea_Timer_Fired, timers[timerID]));
+                    Dictionary<string, string> data = new Dictionary<string, string>()
+                    {
+                        { "TimerID", timerID }
+                    };
+                    IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Timer_Fired, data);
+                    input.NewEvent(eve);
                     Task.Delay(Int32.Parse(timers[timerID].Args["Timer_Delay"]) * 1000).ContinueWith(t => { timerTick(timerID); });
                 }
                 else
