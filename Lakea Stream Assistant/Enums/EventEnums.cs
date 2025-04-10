@@ -16,6 +16,7 @@
         Lakea_Callback,
         Lakea_Command,
         Lakea_Exit,
+        Lakea_Struggle,
         Lakea_Released,
         Lakea_Retort,
         Lakea_Start_Up,
