@@ -25,7 +25,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             lakea = new LakeaFunctions(config.Events, passArgs, commands, this);
             obs = new OBSFunctions(config.Events, passArgs);
             twitch = new TwitchFunctions(config.Events, passArgs, commands);
-            captured = new LakeaCaptured(this, lakea, config.Settings.CapturedEventRetorts);
+            captured = new LakeaCaptured(this, lakea, config.Settings);
             outputs = new EventOutputs(this, config.Settings, captured);
         }
 
@@ -65,20 +65,23 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 {
                     case EventType.Battle_Simulator_Encounter:
                     case EventType.Battle_Simulator_Nonencounter:
-                        item = lakea.NewSupportingApplicationEvent((EventItem)eve);
+                        item = lakea.NewSupportingApplicationEvent((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Timer_Start:
                         lakea.NewTimerStart();
                         item = null;
                         break;
                     case EventType.Lakea_Callback:
-                        item = lakea.NewCallback((LakeaCallback)eve);
+                        item = lakea.NewCallback((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Command:
                         item = lakea.NewCommand((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Exit:
                         item = lakea.NewExit((IncomingEvent)eve);
+                        break;
+                    case EventType.Lakea_Struggle:
+                        item = lakea.LakeaStruggle((IncomingEvent)eve);
                         break;
                     case EventType.Lakea_Released:
                         item = lakea.LakeaReleased((IncomingEvent)eve);

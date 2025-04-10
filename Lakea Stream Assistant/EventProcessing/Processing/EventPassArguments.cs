@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
@@ -9,18 +10,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     //Get arguments from the triggering events and replace any templates with their corresponding values
     public class EventPassArguments
     {
-        public EventItem GetEventArgs(EventItem storedItem, Event eve)
+        public EventItem GetEventArgs(EventItem storedItem, IncomingEvent eve)
         {
             try
             {
-                if(eve.GetArgs() == null)
-                {
-                    return storedItem;
-                }
+                //if(eve.GetArgs() == null)
+                //{
+                //    return storedItem;
+                //}
                 if (!checkEventForArgs(storedItem))
                 {
                     Dictionary<string, string> currentEveArgs = storedItem.GetArgs();
-                    Dictionary<string, string> newEveArgs = eve.GetArgs();
+                    Dictionary<string, string> newEveArgs = eve.Args;
                     foreach (var arg in currentEveArgs)
                     {
                         if (!newEveArgs.ContainsKey(arg.Key))
@@ -36,7 +37,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     EventItem newItem = new EventItem(storedItem, newEveArgs);
                     return newItem;
                 }
-                Dictionary<string, string> triggerArgs = eve.GetArgs();
+                Dictionary<string, string> triggerArgs = eve.Args;
                 Dictionary<string, string> currentArgs = storedItem.GetArgs();
                 Dictionary<string, string> adjustedArgs = new Dictionary<string, string>();
                 foreach (var arg in currentArgs)

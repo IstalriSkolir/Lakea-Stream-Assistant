@@ -35,6 +35,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "lakeacallback": return EventType.Lakea_Callback;
                 case "lakeaexit": return EventType.Lakea_Exit;
                 case "lakeareleased": return EventType.Lakea_Released;
+                case "lakeastruggle": return EventType.Lakea_Struggle;
                 case "lakearetort": return EventType.Lakea_Retort;
                 case "lakeastartup": return EventType.Lakea_Start_Up;
                 case "lakeatimer": return EventType.Lakea_Timer_Start;

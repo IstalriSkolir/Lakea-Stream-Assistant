@@ -324,8 +324,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //Lakea has been captured
         public void CaptureLakea(Dictionary<string, string> args, Callbacks callback)
         {
-            int captureDuration = int.Parse(args["Duration"]);
-            captured.LakeaCaught(this, captureDuration);
+            captured.LakeaCaught(this, args);
             if (callback != null)
             {
                 Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
@@ -368,16 +367,25 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         //Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(Dictionary<string, string> args, Callbacks callback)
         {
+            if (args.ContainsKey("CallbackID"))
+                args["CallbackID"] = callback.ID;
+            else
+                args.Add("CallbackID", callback.ID);
             if (callback.Delay > 0)
             {
                 Task.Delay(callback.Delay * 1000).ContinueWith(t =>
                 {
-                    handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+                    handleEvents.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
                 });
+
+                //Task.Delay(callback.Delay * 1000).ContinueWith(t =>
+                //{
+                //    handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+                //});
             }
             else
             {
-                handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
+                handleEvents.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
             }
         }
     }
