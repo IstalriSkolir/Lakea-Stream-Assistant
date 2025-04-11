@@ -11,12 +11,10 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
 {
     public class RunEvent : WebSocketBehavior
     {
-        private EventInput eventInput;
         private JSONConvertor convertor;
 
         public RunEvent()
         {
-            eventInput = Server.EventInput;
             convertor = Server.JSONConvertor;
         }
 
@@ -65,7 +63,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             {
                 JObject json = JObject.Parse(args.Data);
                 EventItem item = convertor.CreateEventItem(json);
-                eventInput.NewEvent(item);
+                StreamAssistant.EventHandler.NewEvent(item);
             }
             catch (Exception ex)
             {

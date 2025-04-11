@@ -14,14 +14,12 @@ namespace Lakea_Stream_Assistant.WebSocket
         private static Server instance = null;
         private static readonly object padlock = new object();
         private static WebSocketServer server;
-        private static EventInput eventHandler;
         private static JSONConvertor convertor;
         private static bool enabled;
         private static string ip;
         private static int port;
 
         public static bool Enabled { get { return enabled; } }
-        public static EventInput EventInput { get { return eventHandler; } }
         public static JSONConvertor JSONConvertor { get { return convertor; } }
 
         // Set class up for thread safe singleton instance
@@ -42,7 +40,7 @@ namespace Lakea_Stream_Assistant.WebSocket
         }
 
         // initialise the websocket server
-        public static async void Initialise(Config config, EventInput newEventHandler)
+        public static async void Initialise(Config config)
         {
             enabled = config.Settings.WebSocket.Enabled;
             if(!enabled)
@@ -53,7 +51,6 @@ namespace Lakea_Stream_Assistant.WebSocket
             Logs.Instance.NewLog(LogLevel.Info, "Initialising Websocket Server...");
             ip = config.Settings.WebSocket.IP;
             port = config.Settings.WebSocket.Port;
-            eventHandler = newEventHandler;
             convertor = new JSONConvertor();
             server = new WebSocketServer("ws://" + ip + ":" + port);
             server.AddWebSocketService<AddEvent>("/AddEvent");

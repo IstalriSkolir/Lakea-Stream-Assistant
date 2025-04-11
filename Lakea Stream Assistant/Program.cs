@@ -16,9 +16,12 @@ namespace Lakea_Stream_Assistant
     //Start Object
     class StreamAssistant
     {
-        static KeepAliveToken keepAliveToken;
-        static EventInput eventHandler;
-        static ExternalProcesses externalProcesses;
+        private static KeepAliveToken keepAliveToken;
+        private static EventInput eventHandler;
+        private static ExternalProcesses externalProcesses;
+
+        // Event handler can be called from anywhere to process new events
+        public static EventInput EventHandler { get { return eventHandler; } }
 
         //Point of Entry
         static void Main(string[] args)
@@ -63,8 +66,8 @@ namespace Lakea_Stream_Assistant
                 eventHandler = new EventInput(config, lakeaCommands);
                 Task.Run(() => externalProcesses.StartAllExternalProcesses());
                 var obsInit = Task.Run(() => OBS.Initialise(eventHandler, config.OBS.IP, config.OBS.Port, config.OBS.Password));
-                var twitchInit = Task.Run(() => Twitch.Initialise(config, eventHandler, lakeaCommands));
-                var serverInit = Task.Run(() => Server.Initialise(config, eventHandler));
+                var twitchInit = Task.Run(() => Twitch.Initialise(config, lakeaCommands));
+                var serverInit = Task.Run(() => Server.Initialise(config));
                 Task.WaitAll(obsInit, twitchInit, serverInit);
                 Dictionary<string, string> empty = new Dictionary<string, string>();
                 Task.Run(() => eventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Timer_Start, empty)));

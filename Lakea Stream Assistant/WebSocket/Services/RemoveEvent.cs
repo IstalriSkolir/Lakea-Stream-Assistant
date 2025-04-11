@@ -11,12 +11,10 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
 {
     public class RemoveEvent : WebSocketBehavior
     {
-        private EventInput eventInput;
         private JSONConvertor convertor;
 
         public RemoveEvent()
         {
-            eventInput = Server.EventInput;
             convertor = Server.JSONConvertor;
         }
 
@@ -39,7 +37,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
                 EventItem item = convertor.CreateEventItem(json);
                 Terminal.Output("Socket: Message Service -> RemoveEvent, " + e.Data);
                 Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> RemoveEvent, " + e.Data);
-                eventInput.UpdateEventDictionaries(key, item, remove: true);
+                StreamAssistant.EventHandler.UpdateEventDictionaries(key, item, remove: true);
             }
             catch (Exception ex)
             {
