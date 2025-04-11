@@ -160,7 +160,7 @@ namespace Lakea_Stream_Assistant.Static
             writeText("Connections:", 2, 2);
             writeText("OBS           ->", 2, 4);
             writeText("Twitch Client ->", 2, 5);
-            writeText("Twitch PubSub ->", 2, 6);
+            writeText("Twitch EveSub ->", 2, 6);
             writeText("Web Socket    ->", 2, 7);
             writeText("Events:", 2, 10);
             writeText("Twitch ->", 2, 12);
@@ -213,17 +213,17 @@ namespace Lakea_Stream_Assistant.Static
         {
             bool obs;
             bool twitchClient;
-            bool twitchPubSub;
+            bool twitchEventSub;
             bool webSocket;
             try { obs = OBS.IsConnected; } catch { obs = false; }
             try { twitchClient = Twitch.IsClientConnected; } catch { twitchClient = false; }
-            try { twitchPubSub = Twitch.IsPubSubConnected; } catch { twitchPubSub = false; }
+            try { twitchEventSub = Twitch.IsEventSubConnected; } catch { twitchEventSub = false; }
             try { webSocket = Server.Enabled; } catch { webSocket = false; }
             if(obs) { writeText("Connected   ", 19, 4, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 4, ConsoleColor.Red); }
             if(twitchClient) { writeText("Connected   ", 19, 5, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 5, ConsoleColor.Red); }
-            if(twitchPubSub) { writeText("Connected   ", 19, 6, ConsoleColor.Green); }
+            if(twitchEventSub) { writeText("Connected   ", 19, 6, ConsoleColor.Green); }
             else { writeText("Disconnected", 19, 6, ConsoleColor.Red); }
             if(webSocket) { writeText("Enabled     ", 19, 7, ConsoleColor.Green); }
             else { writeText("Disabled    ", 19, 7, ConsoleColor.Red); }

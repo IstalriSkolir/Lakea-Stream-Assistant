@@ -190,7 +190,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         // When a channel redeem event is triggered, checks the bits dictionary for event before triggering the events effect
         public EventItem NewBits(IncomingEvent eve)
         {
-            bitsCommands.NewBitsEvent(eve);
+            //bitsCommands.NewBitsEvent(eve);
             bool eventFound = false;
             int bitAmount = int.Parse(eve.Args["Bits"]);
             for (int i = 0; i < bitsOrder.Count; i++)

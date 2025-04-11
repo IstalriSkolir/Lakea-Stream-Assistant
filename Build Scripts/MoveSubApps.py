@@ -8,11 +8,11 @@ def start():
     source = current_dir
     destination = current_dir
     if(mode == "Debug"):
-        source = current_dir + "/../Battle Similator/bin/Debug/net6.0"
-        destination = current_dir + "/../Lakea Stream Assistant/bin/Debug/net6.0/Applications/Battle Simulator"
+        source = current_dir + "/../Battle Similator/bin/Debug/net8.0"
+        destination = current_dir + "/../Lakea Stream Assistant/bin/Debug/net8.0/Applications/Battle Simulator"
     elif(mode == "Release"):
-        source = current_dir + "/../Battle Similator/bin/Release/net6.0"
-        destination = current_dir + "/../Lakea Stream Assistant/bin/Release/net6.0/Applications/Battle Simulator"
+        source = current_dir + "/../Battle Similator/bin/Release/net8.0"
+        destination = current_dir + "/../Lakea Stream Assistant/bin/Release/net8.0/Applications/Battle Simulator"
     print(f"Moving {mode} Battle Simulator to Lakea Build Folder...")
     shutil.copytree(source, destination)
 

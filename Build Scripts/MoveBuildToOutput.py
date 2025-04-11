@@ -6,7 +6,7 @@ current_dir = os.getcwd()
 def start():
     print("Moving Build Folder to Output Directory...")
     version = get_project_version()
-    source = current_dir + "/../Lakea Stream Assistant/bin/Debug/net6.0"
+    source = current_dir + "/../Lakea Stream Assistant/bin/Debug/net8.0"
     destination = current_dir + "/../Output/Lakea Stream Assistant " + version
     if(os.path.isdir(destination)):
         shutil.rmtree(destination)

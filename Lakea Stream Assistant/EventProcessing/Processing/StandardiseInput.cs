@@ -1,5 +1,6 @@
 ﻿using OBSWebsocketDotNet.Types.Events;
 using TwitchLib.Client.Events;
+using TwitchLib.EventSub.Websockets.Core.EventArgs.Channel;
 using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
@@ -35,17 +36,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         #region Twitch Events
 
         // Convert Twitch bits data to Dictionary
-        public Dictionary<string, string> ConvertTwitchBitsData(OnBitsReceivedV2Args args)
+        public Dictionary<string, string> ConvertTwitchBitsData(ChannelCheerArgs args)
         {
             Dictionary<string, string> bitsArgs = new Dictionary<string, string>
             {
-                { "Bits", args.BitsUsed.ToString() },
-                { "TotalBits", args.TotalBitsUsed.ToString() },
-                { "IsAnonymous", args.IsAnonymous.ToString() },
-                { "DisplayName", args.UserName },
-                { "ChannelName", args.ChannelName },
-                { "ChatMessage", args.ChatMessage },
-                { "AccountID", args.UserId }
+                { "Bits", args.Notification.Payload.Event.Bits.ToString() },
+                { "IsAnonymous", args.Notification.Payload.Event.IsAnonymous.ToString() },
+                { "DisplayName", args.Notification.Payload.Event.UserName },
+                { "ChannelName", args.Notification.Payload.Event.BroadcasterUserName },
+                { "ChatMessage", args.Notification.Payload.Event.Message },
+                { "AccountID", args.Notification.Payload.Event.UserId }
             };
             return bitsArgs;
         }
@@ -90,13 +90,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         // Convert Twitch follow data to Dictionary
-        public Dictionary<string, string> ConvertTwitchFollowData(OnFollowArgs args)
+        public Dictionary<string, string> ConvertTwitchFollowData(ChannelFollowArgs args)
         {
             Dictionary<string, string> followArgs = new Dictionary<string, string>
             {
-                { "DisplayName", args.DisplayName },
-                { "AccountID", args.UserId },
-                { "ChannelID", args.FollowedChannelId }
+                { "DisplayName", args.Notification.Payload.Event.UserName },
+                { "AccountID", args.Notification.Payload.Event.UserId },
+                { "ChannelID", args.Notification.Payload.Event.BroadcasterUserId }
             };
             return followArgs;
         }
@@ -150,15 +150,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         // Convert Twitch redeem data to Dictionary
-        public Dictionary<string, string> ConvertTwitchRedeemData(OnChannelPointsRewardRedeemedArgs args)
+        public Dictionary<string, string> ConvertTwitchRedeemData(ChannelPointsCustomRewardRedemptionArgs args)
         {
             Dictionary<string, string> argsDict = new Dictionary<string, string>
             {
-                { "DisplayName", args.RewardRedeemed.Redemption.User.DisplayName },
-                { "AccountID", args.RewardRedeemed.Redemption.User.Id },
-                { "RedeemTitle", args.RewardRedeemed.Redemption.Reward.Title },
-                { "RedeemCost", args.RewardRedeemed.Redemption.Reward.Cost.ToString() },
-                { "RedeemID", args.RewardRedeemed.Redemption.Reward.Id }
+                { "DisplayName", args.Notification.Payload.Event.UserName },
+                { "AccountID", args.Notification.Payload.Event.UserId },
+                { "RedeemTitle", args.Notification.Payload.Event.Reward.Title },
+                { "RedeemCost", args.Notification.Payload.Event.Reward.Cost.ToString() },
+                { "RedeemID", args.Notification.Payload.Event.Id }
             };
             return argsDict;
         }
