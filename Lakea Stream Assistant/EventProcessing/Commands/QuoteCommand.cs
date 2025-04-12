@@ -21,23 +21,25 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             quotes = initiliaseQuotes(resourcePath);
         }
 
-        public Dictionary<string, string> NewQuoteCommand(LakeaCommand command)
+        public Dictionary<string, string> NewQuoteCommand(IncomingEvent eve)
         {
             try
             {
+                string commandText = eve.Args["CommandText"].ToLower();
+                string argumentsAsString = eve.Args["ArgumentsAsString"];
                 Dictionary<string, string> quote = new Dictionary<string, string>();
-                switch (command.Args.Command.CommandText.ToLower())
+                switch (commandText)
                 {
                     case "quotecount":
                         quote.Add("Message", "We have " + quotes.Count + " quotes stored! Some of these make me wonder why mistakes I made to end up here...");
                         break;
                     case "addquote":
                     case "quoteadd":
-                        addquote(command.Args.Command.ArgumentsAsString);
+                        addquote(argumentsAsString);
                         quote.Add("Message", "Quote added! We now have " + quotes.Count + " quotes!");
                         break;
                     case "quote":
-                        string quoteString = getQuote(command);
+                        string quoteString = getQuote(eve);
                         quote.Add("Message", quoteString);
                         break;
                     case "quotefest":
@@ -61,9 +63,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             saveQuotesToFile();
         }
 
-        private string getQuote(LakeaCommand command)
+        private string getQuote(IncomingEvent eve)
         {
-            if(command.Args.Command.ArgumentsAsList.Count == 0)
+            //if(command.Args.Command.ArgumentsAsList.Count == 0)
+            if (!eve.Args.ContainsKey("CommandArg1"))
             {
                 int index = random.Next(0, quotes.Count);
                 return "Here's a random quote, '" + quotes[index] + "'";
@@ -72,7 +75,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             {
                 try
                 {
-                    int index = int.Parse(command.Args.Command.ArgumentsAsList[0]);
+                    int index = int.Parse(eve.Args["CommandArg1"]);
                     index--;
                     if(index >= 0 && index < quotes.Count)
                     {
@@ -90,7 +93,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
                 catch (Exception ex)
                 {
-                    Logs.Instance.NewLog(LogLevel.Warning, "Failed to Parse '" + command.Args.Command.ArgumentsAsList[0] + "' for Quote Index");
+                    Logs.Instance.NewLog(LogLevel.Warning, "Failed to Parse '" + eve.Args["CommandArg1"] + "' for Quote Index");
                     int index = random.Next(0, quotes.Count);
                     return "Couldn't figure out which quote you wanted so heres a random one instead, '" + quotes[index] + "'";
                 }

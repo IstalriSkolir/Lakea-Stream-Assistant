@@ -25,8 +25,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             lakea = new LakeaFunctions(config.Events, passArgs, commands, this);
             obs = new OBSFunctions(config.Events, passArgs);
             twitch = new TwitchFunctions(config.Events, passArgs, commands);
-            captured = new LakeaCaptured(this, lakea, config.Settings);
-            outputs = new EventOutputs(this, config.Settings, captured);
+            captured = new LakeaCaptured(lakea, config.Settings);
+            outputs = new EventOutputs(config.Settings, captured);
         }
 
         #region Update Events

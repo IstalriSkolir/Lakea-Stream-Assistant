@@ -12,15 +12,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     public class EventOutputs
     {
         private BattleManager battleManager;
-        private EventInput handleEvents;
         private PythonScripts pythonScripts;
         private LakeaCaptured captured;
         private Random random = new Random();
 
-        public EventOutputs(EventInput handleEvents, ConfigSettings settings, LakeaCaptured captured)
+        public EventOutputs(ConfigSettings settings, LakeaCaptured captured)
         {
-            this.handleEvents = handleEvents;
-            this.battleManager = new BattleManager(handleEvents, settings.ResourcePath);
+            this.battleManager = new BattleManager(settings.ResourcePath);
             this.pythonScripts = new PythonScripts(settings.PythonExePath, settings.ResourcePath);
             this.captured = captured;
         }
@@ -375,17 +373,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 Task.Delay(callback.Delay * 1000).ContinueWith(t =>
                 {
-                    handleEvents.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
                 });
-
-                //Task.Delay(callback.Delay * 1000).ContinueWith(t =>
-                //{
-                //    handleEvents.NewEvent(new LakeaCallback(EventSource.Lakea, EventType.Lakea_Callback, callback, args));
-                //});
             }
             else
             {
-                handleEvents.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
             }
         }
     }
