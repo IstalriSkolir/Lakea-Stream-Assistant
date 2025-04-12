@@ -188,15 +188,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         // Calls the Processes object to process the command before returning the output in a new EventItem object
         private EventItem processCommand(IncomingEvent eve)
         {
-            // Needs fixing for process.NewProcessCommand to use IncomingEvent class instead of legacy LakeaCommand class - Issue #297
-
             string argumentsAsString = eve.Args["ArgumentsAsString"];
             Terminal.Output("Lakea: Process Command -> " + argumentsAsString);
             Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " + argumentsAsString);
-
-            //Dictionary<string, string> args = process.NewProcessCommand(eve);
-            Dictionary<string, string> args = new Dictionary<string, string>();
-
+            Dictionary<string, string> args = process.NewProcessCommand(eve);
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
         }
 
