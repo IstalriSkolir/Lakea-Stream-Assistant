@@ -15,40 +15,42 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         //Called when a new process command is received, checks the first arguments for function and calls relevant function
-        public Dictionary<string, string> NewProcessCommand(LakeaCommand eve)
+        public Dictionary<string, string> NewProcessCommand(IncomingEvent eve)
         {
+            string commandArg1 = eve.Args["CommandArg1"].ToLower();
+            string displayName = eve.Args["DisplayName"];
             Dictionary<string, string> args = new Dictionary<string, string>();
-            if (eve.Args.Command.ArgumentsAsList.Count > 0)
+            if (eve.Args.ContainsKey("CommandArg1"))
             {
-                switch (eve.Args.Command.ArgumentsAsList[0].ToLower())
+                switch (commandArg1)
                 {
                     case "list":
-                        args = getAllApplications(eve.Args.Command.ChatMessage.DisplayName);
+                        args = getAllApplications(displayName);
                         break;
                     case "listactive":
-                        args = getApplicationsByStatus(true, eve.Args.Command.ChatMessage.DisplayName);
+                        args = getApplicationsByStatus(true, displayName);
                         break;
                     case "listinactive":
-                        args = getApplicationsByStatus(false, eve.Args.Command.ChatMessage.DisplayName);
+                        args = getApplicationsByStatus(false, displayName);
                         break;
                     case "startall":
-                        args = startAllApplications(eve.Args.Command.ChatMessage.DisplayName);
+                        args = startAllApplications(displayName);
                         break;
                     case "stopall":
-                        args = stopAllApplications(eve.Args.Command.ChatMessage.DisplayName);
+                        args = stopAllApplications(displayName);
                         break;
                     case "start":
                     case "stop":
-                        args = checkForSecondArgument(eve.Args.Command.ArgumentsAsList, eve.Args.Command.ChatMessage.DisplayName);
+                        args = checkForSecondArgument(eve, displayName);
                         break;
                     default:
-                        args.Add("Message", "I have no idea what you mean by 'process " + eve.Args.Command.ArgumentsAsList[0] + "'. Your going to have to try again @" + eve.Args.Command.ChatMessage.DisplayName);
+                        args.Add("Message", "I have no idea what you mean by 'process " + commandArg1 + "'. Your going to have to try again @" + displayName);
                         break;
                 }
             }
             else
             {
-                args.Add("Message", "Process what? I need more info than that @" + eve.Args.Command.ChatMessage.DisplayName + "! Help me out here instead of being a twit!");
+                args.Add("Message", "Process what? I need more info than that @" + displayName + "! Help me out here instead of being a twit!");
             }
             return args;
         }
@@ -109,8 +111,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         }
 
         //Checks that a 2nd argument exists before calling the relevant function
-        private Dictionary<string, string> checkForSecondArgument(List<string> listArgs, string userName)
+        private Dictionary<string, string> checkForSecondArgument(IncomingEvent eve/*List<string> listArgs*/, string userName)
         {
+            List<string> listArgs = new List<string>();
+            for (int index = 0; index < eve.Args.Count; index++)
+                if (eve.Args.ContainsKey("CommandArg" + (index + 1)))
+                    listArgs.Add(eve.Args["CommandArg" + (index + 1)]);
             Dictionary<string, string> args = new Dictionary<string, string>();
             if(listArgs.Count >= 2)
             {
