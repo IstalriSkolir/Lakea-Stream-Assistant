@@ -1,20 +1,20 @@
 import os
 import sys
 import random
-
-CHARACTER_FOLDER = "X:\\1-APPLICATIONDATA\\LIVEDATA\\Creatures\\Characters\\"
-#CHARACTER_FOLDER = "X:\\1-APPLICATIONDATA\\DEVENV\\Creatures\\Characters\\"
+from Utils.monster_battle_classes import CHARACTER_PATH
+from Utils.twitch import send_twitch_message
 
 def start():
     account_id = sys.argv[1]
     account_name = sys.argv[2]
     level_ups = int(sys.argv[3])
-    character_dict = get_character_info(CHARACTER_FOLDER + account_id + ".txt")
+    character_dict = get_character_info(f"{CHARACTER_PATH}{account_id}.txt")
     char = character(character_dict, account_id, account_name)
     for x in range(level_ups):
         next_level = calculate_next_level(char.level)
         char = character_level_up(char, next_level)
-    save_character_data(char, CHARACTER_FOLDER + account_id + ".txt")
+    save_character_data(char, f"{CHARACTER_PATH}{account_id}.txt")
+    send_twitch_message(f"@{account_name} just earned {level_ups} level ups!")
 
 def get_character_info(character_path):
     character_dict = {}

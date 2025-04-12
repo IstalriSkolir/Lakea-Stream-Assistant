@@ -1,13 +1,14 @@
 import os
+from Utils.monster_battle_classes import BOSS_PATH
+from Utils.common_functions import update_boss_health_bar
 
-BOSS_FOLDER = "X:\\1-APPLICATIONDATA\\LIVEDATA\\Creatures\\Bosses\\"
-#BOSS_FOLDER = "X:\\1-APPLICATIONDATA\\DEVENV\\Creatures\\Bosses\\"
-HEALTH_DECREASE = 50
+HEALTH_DECREASE = 100
 
 def start():
-    weaken_boss(f"{BOSS_FOLDER}0000-LAKEA_MOONLIGHT.txt")
-    weaken_boss(f"{BOSS_FOLDER}0001-LOOPING_COIL.txt")
-    weaken_boss(f"{BOSS_FOLDER}0002-MATERIES_COIL.txt")
+    weaken_boss(f"{BOSS_PATH}0000-LAKEA_MOONLIGHT.txt")
+    weaken_boss(f"{BOSS_PATH}0001-LOOPING_COIL.txt")
+    weaken_boss(f"{BOSS_PATH}0002-MATERIES_COIL.txt")
+    #update_boss_health_bar()
 
 def weaken_boss(path):
     boss_dict = get_boss_info(path)
@@ -46,4 +47,7 @@ def save_boss_info(boss_dict, path):
         count -= 1
     writer.close()
 
-start()
+
+
+if __name__ == '__main__':
+    start()

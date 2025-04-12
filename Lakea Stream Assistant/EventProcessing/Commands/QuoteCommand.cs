@@ -65,7 +65,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         private string getQuote(IncomingEvent eve)
         {
-            //if(command.Args.Command.ArgumentsAsList.Count == 0)
             if (!eve.Args.ContainsKey("CommandArg1"))
             {
                 int index = random.Next(0, quotes.Count);

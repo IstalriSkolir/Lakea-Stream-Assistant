@@ -1,5 +1,6 @@
 from Utils.obs import create_source, get_source_id, set_source_transform, set_source_activity, remove_source_from_scene
 from Utils.twitch import send_twitch_message
+from Utils.common_functions import RESOURCE_FOLDER
 from time import sleep
 import random
 
@@ -13,12 +14,12 @@ def start():
     sleep(VIEW_TIME)
     remove_source_from_scene(source_id, SCENE)
 
-def get_random_art_object():
+def get_random_art_object() -> dict:
     keys = list(ART_DICT.keys())
     key = random.choice(keys)
     return ART_DICT[key]
 
-def create_art_scene_item(art):
+def create_art_scene_item(art: dict) -> int:
     create_source("RandomArt", "image_source", SCENE, art["source_file"], False)
     source_id = get_source_id("RandomArt", SCENE)
     set_source_transform(source_id, SCENE, art["transform"])
@@ -35,7 +36,7 @@ ART_DICT = {
             "scaleY": 0.31
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\1.jpeg"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\1.jpeg"
         }
     },
     2: {
@@ -47,7 +48,7 @@ ART_DICT = {
             "scaleY": 0.365
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\2.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\2.png"
         }
     },
     3: {
@@ -59,7 +60,7 @@ ART_DICT = {
             "scaleY": 0.365
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\3.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\3.png"
         }
     },
     4: {
@@ -71,7 +72,7 @@ ART_DICT = {
             "scaleY": 0.495
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\4.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\4.png"
         }
     },
     5: {
@@ -83,7 +84,7 @@ ART_DICT = {
             "scaleY": 0.54
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\5.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\5.png"
         }
     },
     6: {
@@ -95,7 +96,7 @@ ART_DICT = {
             "scaleY": 0.177
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\6.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\6.png"
         }
     },
     7: {
@@ -107,7 +108,7 @@ ART_DICT = {
             "scaleY": 0.242
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\7.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\7.png"
         }
     },
     8: {
@@ -119,7 +120,7 @@ ART_DICT = {
             "scaleY": 0.242
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\8.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\8.png"
         }
     },
     9: {
@@ -131,11 +132,11 @@ ART_DICT = {
             "scaleY": 0.55
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\9.png"
+            "file": f"{RESOURCE_FOLDER}RandomArt\\9.png"
         }
     },
     10: {
-        "chat_message": "Materies out on patrol in the woodlands, keeping the woodlands safe! This incredible piece was done by Fram! Go check out her Instagram: https://www.instagram.com/insta_fram__",
+        "chat_message": "Materies out on patrol in the woodlands, keeping the woodlands safe! This incredible piece was done by Fram! Go check out her website: https://www.fbmyers.com/",
         "transform": {
             "positionX": 0,
             "positionY": 535,
@@ -143,11 +144,35 @@ ART_DICT = {
             "scaleY": 0.35
         },
         "source_file": {
-            "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomArt\\10.png"
-        }
+            "file": f"{RESOURCE_FOLDER}RandomArt\\10.png"
+        },
+    },
+    11: {
+        "chat_message": "Materies loves a good fight, even with high stakes he enjoys the thrill of a challenge! This insane piece was done by Neotheta! Go check out his Website: https://neotheta.fi/",
+        "transform": {
+            "positionX": 0,
+            "positionY": 420,
+            "scaleX": 0.375,
+            "scaleY": 0.375
+        },
+        "source_file": {
+            "file": f"{RESOURCE_FOLDER}RandomArt\\11.png"
+        },
+    },
+    12: {
+        "chat_message": "We needed some art to go towards some graphics for stream schedules and Shunpie delivered! Check them out: https://shunpielinks.carrd.co/",
+        "transform": {
+            "positionX": 0,
+            "positionY": 345,
+            "scaleX": 0.250,
+            "scaleY": 0.250
+        },
+        "source_file": {
+            "file": f"{RESOURCE_FOLDER}RandomArt\\12.png"
+        },
     }
 }
 
 
-
-start()
+if __name__ == '__main__':
+    start()

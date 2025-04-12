@@ -1,8 +1,8 @@
 import math, _thread
 from PIL import Image, ImageDraw, ImageFont
 from Utils.monster_battle_classes import get_monster_dict_by_id
-from Utils.common_functions import get_from_common_storage, update_common_storage
-from Utils.twitch import send_twitch_message, create_connection, get_details_from_message
+from Utils.common_functions import RESOURCE_FOLDER, get_from_common_storage, update_common_storage
+from Utils.twitch import send_twitch_message, create_twitch_connection, get_details_from_message
 from Utils.obs import create_source, get_source_id, remove_source_from_scene
 from time import sleep
 
@@ -45,8 +45,8 @@ def update_progress_bar(current_score):
     progress_point = (start_point[0] + distance, start_point[1])    
     im = Image.new('RGBA', (1920, 1080), (0, 0, 0, 0))
     draw = ImageDraw.Draw(im)
-    large_font = ImageFont.truetype("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Fonts\\Cataneo_BT_Bold.ttf", 40)
-    small_font = ImageFont.truetype("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Fonts\\Cataneo_BT_Bold.ttf", 25)
+    large_font = ImageFont.truetype(f"{RESOURCE_FOLDER}Fonts\\Cataneo_BT_Bold.ttf", 40)
+    small_font = ImageFont.truetype(f"{RESOURCE_FOLDER}Fonts\\Cataneo_BT_Bold.ttf", 25)
     if percent < 1:
         draw.line((start_point, progress_point), fill=(20, 199, 163), width=15)
     else:
@@ -56,7 +56,7 @@ def update_progress_bar(current_score):
     draw.text((start_point[0] - 90, start_point[1] - 25), f"{CURRENT_SCORE}", (255, 255, 255), large_font)
     draw.text((end_point[0] + 15, end_point[1] - 25), f"{HIGH_SCORE}", (255, 255, 255), large_font)
     draw.text((end_point[0], end_point[1] + 30), "High Score", (255, 255, 255), small_font)
-    im.save("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Outputs\\ProgressBar.png", quality=95)
+    im.save(f"{RESOURCE_FOLDER}Outputs\\ProgressBar.png", quality=95)
 
 def create_obs_source():
     global SOURCE_ID
@@ -65,7 +65,7 @@ def create_obs_source():
         "source_kind": "image_source",
         "source_file": {
             "file": 
-            "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Outputs\\ProgressBar.png"
+            f"{RESOURCE_FOLDER}Outputs\\ProgressBar.png"
         },
     }
     create_source(data["source_name"], data['source_kind'], SCENE, data["source_file"], True)
@@ -97,7 +97,7 @@ def end_script():
     remove_source_from_scene(SOURCE_ID, SCENE)
 
 def socket_loop():
-    sock = create_connection()
+    sock = create_twitch_connection()
     while KEEP_ALIVE is True:
         resp = sock.recv(2048).decode('utf-8')
         if resp.startswith('PING'):

@@ -1,15 +1,17 @@
+import _thread, math, random, string, sys
 from Utils.obs import create_source, set_source_transform, get_source_id, set_source_activity, remove_source_from_scene, set_source_settings
-from Utils.twitch import create_connection, send_twitch_message, get_details_from_message
+from Utils.twitch import create_twitch_connection, send_twitch_message, get_details_from_message
 from Utils.monster_battle_classes import monster
+from Utils.common_functions import RESOURCE_FOLDER
+from Utils.common_dicts import get_create_channel_redeem_dict, get_event_item_dict, get_event_details_dict, get_event_target_dict, get_event_target_args_dict
 from Utils.rope_drawer import draw_rope
+from Utils.lakea import send_to_websocket
 from PIL import Image, ImageDraw, ImageFont
 from time import sleep
-import _thread, math, random, string, shutil, os
 
 TIMER_FULL = 900 # 15 minutes
 STEP = 5
 RESCUED = False
-MONSTER_FOLDER = "X:\\1-APPLICATIONDATA\\LIVEDATA\\Creatures\\Monsters\\"
 
 SOCK = {}
 SCENE = "Canvas"
@@ -24,6 +26,7 @@ ENEMY = ""
 ENEMY_ID = ""
 ENEMY_COUNT = -1
 MESSAGE_TRACKER = 0.7
+CHANNEL_REDEEM_ID = ""
 
 HANGING_ROPES_SOURCE_ID = -1
 ROPE_SOURCE_ID = -1
@@ -55,7 +58,7 @@ def start_timer():
         set_streamer_image(percent)
         send_progress_messages(percent)
     KEEP_ALIVE = False
-    monster_battle_file_reset()
+    monster_battle_reset()
     if RESCUED == True:
         streamer_rescued()
     else:
@@ -114,25 +117,25 @@ def streamer_not_rescue():
     sleep(10)
     remove_source_from_scene(GRAVE_SOURCE_ID, SCENE)
 
-def capture_streamer_start(value):
+def start(value):
     global SOCK, STREAMER_NAME, STREAMER_PRONOUNS, STREAMER_IMAGES, ENEMY, ENEMY_ID, ENEMY_COUNT, STEP_IMAGE, CURRENT_IMAGE
-    SOCK = create_connection()
+    SOCK = create_twitch_connection()
     parts = value.split("|")
-    STREAMER_NAME = parts[0]
-    STREAMER_IMAGES = parts[1].split(",")
+    STREAMER_NAME = parts[2]
+    STREAMER_IMAGES = parts[3].split(",")
     STEP_IMAGE = 1 / len(STREAMER_IMAGES)
     CURRENT_IMAGE = 0
-    STREAMER_PRONOUNS = parts[2]
-    enemy_parts = parts[3].split("-")
+    STREAMER_PRONOUNS = parts[4]
+    enemy_parts = parts[5].split("-")
     ENEMY_ID = enemy_parts[0]
     ENEMY = string.capwords(enemy_parts[1].replace("_", " "))
-    if "-" in parts[4]:
-        numbers = parts[4].split("-")
+    if "-" in parts[6]:
+        numbers = parts[6].split("-")
         ENEMY_COUNT = random.randint(int(numbers[0]), int(numbers[1]))
     else:
-        ENEMY_COUNT = int(parts[4])
+        ENEMY_COUNT = int(parts[6])
     draw_rope_length(1)
-    monster_rating = monster_battle_file_setup()
+    monster_rating = monster_battle_setup()
     create_obs_sources(STREAMER_IMAGES[CURRENT_IMAGE], monster_rating)
     send_twitch_message(f"{STREAMER_NAME} has be kidnapped by {ENEMY}s! Go rescue {STREAMER_PRONOUNS} before the {ENEMY}s decide to get rid of {STREAMER_PRONOUNS}!")
     start_timer()
@@ -145,7 +148,7 @@ def set_streamer_image(percent):
         CURRENT_IMAGE += 1
         if CURRENT_IMAGE < len(STREAMER_IMAGES):
             input_settings = {
-                "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{STREAMER_IMAGES[CURRENT_IMAGE]}"
+                "file": f"{RESOURCE_FOLDER}{STREAMER_IMAGES[CURRENT_IMAGE]}"
             }
             set_source_settings("StreamerImage", input_settings)
 
@@ -182,9 +185,9 @@ def draw_rope_length(percent, move_fire = False):
             }
             set_source_transform(FLAME_SOURCE_ID, SCENE, flame_position)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Fonts\\Cataneo_BT_Bold.ttf", 35)
+    font = ImageFont.truetype(f"{RESOURCE_FOLDER}Fonts\\Cataneo_BT_Bold.ttf", 35)
     draw.text((1710, 310), f"{ENEMY_COUNT} {ENEMY}s\nRemaining!", (255, 255, 255), font)
-    im.save("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Ropes.png", quality=95)
+    im.save(f"{RESOURCE_FOLDER}Ropes.png", quality=95)
 
 def create_obs_sources(streamer_image, monster_rating):
     global HANGING_ROPES_SOURCE_ID, ROPE_SOURCE_ID, BARREL_SOURCE_ID, STREAMER_SOURCE_ID, CAGE_SOURCE_ID, FLAME_SOURCE_ID, EXPLOSION_SOURCE_ID, GRAVE_SOURCE_ID
@@ -194,9 +197,9 @@ def create_obs_sources(streamer_image, monster_rating):
     im = draw_rope(im, (1750, 190), (1750, 300), 8.0)
     im = draw_rope(im, (1875, 190), (1875, 300), 8.0)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\Fonts\\Cataneo_BT_Bold.ttf", 20)
+    font = ImageFont.truetype(f"{RESOURCE_FOLDER}Fonts\\Cataneo_BT_Bold.ttf", 20)
     draw.text((1705, 395), f"({monster_rating})", (255, 255, 255), font)
-    im.save("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\HangingRopes.png", quality=95)    
+    im.save(f"{RESOURCE_FOLDER}HangingRopes.png", quality=95)    
     ropes_image_data = get_default_image_data("Ropes", "Ropes.png")
     barrel_image_data = get_default_image_data("TNTBarrel", "TNTBarrel.png")
     hanging_ropes_image_data = get_default_image_data("HangingRopes", "HangingRopes.png")
@@ -228,36 +231,58 @@ def create_full_obs_source(details, active):
         set_source_activity(streamer_image_source_id, SCENE, True)
     return streamer_image_source_id
 
-def monster_battle_file_setup():
+def monster_battle_setup():
+    global CHANNEL_REDEEM_ID
+    channel_redeem_dict = get_create_channel_redeem_dict(
+        f"Rescue {STREAMER_NAME}!",
+        f"Rescue {STREAMER_NAME} from the {ENEMY}s before its too late!",
+        25,
+        colour="#FF0000",
+        max_per_user_per_stream_enabled=True,
+        max_per_user_per_stream_amount=3
+    )
+    response = send_to_websocket(channel_redeem_dict, "CreateChannelRedeem")
+    CHANNEL_REDEEM_ID = response["Data"][0]["Id"]
+    lakea_event_details = get_event_details_dict("Rescue Streamer Minigame", "Twitch", "Twitch_Redeem", CHANNEL_REDEEM_ID)
+    lakea_event_arg_1 = get_event_target_args_dict("Type", "SPECIFICMONSTER")
+    lakea_event_arg_2 = get_event_target_args_dict("Arg1", f"{ENEMY_ID}-{ENEMY}")
+    lakea_event_target = get_event_target_dict("Battle_Simulator", "Battle_Simulator_Encounter", [lakea_event_arg_1, lakea_event_arg_2])
+    lakea_event = get_event_item_dict(CHANNEL_REDEEM_ID, lakea_event_details, lakea_event_target)
+    send_to_websocket(lakea_event, "AddEvent")
+    channel_redeem_dict.update({"IsEnabled": True})
+    update_redeem = {
+        "RedeemID": CHANNEL_REDEEM_ID,
+        "RedeemData": channel_redeem_dict
+    }
+    send_to_websocket(update_redeem, "UpdateChannelRedeem")
     monster_name = ENEMY.upper().replace(" ", "_")
     mon = monster(f"{ENEMY_ID}-{monster_name}")
-    monster_list = "RANDOMMONSTERS"
-    if mon.rating != "MISC":
-        monster_list = f"{mon.rating}MONSTERS"
-    shutil.copy(f"{MONSTER_FOLDER}{monster_list}.txt", f"{MONSTER_FOLDER}{monster_list}-temp.txt")
-    f = open(f"{MONSTER_FOLDER}{monster_list}.txt", "w")
-    f.write(f"{ENEMY_ID}-{ENEMY.upper()}")
-    f.close()
+    return_string = ""
     match mon.rating:
         case "WEAK":
-            return f"Weak Monster - lvl {str(mon.level)}"
+            return_string = f"Weak Monster - lvl {str(mon.level)}"
         case "NORMAL":
-            return f"Normal Monster - lvl {str(mon.level)}"
+            return_string = f"Normal Monster - lvl {str(mon.level)}"
         case "HARD":
-            return f"Hard Monster - lvl {str(mon.level)}"
+            return_string = f"Hard Monster - lvl {str(mon.level)}"
         case "MISC":
-            return f"Random Monster - lvl {str(mon.level)}"
+            return_string = f"Random Monster - lvl {str(mon.level)}"
         case _:
-            return ""
+            return_string = "Something Broke!"
+    return return_string
 
-def monster_battle_file_reset():
-    monster_name = ENEMY.upper().replace(" ", "_")
-    mon = monster(f"{ENEMY_ID}-{monster_name}")
-    monster_list = "RANDOMMONSTERS"
-    if mon.rating != "MISC":
-        monster_list = f"{mon.rating}MONSTERS"
-    shutil.copy(f"{MONSTER_FOLDER}{monster_list}-temp.txt", f"{MONSTER_FOLDER}{monster_list}.txt")
-    os.remove(f"{MONSTER_FOLDER}{monster_list}-temp.txt")
+def monster_battle_reset():
+    data = {
+        "Key": CHANNEL_REDEEM_ID,
+        "EventItem": {
+            "EventDetails": {
+                "Source": "Twitch",
+                "Type": "Twitch_Redeem"
+            }
+        }
+    }
+    send_to_websocket(CHANNEL_REDEEM_ID, "DeleteChannelRedeem", to_json=False)
+    #send_to_websocket(data, "RemoveEvent")
 
 def get_default_image_data(image, file):
     match image:
@@ -266,7 +291,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 1730,
@@ -280,7 +305,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 1725,
@@ -294,7 +319,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 1727,
@@ -308,7 +333,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": -35,
@@ -322,7 +347,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 1580,
@@ -336,7 +361,7 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 1730,
@@ -350,10 +375,18 @@ def get_default_image_data(image, file):
                 "source_name": image,
                 "source_kind": "image_source",
                 "source_file": {
-                    "file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\{file}"
+                    "file": f"{RESOURCE_FOLDER}{file}"
                 },
                 "position": {
                     "positionX": 0,
                     "positionY": 0,
                 }
             }
+        
+
+
+if __name__ == '__main__':
+    event = ""
+    for arg in sys.argv:
+        event = f"{event}|{arg}"    
+    start(event)

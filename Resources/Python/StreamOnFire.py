@@ -1,7 +1,8 @@
-from Utils.obs import create_source, get_source_id, set_source_transform, set_source_activity, remove_source_from_scene
-from Utils.twitch import create_connection, send_twitch_message, get_details_from_message
-from time import sleep
 import random, _thread
+from time import sleep
+from Utils.obs import create_source, get_source_id, set_source_transform, set_source_activity, remove_source_from_scene
+from Utils.twitch import create_twitch_connection, send_twitch_message, get_details_from_message
+from Utils.common_functions import RESOURCE_FOLDER
 
 FLAMES = {}
 SOCK = {}
@@ -14,7 +15,7 @@ def stream_on_fire_start(value):
     details = get_value_details(value)
     FLAMES = create_flames(details)
     FLAMES = create_obs_sources(FLAMES)
-    SOCK = create_connection()
+    SOCK = create_twitch_connection()
     send_twitch_message(f"The streams set on fire! Send messages with the word 'water' in to put the fire out!")
     _thread.start_new_thread(socket_loop, ())
     while KEEP_ALIVE is True:
@@ -90,7 +91,7 @@ def create_flames(details):
             "source_name": f"Flame{count}",
             "source_kind": "image_source",
             "source_file": {
-                "file": "X:\\1-APPLICATIONDATA\\LIVEDATA\Python\\ScriptResources\\Flame2.gif"
+                "file": f"{RESOURCE_FOLDER}Flame2.gif"
             },
             "position": {
                 "positionX": random.randint(0, 1664),

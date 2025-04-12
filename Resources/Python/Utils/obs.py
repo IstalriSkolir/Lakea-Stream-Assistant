@@ -1,15 +1,12 @@
 from obswebsocket import obsws, requests
-
-IP = "{IP}"
-PORT = "{PORT}"
-PASSWORD = "{PASSWORD}"
+from Utils.sensitive_data import MAIN_PC_OBS_IP, MAIN_PC_OBS_PORT, MAIN_PC_OBS_PASSWORD
 
 SOCK = {}
 INITIALISED = False
 
 def create_connection():
     global INITIALISED
-    sock = obsws(IP, PORT, PASSWORD)
+    sock = obsws(MAIN_PC_OBS_IP, MAIN_PC_OBS_PORT, MAIN_PC_OBS_PASSWORD)
     sock.connect()
     INITIALISED = True
     return sock
@@ -21,8 +18,12 @@ def _check_if_initialised():
 
 def get_source_id(source_name, scene):
     _check_if_initialised()
-    response = SOCK.call(requests.GetSceneItemId(sourceName=source_name, sceneName=scene))
-    source_id = response.datain["sceneItemId"]
+    source_id = -1
+    try:
+        response = SOCK.call(requests.GetSceneItemId(sourceName=source_name, sceneName=scene))
+        source_id = response.datain["sceneItemId"]
+    except KeyError:
+        pass
     return source_id
 
 def set_source_activity(source_id, scene, visibility):
@@ -50,6 +51,14 @@ def create_source(source_name, source_kind, scene_name, input_settings, scene_it
 def remove_source_from_scene(source_id, scene):
     _check_if_initialised()
     SOCK.call(requests.RemoveSceneItem(sceneName=scene, sceneItemId=source_id))
+
+def delete_input(input_name: str):
+    _check_if_initialised()
+    SOCK.call(requests.RemoveInput(inputName=input_name))
+
+def set_audio_monitoring(input_name: str, monitoring_mode):
+    _check_if_initialised()
+    SOCK.call(requests.SetInputAudioMonitorType(inputName=input_name, monitorType=monitoring_mode))
 
 def create_scene(scene):
     _check_if_initialised()

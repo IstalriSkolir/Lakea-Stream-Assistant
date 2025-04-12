@@ -1,9 +1,9 @@
 import os, sys, random
-from CharacterGainXP import random_character_gain_xp
-from CaptureStreamerGame import capture_streamer_start
+from RandomCharacterGainXP import random_character_gain_xp
 from StreamOnFire import stream_on_fire_start
+from Utils.common_functions import RESOURCE_FOLDER, PYTHON_FOLDER
 from Utils.obs_caller import obs_set_source_visability, obs_create_source
-from Utils.twitch_caller import twitch_caller_send_message
+from Utils.twitch_caller import twitch_caller_send_message, twitch_caller_looping_send_message, lakea_and_looping_conversation
 
 EVENT_PERCENT = 10 # 1-100, how likely a random event is to occur
 
@@ -19,11 +19,13 @@ def start():
             if check_lock() is False:
                 run_event()
                 remove_lock()
+        elif sys.argv[1] == "RANDOMTEST":
+            random_test(int(sys.argv[2]))
     else:
         if check_lock() is False:
             run_script()
         
-def check_lock():
+def check_lock() -> bool:
      if os.path.isfile("./RandomEvent.lock") is False:
         lock = open("RandomEvent.lock", "w")
         lock.close()
@@ -45,11 +47,10 @@ def remove_lock():
     if os.path.exists("RandomEvent.lock"):
         os.remove("RandomEvent.lock")
     
-def get_event(is_random, event_number = -1):
-    file = open("X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomEvents.txt")
+def get_event(is_random: bool, event_number = -1) -> dict:
+    file = open(f"{RESOURCE_FOLDER}RandomEvents.txt")
     events = file.read().splitlines()
     file.close()
-    length = len(events)
     line = "#"
     ran = 0
     if is_random is True:
@@ -57,7 +58,6 @@ def get_event(is_random, event_number = -1):
         keys = list(events_dict.keys())
         key = random.choice(keys)
         array = events_dict[key]
-        
         ran = random.randrange(0, len(array))
         line = f"{key}:{array[ran]}"
     else:
@@ -70,7 +70,7 @@ def get_event(is_random, event_number = -1):
     }
     return event
 
-def create_event_dict(lines):
+def create_event_dict(lines: list) -> dict:
     events_dict = {}
     events_type =  []
     for line in lines:
@@ -93,21 +93,39 @@ def run_event(event_number = -1):
         event = get_event(False, event_number)
     match event["type"]:
         case "CAPTURESTREAMERGAME":
-            capture_streamer_start(event["value"])
+            run_script_with_args(event["value"])
+        case "LAKEALOOPINGCONVERSATION":
+            lakea_and_looping_conversation(event["value"])
+        case "LOOPINGEMOTESPAM":
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
+        case "LOOPINGREDEEMPRANK":
+            run_script_with_args(event["value"])
+        case "LOOPINGROPEPRANK":
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
+        case "LOOPINGROTATEGAME":
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
+        case "MONSTERATTACKBOSS":
+            run_script_with_args(event["value"])
         case "MONSTERHUNTERGAME":
-            os.system(f"python {event['value']}.py")
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
         case "OBSACTIVATESOURCE":
             obs_set_source_visability(event["value"], True)
         case "OBSCREATESOURCE":
             obs_create_source(event["value"], "X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\")
+        case "PLAYSOUNDEFFECT":
+            run_script_with_args(event["value"])
         case "RUNPYTHONSCRIPT":
-            os.system(f"python {event['value']}.py")
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
+        case "SENDRIDDLECHAT":
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
         case "SENDTWITCHMESSAGE":
             twitch_caller_send_message(event["value"])
+        case "SENDTWITCHMESSAGELOOPING":
+            twitch_caller_looping_send_message(event["value"])
         case "SHOWRANDOMART":
-            os.system(f"python {event['value']}.py")
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
         case "SHOWRANDOMCLIP":
-            os.system(f"python {event['value']}.py")
+            os.system(f"python {PYTHON_FOLDER}{event['value']}.py")
         case "STREAMONFIRE":
             stream_on_fire_start(event['value'])
         case "RANDOMCHARACTERXP":
@@ -115,6 +133,23 @@ def run_event(event_number = -1):
         case _:
             pass
 
+def run_script_with_args(details):
+    parts = details.split("|")
+    script = parts.pop(0)
+    command = f"python {PYTHON_FOLDER}{script}.py"
+    for arg in parts:
+        command = f"{command} {arg}"
+    os.system(command)
+
+def random_test(number: int):
+    file = open(f"{RESOURCE_FOLDER}RANDOMTESTOUTPUT.txt", "w")
+    for x in range(number):
+        line = get_event(True)
+        print(f"{x + 1}. {line}")
+        file.write(f"{line}\n")
+    file.close()
 
 
-start()
+
+if __name__ == '__main__':
+    start()
