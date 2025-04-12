@@ -10,7 +10,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
 {
     public class LakeaCaptured
     {
-        private EventInput input;
         private LakeaFunctions lakea;
         private BattleFileParser battleFileParser;
         private Random random;
@@ -26,9 +25,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private float progress;
         private float escapeDC;
 
-        public LakeaCaptured(EventInput eventInput, LakeaFunctions lakeaFunctions, ConfigSettings settings)
+        public LakeaCaptured(LakeaFunctions lakeaFunctions, ConfigSettings settings)
         {
-            input = eventInput;
             lakea = lakeaFunctions;
             retortEvents = settings.CapturedEventRetorts.EventType;
             battleFileParser = new BattleFileParser(settings.ResourcePath);
@@ -88,7 +86,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                     { "EscapeProgress", progress.ToString() },
                     { "EscapeDC", escapeDC.ToString() }
                 };
-                input.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Struggle, args));
+                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Struggle, args));
             }
             else
             {
@@ -107,7 +105,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 { "EventID", "Lakea_Released" }
             };
             IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Released, data);
-            input.NewEvent(eve);
+            StreamAssistant.EventHandler.NewEvent(eve);
         }
     }
 }

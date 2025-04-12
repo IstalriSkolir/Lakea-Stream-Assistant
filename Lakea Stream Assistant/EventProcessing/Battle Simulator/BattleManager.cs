@@ -8,10 +8,9 @@ using System.Globalization;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 {
-    //This class handles the calls to the Battle Simulator Application
+    // This class handles the calls to the Battle Simulator Application
     public class BattleManager
     {
-        private EventInput eventInput;
         private ProcessStartInfo battleSimInfo;
         private Process battleSim;
         private BattleFileParser fileParser;
@@ -21,10 +20,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         private int bossCount;
         private string resourcePath;
 
-        //Constructor sets the path and other properties for the Battle Simulator Application
-        public BattleManager(EventInput eventInput, string resourcePath)
+        // Constructor sets the path and other properties for the Battle Simulator Application
+        public BattleManager(string resourcePath)
         {
-            this.eventInput = eventInput;
             this.fileParser = new BattleFileParser(resourcePath);
             this.queue = new List<string>();
             this.active = false;
@@ -47,7 +45,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             Other("ENVIRONMENTRESET", "NA", "NA");
         }
 
-        //Get the character sheet of a user
+        // Get the character sheet of a user
         public Dictionary<string, string> GetCharacterSheet(string accountID, string displayName)
         {
             try
@@ -77,7 +75,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             return null;
         }
 
-        //Get the character statistics of a user
+        // Get the character statistics of a user
         public Dictionary<string, string> GetCharacterStatistics(string accountID, string displayName)
         {
             Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
@@ -92,7 +90,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 
         #region Run Battle Simulator
 
-        //Add an event to the Battle Sim Queue
+        // Add an event to the Battle Sim Queue
         public void Other(string eve, string accountID, string displayName)
         {
             try
@@ -108,7 +106,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                         {
                             { "Message", "You're not a high enough level yet @" + displayName + ", you can't prestige until you're level 100!" }
                         };
-                        eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Can't Prestige", "Battle_Simulator_Cant_Prestige", args: args));
+                        StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Can't Prestige", "Battle_Simulator_Cant_Prestige", args: args));
                         return;
                     }
                 }
@@ -130,7 +128,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        //Add a battle to the Battle Sim Queue
+        // Add a battle to the Battle Sim Queue
         public void Battle(string type, string accountID, string displayName, List<string> battleArgs)
         {
             try
@@ -157,7 +155,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     {
                         { "Message", "Your not a high enough level yet @" + displayName + "! Train with me some more before you get yourself killed!" }
                     };
-                    eventInput.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
                 }
             }
             catch (Exception ex)
@@ -167,7 +165,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        //Run the Battle Simulator
+        // Run the Battle Simulator
         private void runBattleSimulator()
         {
             try
@@ -180,7 +178,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 if (parameters.Contains("BOSSBATTLE") && bossesFirstFight)
                 {
                     bossesFirstFight = false;
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_" + bossCount + "_First_Battle"));
+                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_" + bossCount + "_First_Battle"));
                     Thread.Sleep(5000);
                 }
                 battleSimInfo.Arguments = parameters;
@@ -197,7 +195,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
 
         #region Battle Simulator Ended
 
-        //When Battle Simulator finishes, read the exit code to determine output
+        // When Battle Simulator finishes, read the exit code to determine output
         private void battleSimulatorExited(object sender, EventArgs e)
         {
             Process process = (Process)sender;
@@ -245,7 +243,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             }
         }
 
-        //Read the training results and send them to Twitch
+        // Read the training results and send them to Twitch
         private void trainingEnded(Dictionary<string, string> results)
         {
             if(results.Count > 0)
@@ -257,7 +255,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     message = message.Substring(0, message.Length - 1) + ", they've reached level " + results["CHARACTER_LEVEL"] + "!";
                 }
                 args.Add("Message", message);
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Training", "Battle_Simulator_Training", args: args));
+                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Training", "Battle_Simulator_Training", args: args));
             }
         }
 
@@ -289,11 +287,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     }
                     args.Add("Message", message);
                 }
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
             }
         }
 
-        //Read the boss battle results and process the events
+        // Read the boss battle results and process the events
         private void bossBattleEnded(Dictionary<string, string> results)
         {
             if(results.Count > 0)
@@ -309,7 +307,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! All the bosses have been defeated!");
                     eventID = "All_Bosses_Defeated_Message";
                     eventName = "All Bosses Defeated Message";
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "All Bosses Defeated", "All_Bosses_Defeated"));
+                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "All Bosses Defeated", "All_Bosses_Defeated"));
                 }
                 else if ("TRUE".Equals(results["BOSS_BEATEN"]))
                 {
@@ -317,7 +315,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
                     eventID = "Boss_Defeated_Message";
                     eventName = "Boss Defeated Message";
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_" + bossCount + "_Defeated"));
+                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_" + bossCount + "_Defeated"));
                     bossCount++;
                 }
                 else
@@ -325,13 +323,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
                     eventID = "Boss_Battle_Ended_Message";
                     eventName = "Boss Battle Ended Message";
-                    eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Battle Ended", "Boss_Battle_Ended"));
+                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Battle Ended", "Boss_Battle_Ended"));
                 }
-                eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
+                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
             }
         }
 
-        //Read the prestige results and send them to Twitch
+        // Read the prestige results and send them to Twitch
         private void characterPrestiageEnded(Dictionary<string, string> results)
         {
             int level = Int32.Parse(results["CHARACTER_LEVEL"]);
@@ -350,7 +348,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             {
                 { "Message", message }
             };
-            eventInput.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Character Prestige", "Battle_Simulator_Character_Prestige", args: args));
+            StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Character Prestige", "Battle_Simulator_Character_Prestige", args: args));
         }
 
         #endregion

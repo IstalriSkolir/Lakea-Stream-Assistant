@@ -210,8 +210,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Terminal.Output("Lakea: Quote Command -> " + command);
             Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + command);
 
-            //Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
-            Dictionary<string, string> args = new Dictionary<string, string>();
+            Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
+            //Dictionary<string, string> args = new Dictionary<string, string>();
 
             if ("quotefest".Equals(command))
             {
