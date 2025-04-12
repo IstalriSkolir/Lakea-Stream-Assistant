@@ -1,0 +1,21 @@
+{
+    "data":[
+        {
+            "Message": [
+                {
+                    "Type": "Text",
+                    "Text": "Here is a "
+                },
+                {
+                    "Type": "Link",
+                    "Text": "link",
+                    "URL": "https://www.twitch.tv/materiescoil"
+                },
+                {
+                    "Type": "Text",
+                    "Text": " to the Materies Twitch channel"
+                }
+            ]
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 from Utils.monster_battle_classes import monster
 import os
 
-MONSTER_FOLDER = "X:\\1-APPLICATIONDATA\\LIVEDATA\\Creatures\\Monsters\\"
+MONSTER_FOLDER = "PATH"
 
 WEAK_MONSTERS = []
 NORMAL_MONSTERS = []

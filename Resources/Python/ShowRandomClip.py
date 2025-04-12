@@ -1,6 +1,7 @@
-from Utils.obs import create_source, get_source_id, set_source_transform, set_source_activity, remove_source_from_scene
-from time import sleep
 import random
+from time import sleep
+from Utils.obs import create_source, get_source_id, set_source_transform, set_source_activity, remove_source_from_scene
+from Utils.common_functions import RESOURCE_FOLDER
 
 SCENE = "Canvas"
 ACTIVE_TIME = 60
@@ -21,7 +22,7 @@ def get_clip_object(clip_name):
             "scaleY": 0.65            
         },
         "source_file": {
-            "local_file": f"X:\\1-APPLICATIONDATA\\LIVEDATA\\Python\\ScriptResources\\RandomClip\\{clip_name}.mp4"
+            "local_file": f"{RESOURCE_FOLDER}RandomClip\\{clip_name}.mp4"
         }
     }
 
@@ -45,7 +46,9 @@ CLIPS = [
     "To Catch A Blorb",
     "Cats Always Land On Their Feet",
     "Shiny In Twitch Plays",
-    "Giant Twink"
+    "Giant Twink",
+    "The ol' Switcheroo",
+    "Ur-A-Peeing"
 ]
 
 if __name__ == '__main__':

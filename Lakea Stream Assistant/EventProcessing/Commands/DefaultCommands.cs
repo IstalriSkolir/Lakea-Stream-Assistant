@@ -203,16 +203,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         // Calls on the Quotes object to process the quote command before returning the output in a new EventItem object
         private EventItem quoteCommand(IncomingEvent eve)
         {
-            // Needs fixing for quotes.NewQuoteCommand to use IncomingEvent class instead of legacy LakeaCommand class - Issue #298
-
             string command = eve.Args["CommandText"];
-
             Terminal.Output("Lakea: Quote Command -> " + command);
             Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + command);
-
             Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
-            //Dictionary<string, string> args = new Dictionary<string, string>();
-
             if ("quotefest".Equals(command))
             {
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);

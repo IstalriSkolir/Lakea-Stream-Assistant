@@ -1,14 +1,13 @@
-import os
-import socket
-import threading
+import os, socket, threading
 from time import sleep
 from pynput.keyboard import Key, Controller
+from Utils.twitch import send_twitch_message
 
 keyboard = Controller()
 
 retro_arch_dir = "C:\RetroArch-Win64"
-#retro_arch_exe = r'"retroarch.exe -L "C:\RetroArch-Win64\cores\vba_next_libretro.dll" "C:\Users\mcwol\Documents\Resources\Games\PokemonRuby.gba" -f"'
-retro_arch_exe = r'"retroarch.exe -L "C:\RetroArch-Win64\cores\vba_next_libretro.dll" "C:\Users\mcwol\Documents\Resources\Games\PokemonRuby.gba""'
+retro_arch_exe = r'"retroarch.exe -L "C:\RetroArch-Win64\cores\vba_next_libretro.dll" "C:\Users\mcwol\Documents\Resources\Games\PokemonRuby.gba" -f"'
+#retro_arch_exe = r'"retroarch.exe -L "C:\RetroArch-Win64\cores\vba_next_libretro.dll" "C:\Users\mcwol\Documents\Resources\Games\PokemonRuby.gba""'
 
 server = 'irc.chat.twitch.tv'
 port = 6667
@@ -139,6 +138,8 @@ def check_list_of_commands(command, resp):
             perform_key_press(Key.enter)
         case "!exit":
             keep_alive = False
+        case "!test":
+            send_twitch_message("Listening to Twitch chat for game commands! ")
         case "that'sit,playtimeisoverrangers!":
             end_script(resp)
 
