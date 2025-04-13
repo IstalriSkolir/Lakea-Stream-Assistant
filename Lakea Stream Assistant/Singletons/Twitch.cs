@@ -1,5 +1,4 @@
-﻿using System;
-using Lakea_Stream_Assistant.Enums;
+﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
@@ -28,13 +27,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using TwitchLib.Api.Helix.Models.Bits;
-using TwitchLib.Api.Helix.Models.Bits.ExtensionBitsProducts;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
     //Sealed class for Twitch Integration
     public sealed class Twitch
     {
+        private static IHost eventSubHost;
         private static StandardiseInput standardiseInput;
         private static HashChecker hashChecker;
         private static DefaultCommands lakeaCommands;
@@ -130,11 +129,12 @@ namespace Lakea_Stream_Assistant.Singletons
         // Initialise Twitch's EventSub connection
         private static void initialiseEventSub()
         {
-            initialiseEventSubService().Build().Run();
+            eventSubHost = initialiseEventSubService().Build();
+            eventSubHost.RunAsync();
         }
 
         private static IHostBuilder initialiseEventSubService() =>
-            Host.CreateDefaultBuilder()
+             Host.CreateDefaultBuilder()
             .ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
@@ -158,6 +158,15 @@ namespace Lakea_Stream_Assistant.Singletons
             //Subscription sub = CheckUserSubscription("106861102").Result;
             //CheckUserSubscription("106861102");//.Result;
             //TwitchSub sub = GetUserSubscriptionTier("756882056").Result;
+        }
+
+        #endregion
+
+        #region Shutdown
+
+        public static void ShutdownTwitchServices()
+        {
+            eventSubHost.StopAsync();
         }
 
         #endregion
