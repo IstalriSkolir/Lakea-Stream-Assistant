@@ -20,6 +20,8 @@
     <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>Resources\Campfire.ico</ApplicationIcon>
+    <Description>A Twitch stream assistant for Twitch streamers</Description>
+    <PackageIcon>Campfire.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,6 +71,10 @@
     </None>
     <None Update="Configurations\Lakea Profile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Campfire.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
     <None Update="Resources\Python\TestPython.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

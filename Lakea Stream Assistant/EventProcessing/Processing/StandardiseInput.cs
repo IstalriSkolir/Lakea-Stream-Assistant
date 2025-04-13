@@ -158,7 +158,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { "AccountID", args.Notification.Payload.Event.UserId },
                 { "RedeemTitle", args.Notification.Payload.Event.Reward.Title },
                 { "RedeemCost", args.Notification.Payload.Event.Reward.Cost.ToString() },
-                { "RedeemID", args.Notification.Payload.Event.Id }
+                { "RedeemID", args.Notification.Payload.Event.Reward.Id }
             };
             return argsDict;
         }

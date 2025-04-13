@@ -7,7 +7,6 @@ using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Tokens;
 using Lakea_Stream_Assistant.Static;
-using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.WebSocket;
 
 namespace Lakea_Stream_Assistant
@@ -170,8 +169,9 @@ namespace Lakea_Stream_Assistant
             var exitTasks = Task.Run(() => eventHandler.NewEvent(eve));
             var externalTasks = Task.Run(() => externalProcesses.StopAllExternalProcesses());
             var serverTask = Task.Run(() => Server.Shutdown());
+            var twitchTask = Task.Run(() => Twitch.ShutdownTwitchServices());
             var terminalTask = Task.Run(() => Terminal.EndRefresh());
-            Task.WaitAll(exitTasks, externalTasks, serverTask, terminalTask);
+            Task.WaitAll(exitTasks, externalTasks, serverTask, twitchTask, terminalTask);
         }
 
         #endregion
