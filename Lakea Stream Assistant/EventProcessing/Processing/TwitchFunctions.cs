@@ -24,7 +24,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> giftedSubscriptions;
         private Dictionary<string, EventItem> continuedGiftedSubscriptions;
         private List<Tuple<int, string>> bitsOrder;
-        private BitsCommand bitsCommands;
 
         // Contructor stores list of events to check against when it receives a new event
         public TwitchFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands defaultCommands)
@@ -53,7 +52,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { EventType.Twitch_Gifted_Subscription, giftedSubscriptions },
                 { EventType.Twitch_Continued_Gifted_Subscription, continuedGiftedSubscriptions }
             };
-            bitsCommands = defaultCommands.BitsCommands;
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in newEvents)
             {

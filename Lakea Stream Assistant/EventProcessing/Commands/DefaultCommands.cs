@@ -6,33 +6,25 @@ using Lakea_Stream_Assistant.Models.Tokens;
 using Lakea_Stream_Assistant.Processes;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using TwitchLib.Api.Helix.Models.Bits;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Channels.ModifyChannelInformation;
 using TwitchLib.Api.Helix.Models.Games;
-using TwitchLib.PubSub.Models.Responses;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
     // This class handles default commands for Lakea
     public class DefaultCommands
     {
-        private BitsCommand bits;
         private ProcessCommand process;
         private QuoteCommand quotes;
         private readonly Dictionary<string, Func<IncomingEvent, EventItem>> commandFunctions;
         private readonly Dictionary<string, CommandConfiguration> commandConfigs;
         KeepAliveToken keepAliveToken;
 
-        #region Gets
-
-        public BitsCommand BitsCommands { get { return bits; } }
-
-        #endregion
-
         // Constructor takes object references, sets predefined dictionaries and command active/modonly status
         public DefaultCommands(ConfigSettings settings, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
         {
-            this.bits = new BitsCommand(settings.ResourcePath);
             this.process = new ProcessCommand(externalProcesses);
             this.quotes = new QuoteCommand(settings.ResourcePath);
             this.keepAliveToken = keepAliveToken;
@@ -287,7 +279,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             string displayName = eve.Args["DisplayName"];
             Terminal.Output("Lakea: Total Bits Command -> " + displayName);
             Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + displayName);
-            Dictionary<string, string> args = bits.NewTotalBitsCommand(eve);
+            GetBitsLeaderboardResponse response = Twitch.GetUserTotalCheers(eve.Args["AccountID"]).Result;
+            int userBits = response.Listings[0].Score;
+            int userRank = response.Listings[0].Rank;
+            Dictionary<string, string> args = new Dictionary<string, string>()
+            {
+                { "Message", "" + displayName + " has cheered a total of " + userBits + " bits and is rank " + userRank + " on the leaderboard! Thank you for supporting Materies materi33Lakeaheart" }
+            };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Total Bits Command", "Lakea_Total_Bits_Command", args: args);
         }
     }

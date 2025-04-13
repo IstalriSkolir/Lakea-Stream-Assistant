@@ -1,4 +1,5 @@
-﻿using Lakea_Stream_Assistant.Enums;
+﻿using System;
+using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
@@ -11,6 +12,7 @@ using TwitchLib.Communication.Models;
 using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Events;
 using TwitchLib.Api;
+using TwitchLib.Api.Core.Enums;
 using TwitchLib.Api.Helix.Models.Subscriptions;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
@@ -25,8 +27,8 @@ using TwitchLib.EventSub.Websockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using TwitchLib.Api.Core.Enums;
-using System;
+using TwitchLib.Api.Helix.Models.Bits;
+using TwitchLib.Api.Helix.Models.Bits.ExtensionBitsProducts;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -547,6 +549,21 @@ namespace Lakea_Stream_Assistant.Singletons
                 Terminal.Output("Twitch: Failed to Ban User from Chat -> " + ex.Message);
                 Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
             }
+        }
+
+        // Get the total bits cheered by a user in a channel
+        public static async Task<GetBitsLeaderboardResponse> GetUserTotalCheers(string accountID)
+        {
+            try
+            {
+                return await api.Helix.Bits.GetBitsLeaderboardAsync(count: 1, userid: accountID, accessToken: channelAuthKey);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Get Total User Cheers -> " + ex.Message);
+                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+            }
+            return null;
         }
 
         #endregion
