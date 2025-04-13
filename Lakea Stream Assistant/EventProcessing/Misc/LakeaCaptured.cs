@@ -17,13 +17,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private bool isCaught;
 
         private const int tick = 60000;
+        private const float escapeDC = 100;
+        private const float minimumProgress = 3.35f;
         private int lakeaDexMod;
         private int characterDexMod;
         private float baseProgress;
         private int minRoll;
         private int maxRoll;
         private float progress;
-        private float escapeDC;
+        private string captorDisplayName;
+        private string captorAccountID;
 
         public LakeaCaptured(LakeaFunctions lakeaFunctions, ConfigSettings settings)
         {
@@ -42,7 +45,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             baseProgress = float.Parse(args["ProgressBase"]);
             minRoll = int.Parse(args["MinimumRoll"]);
             maxRoll = int.Parse(args["MaximumRoll"]);
-            escapeDC = (float)characterDexMod * float.Parse(args["DifficultyModifier"]);
             Terminal.Output("Lakea: Captured -> True");
             Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> True");
             isCaught = true;
@@ -74,6 +76,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private void timedEscapeAttempt()
         {
             float additional = (float)random.Next(minRoll, maxRoll) * (baseProgress - ((float)characterDexMod / (float)lakeaDexMod));
+            if(additional < minimumProgress)
+                additional = minimumProgress;
             progress += additional;
             if(progress < escapeDC)
             {
@@ -84,7 +88,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 {
                     { "EventID", "Lakea_Struggle" },
                     { "EscapeProgress", progress.ToString() },
-                    { "EscapeDC", escapeDC.ToString() }
+                    { "EscapeDC", escapeDC.ToString() },
+                    { "CaptorDisplayName", captorDisplayName },
+                    { "CaptorAccountID", captorAccountID }
                 };
                 StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Struggle, args));
             }
