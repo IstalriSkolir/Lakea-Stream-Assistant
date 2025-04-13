@@ -1,5 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
@@ -62,7 +62,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 int strMod = Int32.Parse(character["STR"]) / 3;
                 int dexMod = Int32.Parse(character["DEX"]) / 3;
                 int conMod = Int32.Parse(character["CON"]) / 3;
-                args.Add("Message", "@" + displayName + " -> LEVEL: " + character["LEVEL"] + ", XP: " + character["XP"] + ", XP_NEEDED: " + xpNeeded + ", HP: " +
+                args.Add("Message", displayName + " -> LEVEL: " + character["LEVEL"] + ", XP: " + character["XP"] + ", XP_NEEDED: " + xpNeeded + ", HP: " +
                     character["HP"] + ", STR: " + character["STR"] + "(+" + strMod + "), DEX: " + character["DEX"] + "(+" + dexMod + "), CON: " + character["CON"] +
                     "(+" + conMod + ")");
                 return args;
@@ -81,7 +81,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             Dictionary<string, string> character = fileParser.GetCharacterData(accountID, displayName);
             Dictionary<string, string> args = new Dictionary<string, string>()
             {
-                { "Message", "@" + displayName + " -> DEATHS: " + character["DEATHS"] + ", MONSTERS_KILLED: " + character["MONSTERS_KILLED"] + ", MONSTER_WIN_RATE: " +
+                { "Message", displayName + " -> DEATHS: " + character["DEATHS"] + ", MONSTERS_KILLED: " + character["MONSTERS_KILLED"] + ", MONSTER_WIN_RATE: " +
                     character["MONSTER_WIN_RATE"] + ", BOSSES_FOUGHT: " + character["BOSSES_FOUGHT"] + ", BOSSES_BEATEN: " + character["BOSSES_BEATEN"] + ", PRESTIGE: " +
                     character["PRESTIGE"]}
             };
@@ -102,11 +102,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     int level = Int32.Parse(character["LEVEL"]);
                     if(level < 100)
                     {
-                        Dictionary<string, string> args = new Dictionary<string, string>
-                        {
-                            { "Message", "You're not a high enough level yet @" + displayName + ", you can't prestige until you're level 100!" }
-                        };
-                        StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Can't Prestige", "Battle_Simulator_Cant_Prestige", args: args));
+                        Twitch.WriteToChat("You're not a high enough level yet " + displayName + ", you can't prestige until you're level 100!");
                         return;
                     }
                 }
@@ -151,11 +147,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 }
                 else
                 {
-                    Dictionary<string, string> args = new Dictionary<string, string>
-                    {
-                        { "Message", "Your not a high enough level yet @" + displayName + "! Train with me some more before you get yourself killed!" }
-                    };
-                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Lakea, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+                    Twitch.WriteToChat("Your not a high enough level yet " + displayName + "! Train with me some more before you get yourself killed!");
                 }
             }
             catch (Exception ex)
@@ -178,7 +170,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 if (parameters.Contains("BOSSBATTLE") && bossesFirstFight)
                 {
                     bossesFirstFight = false;
-                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss First Battle", "Boss_" + bossCount + "_First_Battle"));
+                    Dictionary<string, string> args = new Dictionary<string, string>()
+                    {
+                        { "EventID", "Boss_" + bossCount + "_First_Battle" }
+                    };
+                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
                     Thread.Sleep(5000);
                 }
                 battleSimInfo.Arguments = parameters;
@@ -248,14 +244,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             if(results.Count > 0)
             {
-                Dictionary<string, string> args = new Dictionary<string, string>();
-                string message = "@" + results["CHARACTER_NAME"] + " trained with me and gained " + results["XP_GAINED"] + "XP!";
+                string message = results["CHARACTER_NAME"] + " trained with me and gained " + results["XP_GAINED"] + "XP!";
                 if (results["LEVEL_UP"].Equals("TRUE"))
                 {
                     message = message.Substring(0, message.Length - 1) + ", they've reached level " + results["CHARACTER_LEVEL"] + "!";
                 }
-                args.Add("Message", message);
-                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Training", "Battle_Simulator_Training", args: args));
+                Twitch.WriteToChat(message);
             }
         }
 
@@ -264,30 +258,28 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
         {
             if (results.Count > 0)
             {
-                Dictionary<string, string> args = new Dictionary<string, string>();
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+                string message = string.Empty;
                 string monster = results["MONSTER_NAME"].Replace("_", " ");
                 monster = textInfo.ToTitleCase(monster.ToLower());
                 if (results["WINNER"].Equals(results["CHARACTER_ID"]))
                 {
-                    string message = "@" + results["CHARACTER_NAME"] + " fought a " + monster + " and won! They gained " + results["XP_GAINED"] + "XP!";
+                    message = results["CHARACTER_NAME"] + " fought a " + monster + " and won! They gained " + results["XP_GAINED"] + "XP!";
                     if (results["LEVEL_UP"].Equals("TRUE"))
                     {
                         message = message.Substring(0, message.Length - 1) + " and reached level " + results["CHARACTER_LEVEL"] + "!";
                     }
-                    args.Add("Message", message);
                 }
                 else if (results["WINNER"].Equals(results["MONSTER_ID"]))
                 {
-                    string message = "@" + results["CHARACTER_NAME"] + " was knocked out while fighting a " + monster + "! They should have trained with me more! " + results["CHARACTER_NAME"] + " has lost " + results["CHARACTER_XP_LOST"] + "XP!";
+                    message = results["CHARACTER_NAME"] + " was knocked out while fighting a " + monster + "! They should have trained with me more! " + results["CHARACTER_NAME"] + " has lost " + results["CHARACTER_XP_LOST"] + "XP!";
                     if (results["CHARACTER_LEVELS_LOST"] != "0")
                     {
                         message = message.Remove(message.Length - 1);
                         message += " and " + results["CHARACTER_LEVELS_LOST"] + " levels!";
                     }
-                    args.Add("Message", message);
                 }
-                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Encounter", "Battle_Simulator_Monster", args: args));
+                Twitch.WriteToChat(message);
             }
         }
 
@@ -300,32 +292,24 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
                 string boss = results["MONSTER_NAME"].Replace("_", " ");
                 boss = textInfo.ToTitleCase(boss.ToLower());
-                string eventName = "";
-                string eventID = "";
                 if ("TRUE".Equals(results["ALL_BOSSES_BEATEN"]))
                 {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! All the bosses have been defeated!");
-                    eventID = "All_Bosses_Defeated_Message";
-                    eventName = "All Bosses Defeated Message";
-                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "All Bosses Defeated", "All_Bosses_Defeated"));
+                    Twitch.WriteToChat(results["CHARACTER_NAME"] + " fought " + boss + " and won! All the bosses have been defeated!");
+                    args.Add("EventID", "All_Bosses_Defeated");
                 }
                 else if ("TRUE".Equals(results["BOSS_BEATEN"]))
                 {
                     bossesFirstFight = true;
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
-                    eventID = "Boss_Defeated_Message";
-                    eventName = "Boss Defeated Message";
-                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Defeated", "Boss_" + bossCount + "_Defeated"));
+                    Twitch.WriteToChat(results["CHARACTER_NAME"] + " fought " + boss + " and won! Get ready for the next boss!");
+                    args.Add("EventID", "Boss_" + bossCount + "_Defeated");
                     bossCount++;
                 }
                 else
                 {
-                    args.Add("Message", "@" + results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
-                    eventID = "Boss_Battle_Ended_Message";
-                    eventName = "Boss Battle Ended Message";
-                    StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Null, EventGoal.Null, "Boss Battle Ended", "Boss_Battle_Ended"));
+                    Twitch.WriteToChat(results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
+                    args.Add("EventID", "Boss_Battle_Ended");
                 }
-                StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, eventName, eventID, args: args));
+                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
             }
         }
 
@@ -344,11 +328,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
             string message = "@" + results["CHARACTER_NAME"] + " Just reached " + results["PRESTIGE"] + " prestige! LEVEL: " + results["CHARACTER_LEVEL"] + ", XP: " +
                 results["CHARACTER_XP"] + ", NEXT_LEVEL: " + nextLevel + ", HP: " + results["CHARACTER_HP"] + ", STR: " + results["CHARACTER_STR"] + "(+" + strMod + 
                 "), DEX: " + results["CHARACTER_DEX"] + "(+" + dexMod + "), CON: " + results["CHARACTER_CON"] + "(+" + conMod + ")";
-            Dictionary<string, string> args = new Dictionary<string, string>()
-            {
-                { "Message", message }
-            };
-            StreamAssistant.EventHandler.NewEvent(new EventItem(EventSource.Battle_Simulator, EventType.Battle_Simulator_Nonencounter, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Battle Simulator Character Prestige", "Battle_Simulator_Character_Prestige", args: args));
+            Twitch.WriteToChat(message);
         }
 
         #endregion
