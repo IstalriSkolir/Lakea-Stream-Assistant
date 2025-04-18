@@ -560,16 +560,18 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
-        // Get the total bits cheered by a user in a channel
-        public static async Task<GetBitsLeaderboardResponse> GetUserTotalCheers(string accountID)
+        public static async Task<GetBitsLeaderboardResponse> GetBitsLeaderBoard(int count, string accountID = "")
         {
             try
             {
-                return await api.Helix.Bits.GetBitsLeaderboardAsync(count: 1, userid: accountID, accessToken: channelAuthKey);
+                if (accountID != "")
+                    return await api.Helix.Bits.GetBitsLeaderboardAsync(count: count, userid: accountID, accessToken: channelAuthKey);
+                else
+                    return await api.Helix.Bits.GetBitsLeaderboardAsync(count: count, accessToken: channelAuthKey);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                Terminal.Output("Twitch: Failed to Get Total User Cheers -> " + ex.Message);
+                Terminal.Output("Twitch: Failed to Get Bits Leaderboard -> " + ex.Message);
                 Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
             }
             return null;

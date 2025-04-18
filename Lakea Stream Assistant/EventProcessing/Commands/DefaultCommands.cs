@@ -42,7 +42,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "so", shoutOutCommand },
                 { "status", statusCommand },
                 { "title", titleCommand },
-                { "totalbits", totalBitsCommand }
+                { "totalbits", totalBitsCommand },
+                { "totalcheers", totalBitsCommand },
+                { "topbits", topBitsCommand },
+                { "topcheers", topBitsCommand }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
@@ -54,11 +57,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "quoteadd", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "quotefest", new CommandConfiguration("QuoteFest", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
-                { "resetterminal", new CommandConfiguration("ResetTerminal", settings.Commands.ResetTerminal.Enabled, settings.Commands.ResetTerminal.ModOnly) },
+                { "resetterminal", new CommandConfiguration("Reset Terminal", settings.Commands.ResetTerminal.Enabled, settings.Commands.ResetTerminal.ModOnly) },
                 { "so", new CommandConfiguration("Shout Out", settings.Commands.ShoutOut.Enabled, settings.Commands.ShoutOut.ModOnly) },
                 { "status", new CommandConfiguration("Status", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) },
                 { "title", new CommandConfiguration("Title", settings.Commands.Title.Enabled, settings.Commands.Status.ModOnly) },
-                { "totalbits", new CommandConfiguration("TotalBits", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) }
+                { "totalbits", new CommandConfiguration("Total Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
+                { "totalcheers", new CommandConfiguration("Total Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
+                { "topbits", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
+                { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) }
             };
         }
 
@@ -280,8 +286,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Terminal.Output("Lakea: Total Bits Command -> " + displayName);
             Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + displayName);
             Dictionary<string, string> args = new Dictionary<string, string>();
-            GetBitsLeaderboardResponse response = Twitch.GetUserTotalCheers(eve.Args["AccountID"]).Result;
-            if (response.Listings.Length > 0)
+            GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(1, eve.Args["AccountID"]).Result;
+            if (response != null && response.Listings.Length > 0)
             {
                 int userBits = response.Listings[0].Score;
                 int userRank = response.Listings[0].Rank;
@@ -292,6 +298,29 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 args.Add("Message", displayName + " hasn't cheered any bits yet!");
             }
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Total Bits Command", "Lakea_Total_Bits_Command", args: args);
+        }
+
+        private EventItem topBitsCommand(IncomingEvent eve)
+        {
+            string displayname = eve.Args["DisplayName"];
+            Terminal.Output("Lakea: Top Bits Command -> " + displayname);
+            Logs.Instance.NewLog(LogLevel.Info, "Top Bits Command -> " + displayname);
+            Dictionary<string, string> args = new Dictionary<string, string>();
+            GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(10).Result;
+            if (response != null && response.Listings.Length > 0)
+            {
+                string message = "Top Cheerers! ";
+                for(int index = 0; index < response.Listings.Length; index++)
+                {
+                    message += (index + 1) + ". " + response.Listings[index].UserName + " -> " + response.Listings[index].Score + " bits, ";
+                }
+                args.Add("Message", message);
+            }
+            else
+            {
+                args.Add("Message", "Error getting top cheerers!");
+            }
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Top Bits Command", "Lakea_Top_Bits_Command", args: args);
         }
     }
 }
