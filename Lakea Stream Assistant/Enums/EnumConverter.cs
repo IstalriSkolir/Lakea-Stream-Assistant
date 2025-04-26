@@ -47,6 +47,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "twitchfollow": return EventType.Twitch_Follow;
                 case "twitchraid": return EventType.Twitch_Raid;
                 case "twitchredeem": return EventType.Twitch_Redeem;
+                case "twitchwatchstreak": return EventType.Twitch_Watch_Streak;
                 case "twitchsubscription": return EventType.Twitch_Subscription;
                 case "twitchresubscription": return EventType.Twitch_Resubscription;
                 case "twitchprimepaidsubscription": return EventType.Twitch_Prime_Paid_Subscription;

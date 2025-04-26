@@ -1,9 +1,9 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Misc;
 using Lakea_Stream_Assistant.Models.Configuration;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Models.Tokens;
-using Lakea_Stream_Assistant.Processes;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using TwitchLib.Api.Helix.Models.Bits;
@@ -45,7 +45,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "totalbits", totalBitsCommand },
                 { "totalcheers", totalBitsCommand },
                 { "topbits", topBitsCommand },
-                { "topcheers", topBitsCommand }
+                { "topcheers", topBitsCommand },
+                { "streak", watchStreakCommand },
+                { "watchstreak", watchStreakCommand }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
@@ -64,7 +66,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "totalbits", new CommandConfiguration("Total Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "totalcheers", new CommandConfiguration("Total Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "topbits", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
-                { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) }
+                { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
+                { "streak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.Status.ModOnly) },
+                { "watchstreak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.WatchStreak.ModOnly) }
             };
         }
 
@@ -302,9 +306,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
 
         private EventItem topBitsCommand(IncomingEvent eve)
         {
-            string displayname = eve.Args["DisplayName"];
-            Terminal.Output("Lakea: Top Bits Command -> " + displayname);
-            Logs.Instance.NewLog(LogLevel.Info, "Top Bits Command -> " + displayname);
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output("Lakea: Top Bits Command -> " + displayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Top Bits Command -> " + displayName);
             Dictionary<string, string> args = new Dictionary<string, string>();
             GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(10).Result;
             if (response != null && response.Listings.Length > 0)
@@ -321,6 +325,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 args.Add("Message", "Error getting top cheerers!");
             }
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Top Bits Command", "Lakea_Top_Bits_Command", args: args);
+        }
+
+        private EventItem watchStreakCommand(IncomingEvent eve)
+        {
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output("Lakea: Watch Streak Command -> " + displayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Watch Streak Command -> " + displayName);
+            WatchStreakDataStreak userStreaks = Twitch.GetUserWatchStreak(eve.Args["AccountID"]);
+            Dictionary<string, string> args = new Dictionary<string, string>()
+            {
+                { "Message", displayName + " has a watch streak of " + userStreaks.CurrentStreak + "! Thank you for regularly tuning in!" }
+            };
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Watch Streak Command", "Lakea_Watch_Streak_Command", args: args);
         }
     }
 }

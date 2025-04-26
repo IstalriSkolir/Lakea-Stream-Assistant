@@ -30,6 +30,7 @@
         Twitch_Follow,
         Twitch_Raid,
         Twitch_Redeem,
+        Twitch_Watch_Streak,
         Twitch_Subscription,
         Twitch_Resubscription,
         Twitch_Prime_Paid_Subscription,

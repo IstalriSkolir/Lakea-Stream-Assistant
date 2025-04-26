@@ -9,6 +9,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
     // Class for detecting scam messages from public chats
     public class ScamMessageDetector
     {
+        private bool enabled;
         private ScamActionMode actionMode = ScamActionMode.Nothing;
         private decimal actionThreshold;
         
@@ -32,6 +33,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 Terminal.Output("Scam Detector: Error Intialising -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
+            if(actionMode == ScamActionMode.Nothing)
+            {
+                enabled = false;
+                return;
+            }
+            enabled = true;
             actionThreshold = settings.ActionThreshold;
             firstTimeMessageMultiplier = settings.Multipliers.FirstTimeMessage;
             hasLinkMultiplier = settings.Multipliers.HasLink;
@@ -56,16 +63,25 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         }
 
         // Check if a incoming message is from a mod and evaluate for potential scam message, check action level if potential scam is found
-        public void CheckChatMessage(OnMessageReceivedArgs args)
+        public bool CheckChatMessage(OnMessageReceivedArgs args)
         {
-            if (!args.ChatMessage.IsModerator && !args.ChatMessage.IsBroadcaster)
+            if (enabled)
             {
-                Tuple<bool, string> eval = checkMessageRisk(args);
-                if (eval.Item1)
+                if (!args.ChatMessage.IsModerator && !args.ChatMessage.IsBroadcaster)
                 {
-                    checkActionLevel(args, eval.Item2);
+                    Tuple<bool, string> eval = checkMessageRisk(args);
+                    if (eval.Item1)
+                    {
+                        checkActionLevel(args, eval.Item2);
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
+            return true;
         }
 
         // Check for banned phrases and evaluate message for potential scam
