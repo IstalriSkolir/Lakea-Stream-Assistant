@@ -3,7 +3,7 @@ using Lakea_Stream_Assistant.Models.Resources.Lakea;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 
-namespace Lakea_Stream_Assistant.Processes
+namespace Lakea_Stream_Assistant.EventProcessing.Misc
 {
     //Controls the running of the external applications that Lakea runs
     public class ExternalProcesses
@@ -14,7 +14,7 @@ namespace Lakea_Stream_Assistant.Processes
         public ExternalProcesses(ConfigApplication[] applications)
         {
             processes = new Dictionary<string, ExternalProcess>();
-            if(applications != null)
+            if (applications != null)
             {
                 foreach (ConfigApplication app in applications)
                 {
@@ -40,7 +40,7 @@ namespace Lakea_Stream_Assistant.Processes
         public List<string> GetAllApplications()
         {
             List<string> applications = new List<string>();
-            foreach(ExternalProcess app in processes.Values)
+            foreach (ExternalProcess app in processes.Values)
             {
                 applications.Add(app.Name);
             }
@@ -51,7 +51,7 @@ namespace Lakea_Stream_Assistant.Processes
         public List<string> GetApplicationsByStatus(bool active)
         {
             List<string> activeApplications = new List<string>();
-            foreach(ExternalProcess app in processes.Values)
+            foreach (ExternalProcess app in processes.Values)
             {
                 if (app.Active == active)
                 {
@@ -64,7 +64,7 @@ namespace Lakea_Stream_Assistant.Processes
         //Starts all the external processes
         public void StartAllExternalProcesses()
         {
-            foreach(var app in processes)
+            foreach (var app in processes)
             {
                 try
                 {
@@ -72,7 +72,7 @@ namespace Lakea_Stream_Assistant.Processes
                     Logs.Instance.NewLog(LogLevel.Info, "Starting Process " + app.Value.Name);
                     app.Value.StartProcess();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Terminal.Output("Lakea: Error Starting Process -> " + app.Value.Name + ", " + ex.Message);
                     Logs.Instance.NewLog(LogLevel.Error, ex);
@@ -83,7 +83,7 @@ namespace Lakea_Stream_Assistant.Processes
         //Stops all the external processes
         public void StopAllExternalProcesses()
         {
-            foreach(var app in processes)
+            foreach (var app in processes)
             {
                 try
                 {
@@ -91,7 +91,7 @@ namespace Lakea_Stream_Assistant.Processes
                     Logs.Instance.NewLog(LogLevel.Info, "Ending Process " + app.Value.Name);
                     app.Value.EndProcess();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Terminal.Output("Lakea: Error Ending Process -> " + app.Value.Name + ", " + ex.Message);
                     Logs.Instance.NewLog(LogLevel.Error, ex);

@@ -113,6 +113,8 @@ public partial class ConfigSettings
 
     private string pythonExePathField;
 
+    private int watchStreakEventTriggerMultipleField;
+
     private SettingsCommands commandsField;
 
     private SettingsCapturedEventRetort capturedEventRetortsField;
@@ -170,6 +172,19 @@ public partial class ConfigSettings
         set
         {
             this.pythonExePathField = value;
+        }
+    }
+
+    /// <remarks/>
+    public int WatchStreakEventTriggerMultiple
+    {
+        get
+        {
+            return this.watchStreakEventTriggerMultipleField;
+        }
+        set
+        {
+            this.watchStreakEventTriggerMultipleField = value;
         }
     }
 
@@ -252,6 +267,8 @@ public partial class SettingsCommands
     private CommandsQuotes quotesField;
 
     private CommandsExit exitField;
+
+    private CommandsWatchStreak commandsWatchStreakField;
 
     public CommandsCategory Category
     {
@@ -366,6 +383,19 @@ public partial class SettingsCommands
         set
         {
             this.exitField = value;
+        }
+    }
+
+    /// <remarks/>
+    public CommandsWatchStreak WatchStreak
+    {
+        get
+        {
+            return this.commandsWatchStreakField;
+        }
+        set
+        {
+            this.commandsWatchStreakField = value;
         }
     }
 }
@@ -667,6 +697,44 @@ public partial class CommandsQuotes
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 public partial class CommandsExit
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsWatchStreak
 {
 
     private bool enabledField;

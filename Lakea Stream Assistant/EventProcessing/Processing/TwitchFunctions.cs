@@ -18,12 +18,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> redeems;
         private Dictionary<string, EventItem> commands;
         private Dictionary<string, EventItem> raids;
+        private Dictionary<string, EventItem> watchStreaks;
         private Dictionary<string, EventItem> subscriptions;
         private Dictionary<string, EventItem> resubscriptions;
         private Dictionary<string, EventItem> primePaidSubscriptions;
         private Dictionary<string, EventItem> giftedSubscriptions;
         private Dictionary<string, EventItem> continuedGiftedSubscriptions;
         private List<Tuple<int, string>> bitsOrder;
+        private List<Tuple<int, string>> watchStreakOrder;
 
         // Contructor stores list of events to check against when it receives a new event
         public TwitchFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands defaultCommands)
@@ -34,6 +36,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             redeems = new Dictionary<string, EventItem>();
             commands = new Dictionary<string, EventItem>();
             raids = new Dictionary<string, EventItem>();
+            watchStreaks = new Dictionary<string, EventItem>();
             subscriptions = new Dictionary<string, EventItem>();
             resubscriptions = new Dictionary<string, EventItem>();
             primePaidSubscriptions = new Dictionary<string, EventItem>();
@@ -46,6 +49,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { EventType.Twitch_Redeem, redeems },
                 { EventType.Twitch_Command, commands },
                 { EventType.Twitch_Raid, raids },
+                { EventType.Twitch_Watch_Streak, watchStreaks },
                 { EventType.Twitch_Subscription, subscriptions },
                 { EventType.Twitch_Resubscription, resubscriptions },
                 { EventType.Twitch_Prime_Paid_Subscription, primePaidSubscriptions },
@@ -78,6 +82,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                             case EventType.Twitch_Raid:
                                 raids.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
+                            case EventType.Twitch_Watch_Streak:
+                                watchStreaks.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
                             case EventType.Twitch_Subscription:
                                 subscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
@@ -107,6 +114,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
             }
             bitsOrder = sortBitsOrder();
+            watchStreakOrder = sortWatchStreakOrder();
         }
 
         // Update the Twitch events during runtime
@@ -154,6 +162,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
             bitsOrder.Sort();
             return bitsOrder;
+        }
+
+        // Sort out watch streaks order of amount so that we can call events based on watch streak amount
+        private List<Tuple<int, string>> sortWatchStreakOrder()
+        {
+            List<Tuple<int, string>> watchStreaksOrder = new List<Tuple<int, string>>();
+            foreach(var eve in watchStreaks)
+            {
+                int watchStreakAmount = int.Parse(eve.Value.GetArgs()["StreakGoal"]);
+                string id = eve.Value.ID;
+                Tuple<int, string> tuple = Tuple.Create(watchStreakAmount, id);
+                watchStreakOrder.Add(tuple);
+            }
+            watchStreaksOrder.Sort();
+            return watchStreaksOrder;
         }
 
         // When a follow event is triggered, checks the follow dictionary for event before triggering events effect
@@ -283,6 +306,48 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 Terminal.Output("Lakea: Twitch Command Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // When a user reaches a watch streak goal
+        public EventItem NewWatchStreak(IncomingEvent eve)
+        {
+            bool eventFound = false;
+            int watchStreakAmount = int.Parse(eve.Args["WatchStreak"]);
+            for (int i = 0; i < watchStreakOrder.Count; i++)
+            {
+                if (i + 1 != watchStreakOrder.Count)
+                {
+                    if (watchStreakAmount >= watchStreakOrder[i].Item1 && watchStreakAmount < watchStreakOrder[i + 1].Item1)
+                    {
+                        eventFound = true;
+                        string id = watchStreakOrder[i].Item2;
+                        EventItem item = passArgs.GetEventArgs(watchStreaks[id], eve);
+                        if (item != null)
+                        {
+                            return item;
+                        }
+                    }
+                }
+                else
+                {
+                    if (watchStreakAmount >= watchStreakOrder[bitsOrder.Count - 1].Item1)
+                    {
+                        eventFound = true;
+                        string id = watchStreakOrder[watchStreakOrder.Count - 1].Item2;
+                        EventItem item = passArgs.GetEventArgs(watchStreaks[id], eve);
+                        if (item != null)
+                        {
+                            return item;
+                        }
+                    }
+                }
+            }
+            if (!eventFound)
+            {
+                Terminal.Output("Lakea: Watch Streak Event Warning-> " + watchStreakAmount);
+                Logs.Instance.NewLog(LogLevel.Warning, "Watch Streak Event Warning -> " + watchStreakAmount);
             }
             return null;
         }

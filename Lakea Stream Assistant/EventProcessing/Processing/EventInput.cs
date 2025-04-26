@@ -113,6 +113,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     case EventType.Twitch_Raid:
                         item = twitch.NewRaid((IncomingEvent)eve);
                         break;
+                    case EventType.Twitch_Watch_Streak:
+                        item = twitch.NewWatchStreak((IncomingEvent)eve);
+                        break;
                     case EventType.Twitch_Subscription:
                         item = twitch.NewSubscription((IncomingEvent)eve);
                         break;

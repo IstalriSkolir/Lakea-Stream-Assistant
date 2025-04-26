@@ -1,5 +1,5 @@
-﻿using Lakea_Stream_Assistant.Models.Events;
-using Lakea_Stream_Assistant.Processes;
+﻿using Lakea_Stream_Assistant.EventProcessing.Misc;
+using Lakea_Stream_Assistant.Models.Events;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {

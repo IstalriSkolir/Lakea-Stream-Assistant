@@ -37,6 +37,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static StandardiseInput standardiseInput;
         private static HashChecker hashChecker;
         private static DefaultCommands lakeaCommands;
+        private static WatchStreakManager watchStreakManager;
         private static ScamMessageDetector scamMessageDetector;
         private static TwitchClient client;
         private static TwitchAPI api;
@@ -51,10 +52,19 @@ namespace Lakea_Stream_Assistant.Singletons
         private static char commandIdentifier;
         private static bool eventSubConnected = false;
 
+        #region Get Data
+
         public static bool IsEventSubConnected { get { return eventSubConnected; } set { eventSubConnected = value; } }
         public static string ChannelID { get { return channelID; } }
         public static string ClientID { get { return clientID; } }
         public static string ChannelAuthKey { get { return channelAuthKey; } }
+
+        public static WatchStreakDataStreak GetUserWatchStreak(string accountID)
+        {
+            return watchStreakManager.GetWatchStreak(accountID);
+        }
+
+        #endregion
 
         #region Initiliase
 
@@ -65,6 +75,7 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 standardiseInput = new StandardiseInput();
                 hashChecker = new HashChecker();
+                watchStreakManager = new WatchStreakManager(config.Settings.ResourcePath, config.Settings.WatchStreakEventTriggerMultiple);
                 scamMessageDetector = new ScamMessageDetector(config.Settings.ScamMessageDetection);
                 lakeaCommands = commands;
                 channelUsername = config.Twitch.StreamingChannel.UserName;
@@ -202,7 +213,11 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Terminal.Output("Twitch: Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
             Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
-            scamMessageDetector.CheckChatMessage(e);
+            bool validMessage = scamMessageDetector.CheckChatMessage(e);
+            if (validMessage)
+            {
+                watchStreakManager.checkForWatchStreak(e.ChatMessage.UserId, e.ChatMessage.DisplayName);
+            }
         }
 
         // Called on a command event, checks if command is custom or not before passing the event info to the eventHandler
