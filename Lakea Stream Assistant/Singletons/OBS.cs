@@ -354,5 +354,38 @@ namespace Lakea_Stream_Assistant.Singletons
         }
 
         #endregion
+
+        #region Misc
+
+        public static string TakeScreenshot(string sourceName, string imageFormat = "png")
+        {
+            try
+            {
+                return client.GetSourceScreenshot(sourceName, imageFormat);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("OBS: Failed to Get Screen Shot -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return string.Empty;
+        }
+
+        public static bool SaveScreenshot(string sourceName, string filePath, string imageFormat = "png")
+        {
+            try
+            {
+                client.SaveSourceScreenshot(sourceName, imageFormat, filePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("OBS: Failed to Save Screen Shot -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

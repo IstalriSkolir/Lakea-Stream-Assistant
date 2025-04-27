@@ -1,6 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
-using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
@@ -10,14 +9,21 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
     //Get arguments from the triggering events and replace any templates with their corresponding values
     public class EventPassArguments
     {
+        private Dictionary<string, Func<Dictionary<string, string>, string>> functionCalls;
+        
+        public EventPassArguments()
+        {
+            functionCalls = new Dictionary<string, Func<Dictionary<string, string>, string>>()
+            {
+                { "[takeobsscreenshot]", getOBSScreenshot },
+                { "[saveobsscreenshot]", saveOBSScreenshot }
+            };
+        }
+  
         public EventItem GetEventArgs(EventItem storedItem, IncomingEvent eve)
         {
             try
             {
-                //if(eve.GetArgs() == null)
-                //{
-                //    return storedItem;
-                //}
                 if (!checkEventForArgs(storedItem))
                 {
                     Dictionary<string, string> currentEveArgs = storedItem.GetArgs();
@@ -46,6 +52,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     if (value.Contains('{') && value.Contains('}'))
                     {
                         value = replaceTemplate(triggerArgs, value);
+                    }
+                    else if (value.Contains('[') && value.Contains(']'))
+                    {
+                        value = makeFunctionCall(value, currentArgs);
                     }
                     adjustedArgs.Add(arg.Key, value);
                 }
@@ -77,7 +87,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             foreach (var arg in Item.GetArgs())
             {
-                if (arg.Value.Contains('{') && arg.Value.Contains('}'))
+                if ((arg.Value.Contains('{') && arg.Value.Contains('}')) || (arg.Value.Contains('[') && arg.Value.Contains(']')))
                 {
                     return true;
                 }
@@ -85,7 +95,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return false;
         }
 
-        //Replaces temples with their corresponding values from the dictionary
+        //Replaces templates with their corresponding values from the dictionary
         private string replaceTemplate(Dictionary<string, string> triggerArgs, string value)
         {
             int startIndex = value.IndexOf('{');
@@ -100,6 +110,34 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 value = replaceTemplate(triggerArgs, value);
             }
             return value;
+        }
+
+        // Replace value with return date of function call
+        private string makeFunctionCall(string value, Dictionary<string, string> currentArgs)
+        {
+            string key = value.ToLower();
+            if (functionCalls.ContainsKey(key))
+                return functionCalls[key].Invoke(currentArgs);
+            return string.Empty;
+        }
+
+        // Get OBS screenshot from the source named in the stored events
+        private string getOBSScreenshot(Dictionary<string, string> currentArgs)
+        {
+            if (currentArgs.ContainsKey("SourceName"))
+                return OBS.TakeScreenshot(currentArgs["SourceName"]);
+            return string.Empty;
+        }
+
+        // Save OBS screenshot from the source named in the stored events
+        private string saveOBSScreenshot(Dictionary<string, string> currentArgs)
+        {
+            if (currentArgs.ContainsKey("SourceName"))
+            {
+                if (OBS.SaveScreenshot(currentArgs["SourceName"], currentArgs["ImageFilePath"])) return currentArgs["ImageFilePath"];
+                else return string.Empty;
+            }
+            return string.Empty;
         }
     }
 }
