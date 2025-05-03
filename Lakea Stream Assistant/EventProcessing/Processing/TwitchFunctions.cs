@@ -173,7 +173,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 int watchStreakAmount = int.Parse(eve.Value.GetArgs()["StreakGoal"]);
                 string id = eve.Value.ID;
                 Tuple<int, string> tuple = Tuple.Create(watchStreakAmount, id);
-                watchStreakOrder.Add(tuple);
+                watchStreaksOrder.Add(tuple);
             }
             watchStreaksOrder.Sort();
             return watchStreaksOrder;

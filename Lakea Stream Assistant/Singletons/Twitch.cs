@@ -395,7 +395,6 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(channelID, redeemID, requestData, channelAuthKey);
-                //UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(clientID, redeemID, requestData, channelAuthKey);
                 return response;
             }
             catch (Exception ex)
