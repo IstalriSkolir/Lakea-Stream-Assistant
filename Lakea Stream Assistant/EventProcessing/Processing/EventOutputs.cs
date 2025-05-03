@@ -371,14 +371,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 args.Add("CallbackID", callback.ID);
             if (callback.Delay > 0)
             {
-                Task.Delay(callback.Delay * 1000).ContinueWith(t =>
+                Task.Run(() =>
                 {
-                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                    Task.Delay(callback.Delay * 1000).ContinueWith(t =>
+                    {
+                        StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                    });
                 });
             }
             else
             {
-                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                Task.Delay(callback.Delay * 1000).ContinueWith(t =>
+                {
+                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Callback, args));
+                });
             }
         }
     }

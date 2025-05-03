@@ -174,7 +174,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     {
                         { "EventID", "Boss_" + bossCount + "_First_Battle" }
                     };
-                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
+                    Task.Run(() =>
+                    {
+                        StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
+                    });
                     Thread.Sleep(5000);
                 }
                 battleSimInfo.Arguments = parameters;
@@ -309,7 +312,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Battle_Simulator
                     Twitch.WriteToChat(results["CHARACTER_NAME"] + " fought " + boss + " and lost, better luck next time ranger!");
                     args.Add("EventID", "Boss_Battle_Ended");
                 }
-                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
+                Task.Run(() =>
+                {
+                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Battle_Simulator, EventType.Battle_Simulator_Encounter, args));
+                });
             }
         }
 

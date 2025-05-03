@@ -92,7 +92,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                     { "CaptorDisplayName", captorDisplayName },
                     { "CaptorAccountID", captorAccountID }
                 };
-                StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Struggle, args));
+                Task.Run(() =>
+                {
+                    StreamAssistant.EventHandler.NewEvent(new IncomingEvent(EventSource.Lakea, EventType.Lakea_Struggle, args));
+                });
             }
             else
             {
@@ -111,7 +114,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 { "EventID", "Lakea_Released" }
             };
             IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Released, data);
-            StreamAssistant.EventHandler.NewEvent(eve);
+            Task.Run(() => {
+                StreamAssistant.EventHandler.NewEvent(eve);
+            });
         }
     }
 }

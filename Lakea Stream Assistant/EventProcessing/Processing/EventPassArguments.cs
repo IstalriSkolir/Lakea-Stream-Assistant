@@ -134,7 +134,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         {
             if (currentArgs.ContainsKey("SourceName"))
             {
-                if (OBS.SaveScreenshot(currentArgs["SourceName"], currentArgs["ImageFilePath"])) return currentArgs["ImageFilePath"];
+                string imageFormat = currentArgs.ContainsKey("ImageFormat") ? currentArgs["ImageFormat"] : "png";
+                if (OBS.SaveScreenshot(currentArgs["SourceName"], currentArgs["ImageFilePath"], imageFormat)) return currentArgs["ImageFilePath"];
                 else return string.Empty;
             }
             return string.Empty;
