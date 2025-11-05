@@ -19,7 +19,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { "[takeobsscreenshot]", getOBSScreenshot },
                 { "[saveobsscreenshot]", saveOBSScreenshot },
                 { "[twitchbitsscore]", getTwitchBitsData },
-                { "[twitchbitsrank]", getTwitchBitsData }
+                { "[twitchbitsrank]", getTwitchBitsData },
+                { "[twitchtopbits]", getTwitchTopBitsData }
             };
         }
   
@@ -162,6 +163,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 else if (template == "[twitchbitsscore]") return response.Listings[0].Score.ToString();
             }
             return "0";
+        }
+
+        // Get Twitch bits leaderboard, defaults to 10 if count isn't specified
+        private string getTwitchTopBitsData(Dictionary<string, string> currentArgs, string template)
+        {
+            int count = currentArgs.ContainsKey("Count") ? Convert.ToInt32(currentArgs["Count"]) : 10;
+            GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(count).Result;
+            string data = string.Empty;
+            foreach (Listing user in response.Listings)
+                data += $"username:{user.UserName},userid:{user.UserId},bits:{user.Score},rank:{user.Rank}|";
+            data = data.Remove(data.Length - 1);
+            return data;
         }
     }
 }
