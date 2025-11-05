@@ -3,20 +3,23 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using TwitchLib.Api.Helix.Models.Bits;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
     //Get arguments from the triggering events and replace any templates with their corresponding values
     public class EventPassArguments
     {
-        private Dictionary<string, Func<Dictionary<string, string>, string>> functionCalls;
+        private Dictionary<string, Func<Dictionary<string, string>, string, string>> functionCalls;
         
         public EventPassArguments()
         {
-            functionCalls = new Dictionary<string, Func<Dictionary<string, string>, string>>()
+            functionCalls = new Dictionary<string, Func<Dictionary<string, string>, string, string>>()
             {
                 { "[takeobsscreenshot]", getOBSScreenshot },
-                { "[saveobsscreenshot]", saveOBSScreenshot }
+                { "[saveobsscreenshot]", saveOBSScreenshot },
+                { "[twitchbitsscore]", getTwitchBitsData },
+                { "[twitchbitsrank]", getTwitchBitsData }
             };
         }
   
@@ -46,19 +49,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 Dictionary<string, string> triggerArgs = eve.Args;
                 Dictionary<string, string> currentArgs = storedItem.GetArgs();
                 Dictionary<string, string> adjustedArgs = new Dictionary<string, string>();
-                foreach (var arg in currentArgs)
-                {
-                    string value = arg.Value;
-                    if (value.Contains('{') && value.Contains('}'))
-                    {
-                        value = replaceTemplate(triggerArgs, value);
-                    }
-                    else if (value.Contains('[') && value.Contains(']'))
-                    {
-                        value = makeFunctionCall(value, currentArgs);
-                    }
-                    adjustedArgs.Add(arg.Key, value);
-                }
                 foreach (var arg in triggerArgs)
                 {
                     if (!adjustedArgs.ContainsKey(arg.Key))
@@ -70,6 +60,19 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         adjustedArgs.Remove(arg.Key);
                         adjustedArgs.Add(arg.Key, arg.Value);
                     }
+                }
+                foreach (var arg in currentArgs)
+                {
+                    string value = arg.Value;
+                    if (value.Contains('{') && value.Contains('}'))
+                    {
+                        value = replaceTemplate(triggerArgs, value);
+                    }
+                    else if (value.Contains('[') && value.Contains(']'))
+                    {
+                        value = makeFunctionCall(value, adjustedArgs);
+                    }
+                    adjustedArgs.Add(arg.Key, value);
                 }
                 EventItem item = new EventItem(storedItem, adjustedArgs);
                 return item;
@@ -112,17 +115,25 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             return value;
         }
 
-        // Replace value with return date of function call
+        // Replace value with return date of function call, run recursively for multiple templates
         private string makeFunctionCall(string value, Dictionary<string, string> currentArgs)
         {
-            string key = value.ToLower();
-            if (functionCalls.ContainsKey(key))
-                return functionCalls[key].Invoke(currentArgs);
-            return string.Empty;
+            int startIndex = value.IndexOf('[');
+            int endIndex = value.IndexOf(']');
+            int length = endIndex - startIndex;
+            string template = value.Substring(startIndex, length + 1);
+            if (functionCalls.ContainsKey(template))
+            {
+                string replacement = functionCalls[template].Invoke(currentArgs, template);
+                value = value.Replace(template, replacement);
+            }
+            if(value.Contains("[") && value.Contains("]"))
+                value = makeFunctionCall(value, currentArgs);
+            return value;
         }
 
         // Get OBS screenshot from the source named in the stored events
-        private string getOBSScreenshot(Dictionary<string, string> currentArgs)
+        private string getOBSScreenshot(Dictionary<string, string> currentArgs, string template)
         {
             if (currentArgs.ContainsKey("SourceName"))
                 return OBS.TakeScreenshot(currentArgs["SourceName"]);
@@ -130,7 +141,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         }
 
         // Save OBS screenshot from the source named in the stored events
-        private string saveOBSScreenshot(Dictionary<string, string> currentArgs)
+        private string saveOBSScreenshot(Dictionary<string, string> currentArgs, string template)
         {
             if (currentArgs.ContainsKey("SourceName"))
             {
@@ -139,6 +150,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 else return string.Empty;
             }
             return string.Empty;
+        }
+
+        // Get Twitch users total bits, only works on Twitch input events
+        private string getTwitchBitsData(Dictionary<string, string> currentArgs, string template)
+        {
+            if (currentArgs.ContainsKey("AccountID"))
+            {
+                GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(1, currentArgs["AccountID"]).Result;
+                if (template == "[twitchbitsrank]") return response.Listings[0].Rank.ToString();
+                else if (template == "[twitchbitsscore]") return response.Listings[0].Score.ToString();
+            }
+            return "0";
         }
     }
 }
