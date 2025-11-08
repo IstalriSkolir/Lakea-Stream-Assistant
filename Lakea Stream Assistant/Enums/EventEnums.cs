@@ -35,7 +35,8 @@
         Twitch_Resubscription,
         Twitch_Prime_Paid_Subscription,
         Twitch_Gifted_Subscription,
-        Twitch_Continued_Gifted_Subscription
+        Twitch_Continued_Gifted_Subscription,
+        Twitch_First_Time_Chatter
     }
 
     public enum EventTarget : byte

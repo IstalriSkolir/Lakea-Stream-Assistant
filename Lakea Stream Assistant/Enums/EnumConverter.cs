@@ -53,6 +53,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "twitchprimepaidsubscription": return EventType.Twitch_Prime_Paid_Subscription;
                 case "twitchgiftedsubscription": return EventType.Twitch_Gifted_Subscription;
                 case "twitchcontinuedgiftedsubscription": return EventType.Twitch_Continued_Gifted_Subscription;
+                case "twitchfirsttimechatter": return EventType.Twitch_First_Time_Chatter;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventType'");
             }
         }
