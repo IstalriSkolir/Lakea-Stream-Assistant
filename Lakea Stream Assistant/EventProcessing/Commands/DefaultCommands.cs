@@ -47,7 +47,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topbits", topBitsCommand },
                 { "topcheers", topBitsCommand },
                 { "streak", watchStreakCommand },
-                { "watchstreak", watchStreakCommand }
+                { "watchstreak", watchStreakCommand },
+                { "followage", followage }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
@@ -68,7 +69,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topbits", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "streak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.Status.ModOnly) },
-                { "watchstreak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.WatchStreak.ModOnly) }
+                { "watchstreak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.WatchStreak.ModOnly) },
+                { "followage", new CommandConfiguration("Followage", settings.Commands.Followage.Enabled, settings.Commands.Followage.ModOnly) }
             };
         }
 
@@ -140,11 +142,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             //if (eve.Args.Command.ArgumentsAsList.Count > 0)
             {
                 GetGamesResponse response = Twitch.GetCategoryInformation(new List<string>() { argumentsAsString }).Result;
-                if(response.Games.Count() > 0)
+                if(response.Data.Count() > 0)
                 {
                     args.Add("Message", "On it, give me a moment!");
                     ModifyChannelInformationRequest request = new ModifyChannelInformationRequest();
-                    request.GameId = response.Games[0].Id;
+                    request.GameId = response.Data[0].Id;
                     Twitch.UpdateChannelInformation(request);
                     return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Category Command", "Lakea_Update_Stream_Category", args: args);
                 }
@@ -338,6 +340,36 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "Message", displayName + " has a watch streak of " + userStreaks.CurrentStreak + "! Thank you for regularly tuning in!" }
             };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Watch Streak Command", "Lakea_Watch_Streak_Command", args: args);
+        }
+
+        private EventItem followage(IncomingEvent eve)
+        {
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output("Lakea: Followage Command -> " + displayName);
+            Logs.Instance.NewLog(LogLevel.Info, "Followage Command -> " + displayName);
+            DateTime followDate = DateTime.Parse(Twitch.GetChannelFollowers(eve.Args["AccountID"], 1).Result.Data[0].FollowedAt);
+            var totalDays = (DateTime.UtcNow - followDate).TotalDays;
+            Dictionary<string, Double> time = new Dictionary<string, double>()
+            {
+                { "years", Math.Truncate(totalDays / 365) },
+                { "months", Math.Truncate((totalDays % 365) / 30) },
+                { "days", Math.Truncate((totalDays % 365) % 30) }
+            };
+            if (time["years"] == 0) time.Remove("years");
+            if (time["months"] == 0) time.Remove("months");
+            if (time["days"] == 0) time.Remove("days");
+            string followed = string.Empty;
+            if (time.Count == 3)
+                followed = time["years"] + " years, " + time["months"] + " months and " + time["days"] + " days";
+            else if (time.Count == 2)
+                followed = $"{time.First().Value} {time.First().Key}, {time.Last().Value} {time.Last().Key}";
+            else
+                followed = $"{time.First().Value} {time.First().Key}";
+            Dictionary<string, string> args = new Dictionary<string, string>()
+            {
+                { "Message", $"{displayName} has been following for {followed}!" }
+            };
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Followage Command", "Lakea_Followage_Command", args: args);
         }
     }
 }

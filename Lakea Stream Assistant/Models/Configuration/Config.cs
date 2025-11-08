@@ -268,7 +268,9 @@ public partial class SettingsCommands
 
     private CommandsExit exitField;
 
-    private CommandsWatchStreak commandsWatchStreakField;
+    private CommandsWatchStreak watchStreakField;
+
+    private CommandsFollowage followage;
 
     public CommandsCategory Category
     {
@@ -391,11 +393,24 @@ public partial class SettingsCommands
     {
         get
         {
-            return this.commandsWatchStreakField;
+            return this.watchStreakField;
         }
         set
         {
-            this.commandsWatchStreakField = value;
+            this.watchStreakField = value;
+        }
+    }
+
+    /// <remarks/>
+    public CommandsFollowage Followage
+    {
+        get
+        {
+            return this.followage;
+        }
+        set
+        {
+            this.followage = value;
         }
     }
 }
@@ -735,6 +750,44 @@ public partial class CommandsExit
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 public partial class CommandsWatchStreak
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsFollowage
 {
 
     private bool enabledField;

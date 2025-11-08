@@ -28,6 +28,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using TwitchLib.Api.Helix.Models.Bits;
 using TwitchLib.Api.Helix.Models.Chat.GetChatters;
+using TwitchLib.Api.Helix.Models.Channels.GetChannelFollowers;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -379,8 +380,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewardsAsync(channelID, requestData, channelAuthKey);
-                return response;
+                return await api.Helix.ChannelPoints.CreateCustomRewardsAsync(channelID, requestData, channelAuthKey);
             }
             catch (Exception ex)
             {
@@ -395,8 +395,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                UpdateCustomRewardResponse response = await api.Helix.ChannelPoints.UpdateCustomRewardAsync(channelID, redeemID, requestData, channelAuthKey);
-                return response;
+                return await api.Helix.ChannelPoints.UpdateCustomRewardAsync(channelID, redeemID, requestData, channelAuthKey);
             }
             catch (Exception ex)
             {
@@ -595,6 +594,11 @@ namespace Lakea_Stream_Assistant.Singletons
         public static async Task<GetChattersResponse> GetChattersList(int count = 100)
         {
             return await api.Helix.Chat.GetChattersAsync(channelID, channelID, count, accessToken: channelAuthKey);
+        }
+
+        public static async Task<GetChannelFollowersResponse> GetChannelFollowers(string userID = "", int count = 20)
+        {
+            return await api.Helix.Channels.GetChannelFollowersAsync(channelID, userID, count, accessToken: channelAuthKey);
         }
 
         #endregion
