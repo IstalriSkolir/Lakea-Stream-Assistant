@@ -4,7 +4,6 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
-using TwitchLib.Client.Models;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -24,12 +23,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private Dictionary<string, EventItem> primePaidSubscriptions;
         private Dictionary<string, EventItem> giftedSubscriptions;
         private Dictionary<string, EventItem> continuedGiftedSubscriptions;
+        private Dictionary<string, EventItem> firstTimeChatters;
         private List<Tuple<int, string>> bitsOrder;
         private List<Tuple<int, string>> watchStreakOrder;
+        Random random;
 
         // Contructor stores list of events to check against when it receives a new event
         public TwitchFunctions(ConfigEvent[] newEvents, EventPassArguments passArgs, DefaultCommands defaultCommands)
         {
+            random = new Random();
             this.passArgs = passArgs;
             follows = new Dictionary<string, EventItem>();
             bits = new Dictionary<string, EventItem>();
@@ -42,6 +44,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             primePaidSubscriptions = new Dictionary<string, EventItem>();
             giftedSubscriptions = new Dictionary<string, EventItem>();
             continuedGiftedSubscriptions = new Dictionary<string, EventItem>();
+            firstTimeChatters = new Dictionary<string, EventItem>();
             events = new Dictionary<EventType, Dictionary<string, EventItem>>
             {
                 { EventType.Twitch_Follow, follows },
@@ -54,7 +57,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { EventType.Twitch_Resubscription, resubscriptions },
                 { EventType.Twitch_Prime_Paid_Subscription, primePaidSubscriptions },
                 { EventType.Twitch_Gifted_Subscription, giftedSubscriptions },
-                { EventType.Twitch_Continued_Gifted_Subscription, continuedGiftedSubscriptions }
+                { EventType.Twitch_Continued_Gifted_Subscription, continuedGiftedSubscriptions },
+                { EventType.Twitch_First_Time_Chatter, firstTimeChatters }
             };
             EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in newEvents)
@@ -99,6 +103,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                                 break;
                             case EventType.Twitch_Continued_Gifted_Subscription:
                                 continuedGiftedSubscriptions.Add(eve.EventDetails.ID, new EventItem(eve));
+                                break;
+                            case EventType.Twitch_First_Time_Chatter:
+                                firstTimeChatters.Add(eve.EventDetails.ID, new EventItem(eve));
                                 break;
                             default:
                                 Terminal.Output("Lakea: Invalid 'EventType' in 'TwitchFunctions' Constructor -> " + type);
@@ -576,6 +583,34 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             catch (Exception ex)
             {
                 Terminal.Output("Lakea: Twitch Gifted Subscription Continued Error -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+            }
+            return null;
+        }
+
+        // When a first time chatter sends a message in chat, get a random EventItem from the dictionary
+        public EventItem NewFirstTimeChatter(IncomingEvent eve)
+        {
+            try
+            {
+                if(firstTimeChatters.Count > 0)
+                {
+                    EventItem item = firstTimeChatters.ElementAt(random.Next(0, firstTimeChatters.Count)).Value;
+                    item = passArgs.GetEventArgs(item, eve);
+                    if(item != null)
+                    {
+                        return item;
+                    }
+                }
+                else
+                {
+                    Terminal.Output($"Lakea: No First Time Chatter Events -> " + eve.Args["DisplayName"]);
+                    Logs.Instance.NewLog(LogLevel.Warning, "No First Time Chatter Events -> " + eve.Args["DisplayName"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: First Time Chatter Error -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;

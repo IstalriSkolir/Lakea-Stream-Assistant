@@ -1,7 +1,6 @@
 ﻿using OBSWebsocketDotNet.Types.Events;
 using TwitchLib.Client.Events;
 using TwitchLib.EventSub.Websockets.Core.EventArgs.Channel;
-using TwitchLib.PubSub.Events;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -199,6 +198,24 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { "SubscriptionMessage", args.Subscriber.ResubMessage }
             };
             return redeemArgs;
+        }
+
+        // Convert first time chatter to Dictionary
+        public Dictionary<string, string> ConvertTwitchFirstTimeChatter(OnMessageReceivedArgs args)
+        {
+            Dictionary<string, string> firstTimeChatterArgs = new Dictionary<string, string>
+            {
+                { "ChatMessage", args.ChatMessage.Message },
+                { "DisplayName", args.ChatMessage.DisplayName },
+                { "AccountID", args.ChatMessage.UserId },
+                { "IsSubscriber", args.ChatMessage.IsSubscriber.ToString() },
+                { "IsStaff", args.ChatMessage.IsStaff.ToString() },
+                { "IsTurbo", args.ChatMessage.IsTurbo.ToString() },
+                { "IsPartner", args.ChatMessage.IsPartner.ToString() },
+                { "IsVIP", args.ChatMessage.IsVip.ToString() },
+                { "IsHighlighted", args.ChatMessage.IsHighlighted.ToString() }
+            };
+            return firstTimeChatterArgs;
         }
 
         #endregion

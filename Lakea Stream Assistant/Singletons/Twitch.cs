@@ -219,6 +219,12 @@ namespace Lakea_Stream_Assistant.Singletons
             if (validMessage)
             {
                 watchStreakManager.checkForWatchStreak(e.ChatMessage.UserId, e.ChatMessage.DisplayName);
+                if (e.ChatMessage.IsFirstMessage)
+                {
+                    Dictionary<string, string> data = standardiseInput.ConvertTwitchFirstTimeChatter(e);
+                    IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_First_Time_Chatter, data);
+                    StreamAssistant.EventHandler.NewEvent(eve);
+                }
             }
         }
 
