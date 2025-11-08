@@ -27,6 +27,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using TwitchLib.Api.Helix.Models.Bits;
+using TwitchLib.Api.Helix.Models.Chat.GetChatters;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -589,6 +590,11 @@ namespace Lakea_Stream_Assistant.Singletons
                 Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
             }
             return null;
+        }
+
+        public static async Task<GetChattersResponse> GetChattersList(int count = 100)
+        {
+            return await api.Helix.Chat.GetChattersAsync(channelID, channelID, count, accessToken: channelAuthKey);
         }
 
         #endregion

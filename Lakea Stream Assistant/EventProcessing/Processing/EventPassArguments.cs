@@ -4,6 +4,7 @@ using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using TwitchLib.Api.Helix.Models.Bits;
+using TwitchLib.Api.Helix.Models.Chat.GetChatters;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -20,7 +21,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { "[saveobsscreenshot]", saveOBSScreenshot },
                 { "[twitchbitsscore]", getTwitchBitsData },
                 { "[twitchbitsrank]", getTwitchBitsData },
-                { "[twitchtopbits]", getTwitchTopBitsData }
+                { "[twitchtopbits]", getTwitchTopBitsData },
+                { "[twitchchatlist]", getTwitchChatters }
             };
         }
   
@@ -173,6 +175,17 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             string data = string.Empty;
             foreach (Listing user in response.Listings)
                 data += $"username:{user.UserName},userid:{user.UserId},bits:{user.Score},rank:{user.Rank}|";
+            data = data.Remove(data.Length - 1);
+            return data;
+        }
+
+        // Get a list of Twitch chatters
+        private string getTwitchChatters(Dictionary<string, string> currentArgs, string template)
+        {
+            string data = string.Empty;
+            GetChattersResponse response = Twitch.GetChattersList().Result;
+            foreach (Chatter chatter in response.Data)
+                data += $"{chatter.UserLogin},";
             data = data.Remove(data.Length - 1);
             return data;
         }
