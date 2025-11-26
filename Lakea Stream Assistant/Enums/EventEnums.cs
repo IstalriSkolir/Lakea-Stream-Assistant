@@ -65,6 +65,7 @@
         OBS_Disable_Random_Source,
         OBS_Loop_Sources,
         OBS_Change_Scene,
+        OBS_Change_Volume,
         Python_Run_Script,
         Twitch_Send_Chat_Message,
         Twitch_Send_Chat_Message_List,

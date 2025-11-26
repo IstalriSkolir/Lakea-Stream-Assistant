@@ -1,13 +1,13 @@
-﻿using OBSWebsocketDotNet;
-using OBSWebsocketDotNet.Types;
-using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Static;
-using OBSWebsocketDotNet.Communication;
-using Lakea_Stream_Assistant.Exceptions;
-using OBSWebsocketDotNet.Types.Events;
+﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
+using Lakea_Stream_Assistant.Exceptions;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Resources.OBS;
+using Lakea_Stream_Assistant.Static;
+using OBSWebsocketDotNet;
+using OBSWebsocketDotNet.Communication;
+using OBSWebsocketDotNet.Types;
+using OBSWebsocketDotNet.Types.Events;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -56,7 +56,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Terminal.Output("Fatal Error: Failed to Connect to OBS -> " + ex.Message);
+                Terminal.Output($"Fatal Error: Failed to Connect to OBS -> {ex.Message}");
                 Terminal.Output("Terminating Lakea...");
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Thread.Sleep(5000);
@@ -88,8 +88,8 @@ namespace Lakea_Stream_Assistant.Singletons
         // If OBS disconnects, then reconnect to OBS
         private static void onDisconnect(object sender, ObsDisconnectionInfo e)
         {
-            Terminal.Output("OBS: Disconnected -> " + e.DisconnectReason);
-            Logs.Instance.NewLog(LogLevel.Warning, "Disconnected from OBS, " + e.DisconnectReason);
+            Terminal.Output($"OBS: Disconnected -> {e.DisconnectReason}");
+            Logs.Instance.NewLog(LogLevel.Warning, $"Disconnected from OBS, {e.DisconnectReason}");
             Terminal.Output("OBS: Attempting to reconnected...");
             Initialise(eventHandler, ip, port, password);
         }
@@ -142,7 +142,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Terminal.Output("Fatal Error: Failed to Fetch OBS Resources -> " + ex.Message);
+                Terminal.Output($"Fatal Error: Failed to Fetch OBS Resources -> {ex.Message}");
                 Terminal.Output("Terminating Lakea...");
                 Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Thread.Sleep(5000);
@@ -151,6 +151,8 @@ namespace Lakea_Stream_Assistant.Singletons
         }
 
         #endregion
+
+        #region Get OBS Data
 
         // Returns the current active scene
         public static string GetCurrentScene()
@@ -161,19 +163,54 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Get Current Scene -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Get Current Scene -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return string.Empty;
         }
+
+        // Gets the status of an source of it it is enabled or not
+        public static bool GetSourceEnabled(string source)
+        {
+            try
+            {
+                string curScene = client.GetCurrentProgramScene();
+                if (curScene != string.Empty && curScene != "")
+                {
+                    Terminal.Output($"OBS: Getting Source State -> '{source}' in '{curScene}'");
+                    Logs.Instance.NewLog(LogLevel.Info, $"Getting OBS Source Stat -> '{source}' in '{curScene}'");
+                    string scene = searchForSource(curScene, source);
+                    int sourceID = resources.GetSourceId(source);
+                    return client.GetSceneItemEnabled(scene, sourceID);
+                }
+                else
+                {
+                    throw new OBSRequestException("Couldn't get the current active scene from OBS");
+                }
+            }
+            catch (OBSRequestException ex)
+            {
+                Terminal.Output($"OBS: OBSRequestException, Failed to Get Source Enabled -> {ex.Message}");
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output($"OBS: Failed to Get Source State -> {ex.Message}");
+                Logs.Instance.NewLog(LogLevel.Error, ex);
+                return false;
+            }
+        }
+
+        #endregion
 
         #region On OBS Change
 
         // Fired when OBS changes scene
         private static void onSceneChanged(object sender, ProgramSceneChangedEventArgs e)
         {
-            Terminal.Output("OBS: Scene Change -> " + e.SceneName);
-            Logs.Instance.NewLog(LogLevel.Info, "OBS Scene Change -> " + e.SceneName);
+            Terminal.Output($"OBS: Scene Change -> {e.SceneName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"OBS Scene Change -> {e.SceneName}");
             Dictionary<string, string> data = standardiseInput.ConvertOBSSceneChangeData(e);
             IncomingEvent eve = new IncomingEvent(EventSource.OBS, EventType.OBS_Scene_Changed, data);
             eventHandler.NewEvent(eve);
@@ -183,8 +220,8 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onSourceActivityChanged(object sender, SceneItemEnableStateChangedEventArgs e)
         {
             string sourceName = resources.GetSourceName(e.SceneItemId);
-            Terminal.Output("OBS: Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
-            Logs.Instance.NewLog(LogLevel.Info, "OBS Source Active -> " + sourceName + ", " + e.SceneItemEnabled);
+            Terminal.Output($"OBS: Source Active -> {sourceName}, {e.SceneItemEnabled}");
+            Logs.Instance.NewLog(LogLevel.Info, $"OBS Source Active -> {sourceName}, {e.SceneItemEnabled}");
             Dictionary<string, string> data = standardiseInput.ConvertOBSSourceActiveData(e, sourceName);
             IncomingEvent eve = new IncomingEvent(EventSource.OBS, EventType.OBS_Source_Active_Status, data);
             eventHandler.NewEvent(eve);
@@ -199,13 +236,18 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Terminal.Output("OBS: Changing Scene -> " + scene);
-                Logs.Instance.NewLog(LogLevel.Info, "Changing OBS Scene -> " + scene);
+                Terminal.Output($"OBS: Changing Scene -> {scene}");
+                Logs.Instance.NewLog(LogLevel.Info, $"Changing OBS Scene -> {scene}");
                 client.SetCurrentProgramScene(scene);
+            }
+            catch (OBSRequestException ex)
+            {
+                Terminal.Output($"OBS: OBSRequestException, Failed to Change Scenes -> {ex.Message}");
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Change Scenes -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Change Scenes -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -217,8 +259,8 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Terminal.Output("OBS: Changing Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
-                Logs.Instance.NewLog(LogLevel.Info, "Changing OBS Scene with Transition -> Scene - " + scene + ", Transition - " + transition);
+                Terminal.Output("OBS: Changing Scene with Transition -> Scene - {scene}, Transition - {transition}");
+                Logs.Instance.NewLog(LogLevel.Info, $"Changing OBS Scene with Transition -> Scene - {scene}, Transition - {transition}");
                 string curTransition = client.GetCurrentSceneTransition().Name;
                 if(curTransition != string.Empty && curTransition != "")
                 {
@@ -233,12 +275,12 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (OBSRequestException ex)
             {
-                Terminal.Output("OBS: OBSRequestException, Failed to Get Transition -> " + ex.Message);
+                Terminal.Output($"OBS: OBSRequestException, Failed to Get Transition -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Change Scenes with Transition -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Change Scenes with Transition -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -248,14 +290,14 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             try
             {
-                Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + scene + "'");
-                Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + scene + "'");
+                Terminal.Output($"OBS: Setting Source State '{active}' -> '{source}' in '{scene}'");
+                Logs.Instance.NewLog(LogLevel.Info, $"Setting OBS Source State '{active}' -> '{source}' in '{scene}'");
                 int sourceID = resources.GetSourceId(source);
                 client.SetSceneItemEnabled(scene, sourceID, active);
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Set Source Enabled -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Set Source Enabled -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
@@ -268,8 +310,8 @@ namespace Lakea_Stream_Assistant.Singletons
                 string curScene = client.GetCurrentProgramScene();
                 if (curScene != string.Empty && curScene != "")
                 {
-                    Terminal.Output("OBS: Setting Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
-                    Logs.Instance.NewLog(LogLevel.Info, "Setting OBS Source State '" + active + "' -> '" + source + "' in '" + curScene + "'");
+                    Terminal.Output($"OBS: Setting Source State '{active} ' -> '{source}' in '{curScene}'");
+                    Logs.Instance.NewLog(LogLevel.Info, $"Setting OBS Source State '{active}' -> '{source}' in '{curScene}'");
                     string scene = searchForSource(curScene, source);
                     int sourceID = resources.GetSourceId(source);
                     if (scene != string.Empty && scene != "")
@@ -278,7 +320,7 @@ namespace Lakea_Stream_Assistant.Singletons
                     }
                     else
                     {
-                        throw new OBSRequestException("Couldn't find source '" + source + "' in active or child scenes");
+                        throw new OBSRequestException($"Couldn't find source '{source}' in active or child scenes");
                     }
                 }
                 else
@@ -288,46 +330,34 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (OBSRequestException ex)
             {
-                Terminal.Output("OBS: OBSRequestException, Failed to Set Source Enabled -> " + ex.Message);
+                Terminal.Output($"OBS: OBSRequestException, Failed to Set Source Enabled -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Set Source Enabled -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Set Source Enabled -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
-        // Gets the status of an source of it it is enabled or not
-        public static bool GetSourceEnabled(string source)
+        // Changes the volume of the OBS source
+        public static void SetAudioVolume(string source, float volume)
         {
             try
             {
-                string curScene = client.GetCurrentProgramScene();
-                if (curScene != string.Empty && curScene != "")
-                {
-                    Terminal.Output("OBS: Getting Source State -> '" + source + "' in '" + curScene + "'");
-                    Logs.Instance.NewLog(LogLevel.Info, "Getting OBS Source Stat -> '" + source + "' in '" + curScene + "'");
-                    string scene = searchForSource(curScene, source);
-                    int sourceID = resources.GetSourceId(source);
-                    return client.GetSceneItemEnabled(scene, sourceID);
-                }
-                else
-                {
-                    throw new OBSRequestException("Couldn't get the current active scene from OBS");
-                }
+                Terminal.Output($"OBS: Changing Source Volume -> {source}, {volume}");
+                Logs.Instance.NewLog(LogLevel.Info, $"Changing OBS Scene -> {source}, {volume}");
+                client.SetInputVolume(source, volume);
             }
             catch (OBSRequestException ex)
             {
-                Terminal.Output("OBS: OBSRequestException, Failed to Get Source Enabled -> " + ex.Message);
+                Terminal.Output($"OBS: OBSRequestException, Failed to Change Source Volume -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
-                return false;
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Get Source State -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Change Source Volume -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
-                return false;
             }
         }
 
@@ -365,7 +395,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Get Screen Shot -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Get Screen Shot -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return string.Empty;
@@ -380,7 +410,7 @@ namespace Lakea_Stream_Assistant.Singletons
             }
             catch (Exception ex)
             {
-                Terminal.Output("OBS: Failed to Save Screen Shot -> " + ex.Message);
+                Terminal.Output($"OBS: Failed to Save Screen Shot ->  {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return false;

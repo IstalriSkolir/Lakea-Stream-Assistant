@@ -197,6 +197,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.OBS_Change_Scene:
                             outputs.ChangeOBSScene(item.Args, item.Callback);
                             break;
+                        case EventGoal.OBS_Change_Volume:
+                            outputs.ChangeOBSSourceVolume(item.Args, item.Callback);
+                            break;
                         case EventGoal.Python_Run_Script:
                             outputs.RunPythonScript(item.Args, item.Callback);
                             break;
