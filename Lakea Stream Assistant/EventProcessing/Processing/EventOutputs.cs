@@ -8,7 +8,7 @@ using Lakea_Stream_Assistant.Static;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
-    //This class handles the outputs that are triggered from events
+    // This class handles the outputs that are triggered from events
     public class EventOutputs
     {
         private BattleManager battleManager;
@@ -25,7 +25,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region OBS Outputs
 
-        //Set OBS source active status, resets after duration expires if there is a duration
+        // Set OBS source active status, resets after duration expires if there is a duration
         public void SetActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback, bool invoked = false)
         {
             OBS.SetSourceEnabled(args["Source"], active);
@@ -51,7 +51,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Set random OBS source active, resets after duration expires if there is a duration
+        // Set random OBS source active, resets after duration expires if there is a duration
         public void SetRandomActiveOBSSource(Dictionary<string, string> args, int duration, bool active, Callbacks callback)
         {
             int sourceCount = 0;
@@ -97,7 +97,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Loop through a set of OBS sources
+        // Loop through a set of OBS sources
         public void LoopOBSSources(Dictionary<string, string> args, Callbacks callback)
         {
             bool anyActive = false;
@@ -128,7 +128,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Changes OBS scene
+        // Changes OBS scene
         public void ChangeOBSScene(Dictionary<string, string> args, Callbacks callback)
         {
             if (args.ContainsKey("Transition"))
@@ -151,6 +151,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 }
                 createCallback(callbackArgs, callback);
             }
+        }
+
+        // Change OBS source volume
+        public void ChangeOBSSourceVolume(Dictionary<string, string> args, Callbacks callback)
+        {
+            float volume = float.Parse(args["Volume"]);
+            if (volume > 20) volume = 20;
+            else if (volume < -20) volume = -20;
+            OBS.SetAudioVolume(args["Source"], volume);
         }
 
         #endregion
