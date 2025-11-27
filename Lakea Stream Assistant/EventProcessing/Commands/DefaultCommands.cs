@@ -48,7 +48,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topcheers", topBitsCommand },
                 { "streak", watchStreakCommand },
                 { "watchstreak", watchStreakCommand },
-                { "followage", followage }
+                { "followage", followage },
+                { "announcement", annoucement }
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
@@ -70,7 +71,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "streak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.Status.ModOnly) },
                 { "watchstreak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.WatchStreak.ModOnly) },
-                { "followage", new CommandConfiguration("Followage", settings.Commands.Followage.Enabled, settings.Commands.Followage.ModOnly) }
+                { "followage", new CommandConfiguration("Followage", settings.Commands.Followage.Enabled, settings.Commands.Followage.ModOnly) },
+                { "announcement", new CommandConfiguration("Announcement", settings.Commands.Announcement.Enabled, settings.Commands.Announcement.ModOnly) }
             };
         }
 
@@ -345,8 +347,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem followage(IncomingEvent eve)
         {
             string displayName = eve.Args["DisplayName"];
-            Terminal.Output("Lakea: Followage Command -> " + displayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Followage Command -> " + displayName);
+            Terminal.Output($"Lakea: Followage Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Followage Command -> {displayName}");
             DateTime followDate = DateTime.Parse(Twitch.GetChannelFollowers(eve.Args["AccountID"], 1).Result.Data[0].FollowedAt);
             var totalDays = (DateTime.UtcNow - followDate).TotalDays;
             Dictionary<string, Double> time = new Dictionary<string, double>()
@@ -360,7 +362,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             if (time["days"] == 0) time.Remove("days");
             string followed = string.Empty;
             if (time.Count == 3)
-                followed = time["years"] + " years, " + time["months"] + " months and " + time["days"] + " days";
+                followed = $"{time["years"]} years, {time["months"]} months and {time["days"]} days";
             else if (time.Count == 2)
                 followed = $"{time.First().Value} {time.First().Key}, {time.Last().Value} {time.Last().Key}";
             else
@@ -370,6 +372,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "Message", $"{displayName} has been following for {followed}!" }
             };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Followage Command", "Lakea_Followage_Command", args: args);
+        }
+
+        private EventItem annoucement(IncomingEvent eve)
+        {
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output($"Lakea: Announcement Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Announcement Command -> {displayName}");
+            Twitch.SendChatAnnouncement(eve.Args["ArgumentsAsString"]).RunSynchronously();
+            return new EventItem(eve.Source, EventType.Twitch_Command, EventTarget.Null, EventGoal.Null, "Announcement Command", "Twitch_Announcement_Command", args:null);
         }
     }
 }

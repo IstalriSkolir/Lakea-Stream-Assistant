@@ -100,7 +100,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                     int index = random.Next(0, quotes.Count);
                     if (!quotesToSend.Contains(quotes[index]))
                     {
-                        quotesToSend.Add($"{quotes[index]} [{(index + 1)}]");
+                        quotesToSend.Add($"[{(index + 1)}] {quotes[index]}");
                     }
                 }
                 messages.Add("Message0", "Are we ready for a quotefest? Lets go!");
