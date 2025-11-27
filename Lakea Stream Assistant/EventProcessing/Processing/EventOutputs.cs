@@ -166,7 +166,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Twitch Outputs
 
-        //Send Twitch chat message
+        // Send Twitch chat message
         public void SendTwitchChatMessage(Dictionary<string, string> args, Callbacks callback)
         {
             Twitch.WriteToChat(args["Message"]);
@@ -181,7 +181,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Sends a list of Chat Messages
+        // Sends a list of Chat Messages
         public void SendTwitchChatMessageList(Dictionary<string, string> args, Callbacks callback)
         {
             int messageCount = -1;
@@ -214,7 +214,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Send Random Twitch Chat Message
+        // Send Random Twitch Chat Message
         public void SendTwitchRandomChatMessage(Dictionary<string, string> args, Callbacks callback)
         {
             int messageCount = 0;
@@ -248,7 +248,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Send Twitch Whisper
+        // Send Twitch Whisper
         public void SendTwitchWhisperMessage(Dictionary<string, string> args, Callbacks callback)
         {
             Twitch.WriteWhisperToUser(args["DisplayName"], args["Message"]);
@@ -262,11 +262,26 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
+        // Send Twitch Announcement
+        public void SendTwitchAnnouncement(Dictionary<string, string> args, Callbacks callback)
+        {
+            Twitch.SendChatAnnouncement(args["Announcement"]);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    callbackArgs.Add(arg.Key, arg.Value);
+                }
+                createCallback(callbackArgs, callback);
+            }
+        }
+
         #endregion
 
         #region Battle Simulator
 
-        //Function to call the Battle Manager to get a characters information
+        // Function to call the Battle Manager to get a characters information
         public void GetCharacterSheet(Dictionary<string, string> args, Callbacks callback)
         {
             Dictionary<string, string> messageArgs = battleManager.GetCharacterSheet(args["AccountID"], args["DisplayName"]);
@@ -276,7 +291,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Function to call the Battle Manager to get a characters statistics
+        // Function to call the Battle Manager to get a characters statistics
         public void GetCharacterStatistics(Dictionary<string, string> args, Callbacks callback)
         {
             Dictionary<string, string> messageArgs = battleManager.GetCharacterStatistics(args["AccountID"], args["DisplayName"]);
@@ -286,7 +301,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Function to call the Battle Manager to train a character
+        // Function to call the Battle Manager to train a character
         public void OtherBattleSimEvent(Dictionary<string, string> args, Callbacks callback)
         {
             battleManager.Other(args["Type"], args["AccountID"], args["DisplayName"]);
@@ -301,7 +316,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //Function to call the Battle Manager for a monster encounter
+        // Function to call the Battle Manager for a monster encounter
         public void Battle(Dictionary<string, string> args, Callbacks callback)
         {
             List<string> battleArgs = new List<string>();
@@ -328,7 +343,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Lakea Captures
 
-        //Lakea has been captured
+        // Lakea has been captured
         public void CaptureLakea(Dictionary<string, string> args, Callbacks callback)
         {
             captured.LakeaCaught(this, args);
@@ -347,7 +362,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Miscellaneous
 
-        //Call Python object to run a python script
+        // Call Python object to run a python script
         public void RunPythonScript(Dictionary<string, string> args, Callbacks callback)
         {
             pythonScripts.RunPythonScript(args);
@@ -362,7 +377,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        //For null events that don't require any actions
+        // For null events that don't require any actions
         public void NullEvent(string message)
         {
             Terminal.Output("Lakea: " + message);
@@ -371,7 +386,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #endregion
 
-        //Creates a callback object with the passed arguments and reruns the New Event function
+        // Creates a callback object with the passed arguments and reruns the New Event function
         private void createCallback(Dictionary<string, string> args, Callbacks callback)
         {
             if (args.ContainsKey("CallbackID"))

@@ -607,6 +607,21 @@ namespace Lakea_Stream_Assistant.Singletons
             return await api.Helix.Channels.GetChannelFollowersAsync(channelID, userID, count, accessToken: channelAuthKey);
         }
 
+        public static async Task SendChatAnnouncement(string message)
+        {
+            try
+            {
+                Terminal.Output("Twitch: Sending Chat Announcement...");
+                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Sending Chat Announcement...");
+                await api.Helix.Chat.SendChatAnnouncementAsync(channelID, channelID, message, accessToken: channelAuthKey);
+            }
+            catch(Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Send Chat Announcement -> " + ex.Message);
+                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+            }
+        }
+
         #endregion
     }
 

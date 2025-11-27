@@ -100,6 +100,7 @@ namespace Lakea_Stream_Assistant.Enums
                 case "twitchsendchatmessagelist": return EventGoal.Twitch_Send_Chat_Message_List;
                 case "twitchsendrandomchatmessage": return EventGoal.Twitch_Send_Random_Chat_Message;
                 case "twitchsendwhispermessage": return EventGoal.Twitch_Send_Whisper_Message;
+                case "twitchsendannouncement": return EventGoal.Twitch_Send_Announcement;
                 default: throw new EnumConversionException("Can not convert '" + source + "' to type 'EventGoal'");
             }
         }

@@ -215,6 +215,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                         case EventGoal.Twitch_Send_Whisper_Message:
                             outputs.SendTwitchWhisperMessage(item.Args, item.Callback);
                             break;
+                        case EventGoal.Twitch_Send_Announcement:
+                            outputs.SendTwitchAnnouncement(item.Args, item.Callback);
+                            break;
                     }
                 }
             }
