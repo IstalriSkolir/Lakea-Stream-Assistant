@@ -31,12 +31,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 switch (commandText)
                 {
                     case "quotecount":
-                        quote.Add("Message", "We have " + quotes.Count + " quotes stored! Some of these make me wonder why mistakes I made to end up here...");
+                        quote.Add($"Message", $"We have {quotes.Count} quotes stored! Some of these make me wonder why mistakes I made to end up here...");
                         break;
                     case "addquote":
                     case "quoteadd":
                         addquote(argumentsAsString);
-                        quote.Add("Message", "Quote added! We now have " + quotes.Count + " quotes!");
+                        quote.Add("Message", $"Quote added! We now have {quotes.Count} quotes!");
                         break;
                     case "quote":
                         string quoteString = getQuote(eve);
@@ -51,7 +51,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Quote Command Error -> " + ex.Message);
+                Terminal.Output($"Lakea: Quote Command Error -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -74,27 +74,16 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             {
                 try
                 {
-                    int index = int.Parse(eve.Args["CommandArg1"]);
-                    index--;
-                    if(index >= 0 && index < quotes.Count)
-                    {
-                        return "Mmm, so that quote is '" + quotes[index] + "'";
-                    }
-                    else if(index < 0)
-                    {
-                        return "How the heck am I meant to get you a negative quote? Learn to count, you twit!";
-                    }
-                    else
-                    {
-                        index++;
-                        return index + " isn't a quote I can get you, we only have " + quotes.Count + " quotes!";
-                    }
+                    int index = int.Parse(eve.Args["CommandArg1"]) - 1;
+                    if(index >= 0 && index < quotes.Count) return $"Mmm, so that quote is '{quotes[index]}'";
+                    else if(index < 0) return "How the heck am I meant to get you a negative quote? Learn to count, you twit!";
+                    else return $"{(index + 1)} isn't a quote I can get you, we only have {quotes.Count} quotes!";
                 }
                 catch (Exception ex)
                 {
-                    Logs.Instance.NewLog(LogLevel.Warning, "Failed to Parse '" + eve.Args["CommandArg1"] + "' for Quote Index");
+                    Logs.Instance.NewLog(LogLevel.Warning, $"Failed to Parse '{eve.Args["CommandArg1"]}' for Quote Index");
                     int index = random.Next(0, quotes.Count);
-                    return "Couldn't figure out which quote you wanted so heres a random one instead, '" + quotes[index] + "'";
+                    return $"Couldn't figure out which quote you wanted so heres a random one instead, '{quotes[index]}'";
                 }
             }
         }
@@ -111,7 +100,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                     int index = random.Next(0, quotes.Count);
                     if (!quotesToSend.Contains(quotes[index]))
                     {
-                        quotesToSend.Add(quotes[index]);
+                        quotesToSend.Add($"{quotes[index]} [{(index + 1)}]");
                     }
                 }
                 messages.Add("Message0", "Are we ready for a quotefest? Lets go!");
@@ -161,7 +150,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)             
             {
-                Terminal.Output("Lakea: Error Initialsing Quotes -> " + ex.Message);
+                Terminal.Output($"Lakea: Error Initialsing Quotes -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -180,7 +169,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Error Loading Quotes from File -> " + ex.Message);
+                Terminal.Output($"Lakea: Error Loading Quotes from File -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
@@ -197,7 +186,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Error Saving Quotes to File -> " + ex.Message);
+                Terminal.Output($"Lakea: Error Saving Quotes to File -> {ex.Message}");
                 Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
