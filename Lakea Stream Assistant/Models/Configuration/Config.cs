@@ -107,8 +107,6 @@ public partial class ConfigSettings
 
     private string logLevelField;
 
-    private int terminalRefreshRateField;
-
     private string resourcePathField;
 
     private string pythonExePathField;
@@ -133,19 +131,6 @@ public partial class ConfigSettings
         set
         {
             this.logLevelField = value;
-        }
-    }
-
-    /// <remarks/>
-    public int TerminalRefreshRate
-    {
-        get
-        {
-            return this.terminalRefreshRateField;
-        }
-        set
-        {
-            this.terminalRefreshRateField = value;
         }
     }
 
@@ -256,8 +241,6 @@ public partial class SettingsCommands
 
     private CommandsTotalBits totalBitsField;
 
-    private CommandsResetTerminal resetTerminalField;
-
     private CommandsProcess processField;
 
     private CommandsShoutOut shoutOutField;
@@ -311,19 +294,6 @@ public partial class SettingsCommands
         set
         {
             this.totalBitsField = value;
-        }
-    }
-
-    /// <remarks/>
-    public CommandsResetTerminal ResetTerminal
-    {
-        get
-        {
-            return this.resetTerminalField;
-        }
-        set
-        {
-            this.resetTerminalField = value;
         }
     }
 
