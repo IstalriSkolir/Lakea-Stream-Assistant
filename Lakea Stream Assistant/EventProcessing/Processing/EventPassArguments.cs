@@ -71,7 +71,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     {
                         value = replaceTemplate(triggerArgs, value);
                     }
-                    else if (value.Contains('[') && value.Contains(']'))
+                    if (value.Contains('[') && value.Contains(']'))
                     {
                         value = makeFunctionCall(value, adjustedArgs);
                     }

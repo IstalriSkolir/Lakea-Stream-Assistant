@@ -1,10 +1,15 @@
-﻿using Lakea_Stream_Assistant.EventProcessing.Misc;
+﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.EventProcessing.Misc;
 using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.Events.EventLists;
+using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Static;
+using System.Diagnostics;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
     //Class for processing commands for external processes
-    public class ProcessCommand
+    public class ProcessCommand : CommandBase
     {
         private ExternalProcesses externalProcesses;
 
@@ -14,8 +19,17 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             this.externalProcesses = externalProcesses;
         }
 
+        public override EventItem Run(IncomingEvent eve)
+        {
+            string argumentsAsString = eve.Args["ArgumentsAsString"];
+            Terminal.Output($"Lakea: Process Command -> {argumentsAsString}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Process Command -> {argumentsAsString}");
+            Dictionary<string, string> args = newProcessCommand(eve);
+            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
+        }
+
         //Called when a new process command is received, checks the first arguments for function and calls relevant function
-        public Dictionary<string, string> NewProcessCommand(IncomingEvent eve)
+        private Dictionary<string, string> newProcessCommand(IncomingEvent eve)
         {
             string commandArg1 = eve.Args["CommandArg1"].ToLower();
             string displayName = eve.Args["DisplayName"];
