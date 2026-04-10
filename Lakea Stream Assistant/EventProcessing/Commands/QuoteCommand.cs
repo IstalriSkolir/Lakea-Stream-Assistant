@@ -3,6 +3,7 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using System.Xml.Serialization;
+using TwitchLib.Communication.Interfaces;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
@@ -11,12 +12,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private List<string> quotes;
         private Random random;
         private bool initiliased = false;
+        private bool cooldown = false;
         private string filePath;
+        private int quoteCooldown;
 
         public bool Initilaised { get { return initiliased; } }
 
-        public QuoteCommand(string resourcePath)
+        public QuoteCommand(string resourcePath, int newQuoteCooldown)
         {
+            quoteCooldown = newQuoteCooldown;
             random = new Random();
             quotes = initiliaseQuotes(resourcePath);
         }
@@ -25,29 +29,36 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             try
             {
-                string commandText = eve.Args["CommandText"].ToLower();
-                string argumentsAsString = eve.Args["ArgumentsAsString"];
-                Dictionary<string, string> quote = new Dictionary<string, string>();
-                switch (commandText)
+                if (!cooldown)
                 {
-                    case "quotecount":
-                        quote.Add($"Message", $"We have {quotes.Count} quotes stored! Some of these make me wonder why mistakes I made to end up here...");
-                        break;
-                    case "addquote":
-                    case "quoteadd":
-                        addquote(argumentsAsString);
-                        quote.Add("Message", $"Quote added! We now have {quotes.Count} quotes!");
-                        break;
-                    case "quote":
-                        string quoteString = getQuote(eve);
-                        quote.Add("Message", quoteString);
-                        break;
-                    case "quotefest":
-                        quote = getQuoteFest();
-                        break;
+                    string commandText = eve.Args["CommandText"].ToLower();
+                    string argumentsAsString = eve.Args["ArgumentsAsString"];
+                    Dictionary<string, string> quote = new Dictionary<string, string>();
+                    switch (commandText)
+                    {
+                        case "quotecount":
+                            quote.Add($"Message", $"We have {quotes.Count} quotes stored! Some of these make me wonder why mistakes I made to end up here...");
+                            break;
+                        case "addquote":
+                        case "quoteadd":
+                            addquote(argumentsAsString);
+                            quote.Add("Message", $"Quote added! We now have {quotes.Count} quotes!");
+                            break;
+                        case "quote":
+                            string quoteString = getQuote(eve);
+                            quote.Add("Message", quoteString);
+                            break;
+                        case "quotefest":
+                            quote = getQuoteFest();
+                            break;
 
+                    }
+                    cooldown = true;
+                    Task.Delay(1000 * quoteCooldown).ContinueWith(t => { cooldown = false; });
+                    return quote;
                 }
-                return quote;
+                else
+                    return new Dictionary<string, string> { { "Message", "The quotes are currently on cooldown!" } };
             }
             catch (Exception ex)
             {
@@ -94,15 +105,22 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             if (quotes.Count > 5)
             {
                 int quoteAmount = random.Next(3, 6);
+                if (quoteAmount > quotes.Count)
+                    quoteAmount = quotes.Count;
                 List<string> quotesToSend = new List<string>();
-                while (quotesToSend.Count < quoteAmount)
+                List<int> indexes = new List<int>();
+                
+                
+                while(indexes.Count < quoteAmount)
                 {
                     int index = random.Next(0, quotes.Count);
-                    if (!quotesToSend.Contains(quotes[index]))
-                    {
-                        quotesToSend.Add($"[{(index + 1)}] {quotes[index]}");
-                    }
+                    if (!indexes.Contains(index))
+                        indexes.Add(index);
                 }
+                foreach (int index in indexes)
+                    quotesToSend.Add(quotes[index]);
+                
+               
                 messages.Add("Message0", "Are we ready for a quotefest? Lets go!");
                 for(int i = 1; i <= quotesToSend.Count; i++)
                 {

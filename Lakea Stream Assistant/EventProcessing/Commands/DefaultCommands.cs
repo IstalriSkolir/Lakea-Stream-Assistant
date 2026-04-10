@@ -26,7 +26,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         public DefaultCommands(ConfigSettings settings, ExternalProcesses externalProcesses, KeepAliveToken keepAliveToken)
         {
             this.process = new ProcessCommand(externalProcesses);
-            this.quotes = new QuoteCommand(settings.ResourcePath);
+            this.quotes = new QuoteCommand(settings.ResourcePath, settings.Commands.Quotes.QuoteCooldown);
             this.keepAliveToken = keepAliveToken;
             this.commandFunctions = new Dictionary<string, Func<IncomingEvent, EventItem>>
             {
@@ -210,14 +210,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Terminal.Output($"Lakea: Quote Command -> {command}");
             Logs.Instance.NewLog(LogLevel.Info, $"Quote Command -> {command}");
             Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
-            if ("quotefest".Equals(command))
+            if (args != null)
             {
-                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
+                if ("quotefest".Equals(command))
+                {
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
+                }
+                else
+                {
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
+                }
             }
-            else
-            {
-                return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
-            }
+            return null;
         }
 
         // Resets the terminal with a full refresh on a new thread
