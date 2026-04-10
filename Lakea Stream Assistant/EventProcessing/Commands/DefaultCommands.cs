@@ -41,7 +41,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", quoteCommand },
                 { "quoteadd", quoteCommand },
                 { "quotefest", quoteCommand },
-                { "resetterminal", resetTerminalCommand },
                 { "so", shoutOutCommand },
                 { "status", statusCommand },
                 { "title", titleCommand },
@@ -65,7 +64,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "addquote", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "quoteadd", new CommandConfiguration("AddQuote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "quotefest", new CommandConfiguration("QuoteFest", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
-                { "resetterminal", new CommandConfiguration("Reset Terminal", settings.Commands.ResetTerminal.Enabled, settings.Commands.ResetTerminal.ModOnly) },
                 { "so", new CommandConfiguration("Shout Out", settings.Commands.ShoutOut.Enabled, settings.Commands.ShoutOut.ModOnly) },
                 { "status", new CommandConfiguration("Status", settings.Commands.Status.Enabled, settings.Commands.Status.ModOnly) },
                 { "title", new CommandConfiguration("Title", settings.Commands.Title.Enabled, settings.Commands.Status.ModOnly) },
@@ -222,19 +220,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
             }
             return null;
-        }
-
-        // Resets the terminal with a full refresh on a new thread
-        private EventItem resetTerminalCommand(IncomingEvent eve)
-        {
-            Terminal.Output("Lakea: Reset Terminal Command -> Resetting Terminal");
-            Logs.Instance.NewLog(LogLevel.Info, "Reset Terminal Command -> Resetting Terminal");
-            Dictionary<string, string> args = new Dictionary<string, string>
-            {
-                { "Message", "On it, give me a moment!" }
-            };
-            Terminal.ResetTerminal();
-            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Reset Terminal Command", "Lakea_Reset_Terminal_Command", args: args);
         }
 
         // Returns a new EvenItem object that sends a shoutout message for the entered username to the Twitch chat

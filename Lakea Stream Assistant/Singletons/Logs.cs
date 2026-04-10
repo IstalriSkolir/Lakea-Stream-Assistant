@@ -82,7 +82,6 @@ namespace Lakea_Stream_Assistant.Singletons
                     {
                         writer.WriteLine(log);
                     }
-                    Terminal.Log(log);
                 }
             }
             catch(Exception newEx)
@@ -107,7 +106,6 @@ namespace Lakea_Stream_Assistant.Singletons
                     {
                         writer.WriteLine(log);
                     }
-                    Terminal.Log(log);
                 }
             }
             catch (Exception newEx)

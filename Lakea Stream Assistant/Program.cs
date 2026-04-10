@@ -54,11 +54,8 @@ namespace Lakea_Stream_Assistant
             if (config != null)
             {
                 Terminal.Output("Lakea is waking up...");
-                Task.Run(() => Terminal.StartTerminalThread());
                 Logs.Instance.SetErrorLogLevel(config.Settings.LogLevel);
                 Logs.Instance.NewLog(LogLevel.Info, "Configuration file loaded -> " + Path.GetFileName(filePath));
-                Terminal.UpdateLogLevel(config.Settings.LogLevel);
-                Terminal.UpdateRefreshRate(config.Settings.TerminalRefreshRate);
                 keepAliveToken = new KeepAliveToken();
                 externalProcesses = new ExternalProcesses(config.Applications);
                 DefaultCommands lakeaCommands = new DefaultCommands(config.Settings, externalProcesses, keepAliveToken);
@@ -170,8 +167,7 @@ namespace Lakea_Stream_Assistant
             var externalTasks = Task.Run(() => externalProcesses.StopAllExternalProcesses());
             var serverTask = Task.Run(() => Server.Shutdown());
             var twitchTask = Task.Run(() => Twitch.ShutdownTwitchServices());
-            var terminalTask = Task.Run(() => Terminal.EndRefresh());
-            Task.WaitAll(exitTasks, externalTasks, serverTask, twitchTask, terminalTask);
+            Task.WaitAll(exitTasks, externalTasks, serverTask, twitchTask);
         }
 
         #endregion
