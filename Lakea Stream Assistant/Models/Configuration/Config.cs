@@ -710,6 +710,8 @@ public partial class CommandsQuotes
 
     private bool modOnlyField;
 
+    private int quoteCooldown;
+
     /// <remarks/>
     public bool Enabled
     {
@@ -733,6 +735,19 @@ public partial class CommandsQuotes
         set
         {
             this.modOnlyField = value;
+        }
+    }
+
+    /// <remarks/>
+    public int QuoteCooldown
+    {
+        get
+        {
+            return this.quoteCooldown;
+        }
+        set
+        {
+            this.quoteCooldown = value;
         }
     }
 }
