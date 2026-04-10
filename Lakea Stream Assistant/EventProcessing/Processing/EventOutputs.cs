@@ -14,7 +14,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
         private BattleManager battleManager;
         private PythonScripts pythonScripts;
         private LakeaCaptured captured;
-        private Random random = new Random();
 
         public EventOutputs(ConfigSettings settings, LakeaCaptured captured)
         {
@@ -62,7 +61,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     sourceCount++;
                 }
             }
-            int ran = random.Next(1, sourceCount + 1);
+            int ran = Dice.Roll(1, sourceCount + 1);
             string key = "Source" + ran;
             string source = args[key];
             OBS.SetSourceEnabled(source, active);
@@ -249,7 +248,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                     messageCount++;
                 }
             }
-            int ran = random.Next(1, messageCount + 1);
+            int ran = Dice.Roll(1, messageCount + 1);
             string key = "Message" + ran;
             Twitch.WriteToChat(args[key]);
             if (callback != null)

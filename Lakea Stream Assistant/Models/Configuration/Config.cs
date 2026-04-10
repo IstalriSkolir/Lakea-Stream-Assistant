@@ -239,13 +239,15 @@ public partial class SettingsCommands
 
     private CommandsTitle titleField;
 
+    private CommandsTopBits topBitsField;
+
     private CommandsTotalBits totalBitsField;
 
     private CommandsProcess processField;
 
     private CommandsShoutOut shoutOutField;
 
-    private CommandsStatus statusField;
+    private CommandsBoop boopField;
 
     private CommandsQuotes quotesField;
 
@@ -281,6 +283,19 @@ public partial class SettingsCommands
         set
         {
             this.titleField = value;
+        }
+    }
+
+    /// <remarks/>
+    public CommandsTopBits TopBits
+    {
+        get
+        {
+            return this.topBitsField;
+        }
+        set
+        {
+            this.topBitsField = value;
         }
     }
 
@@ -324,15 +339,15 @@ public partial class SettingsCommands
     }
 
     /// <remarks/>
-    public CommandsStatus Status
+    public CommandsBoop Boop
     {
         get
         {
-            return this.statusField;
+            return this.boopField;
         }
         set
         {
-            this.statusField = value;
+            this.boopField = value;
         }
     }
 
@@ -437,6 +452,44 @@ public partial class SettingsCapturedEventRetort
         set
         {
             this.eventTypeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsTopBits
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
         }
     }
 }
@@ -635,7 +688,7 @@ public partial class CommandsShoutOut
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-public partial class CommandsStatus
+public partial class CommandsBoop
 {
 
     private bool enabledField;

@@ -1,16 +1,15 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Models.Events;
+using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using System.Xml.Serialization;
-using TwitchLib.Communication.Interfaces;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
-    public class QuoteCommand
+    public class QuoteCommand : CommandBase
     {
         private List<string> quotes;
-        private Random random;
         private bool initiliased = false;
         private bool cooldown = false;
         private string filePath;
@@ -21,11 +20,30 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         public QuoteCommand(string resourcePath, int newQuoteCooldown)
         {
             quoteCooldown = newQuoteCooldown;
-            random = new Random();
             quotes = initiliaseQuotes(resourcePath);
         }
 
-        public Dictionary<string, string> NewQuoteCommand(IncomingEvent eve)
+        public override EventItem Run(IncomingEvent eve)
+        {
+            string command = eve.Args["CommandText"];
+            Terminal.Output($"Lakea: Quote Command -> {command}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Quote Command -> {command}");
+            Dictionary<string, string> args = newQuoteCommand(eve);
+            if (args != null)
+            {
+                if ("quotefest".Equals(command))
+                {
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message_List, "Quote Command", "Lakea_Quote_Command", args: args);
+                }
+                else
+                {
+                    return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Quote Command", "Lakea_Quote_Command", args: args);
+                }
+            }
+            return null;
+        }
+
+        private Dictionary<string, string> newQuoteCommand(IncomingEvent eve)
         {
             try
             {
@@ -78,7 +96,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         {
             if (!eve.Args.ContainsKey("CommandArg1"))
             {
-                int index = random.Next(0, quotes.Count);
+                int index = Dice.Roll(quotes.Count);
                 return "Here's a random quote, '" + quotes[index] + "'";
             }
             else
@@ -93,7 +111,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 catch (Exception ex)
                 {
                     Logs.Instance.NewLog(LogLevel.Warning, $"Failed to Parse '{eve.Args["CommandArg1"]}' for Quote Index");
-                    int index = random.Next(0, quotes.Count);
+                    int index = Dice.Roll(quotes.Count);
                     return $"Couldn't figure out which quote you wanted so heres a random one instead, '{quotes[index]}'";
                 }
             }
@@ -104,7 +122,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Dictionary<string, string> messages = new Dictionary<string, string>();
             if (quotes.Count > 5)
             {
-                int quoteAmount = random.Next(3, 6);
+                int quoteAmount = Dice.Roll(3, 6);
                 if (quoteAmount > quotes.Count)
                     quoteAmount = quotes.Count;
                 List<string> quotesToSend = new List<string>();
@@ -113,7 +131,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 
                 while(indexes.Count < quoteAmount)
                 {
-                    int index = random.Next(0, quotes.Count);
+                    int index = Dice.Roll(quotes.Count);
                     if (!indexes.Contains(index))
                         indexes.Add(index);
                 }
