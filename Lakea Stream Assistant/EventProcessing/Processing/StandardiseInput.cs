@@ -125,7 +125,20 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             Dictionary<string, string> raidArgs = new Dictionary<string, string>
             {
                 { "DisplayName", args.RaidNotification.DisplayName },
+                { "AccountID", args.RaidNotification.UserId },
                 { "RaiderCount", args.RaidNotification.MsgParamViewerCount }
+            };
+            return raidArgs;
+        }
+
+        // Convert Twitch EventSub raid data to dictionary
+        public Dictionary<string, string> ConvertTwitchRaidData(ChannelRaidArgs args)
+        {
+            Dictionary<string, string> raidArgs = new Dictionary<string, string>
+            {
+                { "DisplayName", args.Notification.Payload.Event.FromBroadcasterUserName },
+                { "AccountID", args.Notification.Payload.Event.FromBroadcasterUserId },
+                { "RaiderCount", args.Notification.Payload.Event.Viewers.ToString() }
             };
             return raidArgs;
         }

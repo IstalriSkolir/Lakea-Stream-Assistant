@@ -274,6 +274,8 @@ public partial class SettingsCommands
 
     private CommandsAnnouncement announcementField;
 
+    private CommandsClip clipField;
+
     public CommandsCategory Category
     {
         get
@@ -416,6 +418,7 @@ public partial class SettingsCommands
         }
     }
 
+    /// <remarks/>
     public CommandsAnnouncement Announcement
     {
         get
@@ -425,6 +428,19 @@ public partial class SettingsCommands
         set
         {
             this.announcementField = value;
+        }
+    }
+
+    /// <remarks/>
+    public CommandsClip Clips
+    {
+        get
+        {
+            return this.clipField;
+        }
+        set
+        {
+            this.clipField = value;
         }
     }
 }
@@ -878,6 +894,44 @@ public partial class CommandsAnnouncement
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 public partial class CommandsTitle
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsClip
 {
 
     private bool enabledField;

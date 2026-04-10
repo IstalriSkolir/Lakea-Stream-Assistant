@@ -29,6 +29,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TwitchLib.Api.Helix.Models.Bits;
 using TwitchLib.Api.Helix.Models.Chat.GetChatters;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelFollowers;
+using TwitchLib.Api.Helix.Models.Clips.CreateClip;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -622,6 +623,21 @@ namespace Lakea_Stream_Assistant.Singletons
             }
         }
 
+        public static async Task CreateStreamClip()
+        {
+            try
+            {
+                Terminal.Output("Twitch: Creating Clip...");
+                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Creating Clip...");
+                CreatedClipResponse response = await api.Helix.Clips.CreateClipAsync(channelID, accessToken: channelAuthKey);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Twitch: Failed to Create Twitch Clip -> " + ex.Message);
+                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+            }
+        }
+
         #endregion
     }
 
@@ -648,6 +664,7 @@ namespace Lakea_Stream_Assistant.Singletons
             client.ChannelFollow += OnFollow;
             client.ChannelPointsCustomRewardRedemptionAdd += OnChannelRedeem;
             client.ChannelCheer += OnBits;
+            client.ChannelRaid += OnRaid;
             api = new TwitchAPI();
             api.Settings.ClientId = Twitch.ClientID;
             api.Settings.AccessToken = Twitch.ChannelAuthKey;
@@ -769,7 +786,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private async Task OnChannelRedeem(object sender, ChannelPointsCustomRewardRedemptionArgs e)
         {
             string propToHash = e.Notification.Payload.Event.Id + e.Notification.Payload.Event.UserId + e.Notification.Payload.Event.RedeemedAt;
-            if(hashChecker.CheckPayloadIsntDuplicate("Channel Redeem", propToHash))
+            if (hashChecker.CheckPayloadIsntDuplicate("Channel Redeem", propToHash))
             {
                 Terminal.Output("Twitch: Redeem -> " + e.Notification.Payload.Event.Reward.Title);
                 Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Channel Redeem -> " + e.Notification.Payload.Event.Reward.Title);
@@ -785,14 +802,28 @@ namespace Lakea_Stream_Assistant.Singletons
             string propToHash = e.Notification.Payload.Event.UserId + e.Notification.Payload.Event.Bits + e.Notification.Metadata.MessageTimestamp;
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Bits", propToHash))
             {
-                Terminal.Output("Twitch: Bits -> User: " + e.Notification.Payload.Event.UserName + ", Bits: " + e.Notification.Payload.Event.Bits);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Bits -> User: " + e.Notification.Payload.Event.UserName + ", Bits: " + e.Notification.Payload.Event.Bits);
+                Terminal.Output($"Twitch: Bits -> User: {e.Notification.Payload.Event.UserName}, Bits: {+ e.Notification.Payload.Event.Bits}");
+                Logs.Instance.NewLog(Enums.LogLevel.Info, $"Twitch Bits -> User: {e.Notification.Payload.Event.UserName}, Bits: {e.Notification.Payload.Event.Bits}");
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchBitsData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Bits, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
             }
         }
-    }
 
-    #endregion
+    // Called on a raid event, passes event info to the EventHandler
+    private async Task OnRaid(object sender, ChannelRaidArgs e)
+        {
+            string propToHash = e.Notification.Payload.Event.FromBroadcasterUserId + e.Notification.Payload.Event.Viewers + e.Notification.Metadata.MessageTimestamp;
+            if (hashChecker.CheckPayloadIsntDuplicate("Twitch Raid", propToHash))
+            {
+                Terminal.Output($"Twitch: Raid -> {e.Notification.Payload.Event.FromBroadcasterUserName}");
+                Logs.Instance.NewLog(Enums.LogLevel.Info, $"Twitch Raid -> {e.Notification.Payload.Event.FromBroadcasterUserName}");
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchRaidData(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Raid, data);
+                StreamAssistant.EventHandler.NewEvent(eve);
+            }
+        }
+
+    }
+        #endregion
 }
