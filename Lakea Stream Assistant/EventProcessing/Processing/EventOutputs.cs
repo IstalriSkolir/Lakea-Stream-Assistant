@@ -126,6 +126,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             {
                 OBS.SetSourceEnabled(args["Source1"], true);
             }
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    if (!callbackArgs.ContainsKey(arg.Key))
+                    {
+                        callbackArgs.Add(arg.Key, arg.Value);
+                    }
+                }
+                createCallback(callbackArgs, callback);
+            }
         }
 
         // Changes OBS scene
@@ -160,6 +172,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             if (volume > 20) volume = 20;
             else if (volume < -20) volume = -20;
             OBS.SetAudioVolume(args["Source"], volume);
+            if (callback != null)
+            {
+                Dictionary<string, string> callbackArgs = new Dictionary<string, string>();
+                foreach (var arg in args)
+                {
+                    if (!callbackArgs.ContainsKey(arg.Key))
+                    {
+                        callbackArgs.Add(arg.Key, arg.Value);
+                    }
+                }
+                createCallback(callbackArgs, callback);
+            }
         }
 
         #endregion

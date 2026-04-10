@@ -30,8 +30,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             this.keepAliveToken = keepAliveToken;
             this.commandFunctions = new Dictionary<string, Func<IncomingEvent, EventItem>>
             {
+                { "announcement", annoucement },
                 { "category", categoryCommand },
+                { "clip", clip },
                 { "exit", exitCommand },
+                { "followage", followage },
                 { "process", processCommand },
                 { "quote", quoteCommand },
                 { "quotecount", quoteCommand },
@@ -47,14 +50,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topbits", topBitsCommand },
                 { "topcheers", topBitsCommand },
                 { "streak", watchStreakCommand },
-                { "watchstreak", watchStreakCommand },
-                { "followage", followage },
-                { "announcement", annoucement }
+                { "watchstreak", watchStreakCommand }             
             };
             this.commandConfigs = new Dictionary<string, CommandConfiguration>
             {
+                { "announcement", new CommandConfiguration("Announcement", settings.Commands.Announcement.Enabled, settings.Commands.Announcement.ModOnly) },
                 { "category", new CommandConfiguration("Category", settings.Commands.Category.Enabled, settings.Commands.Category.ModOnly) },
+                { "clip", new CommandConfiguration("Clip", settings.Commands.Clips.Enabled, settings.Commands.Clips.ModOnly) },
                 { "exit", new CommandConfiguration("Exit", settings.Commands.Exit.Enabled, settings.Commands.Exit.ModOnly) },
+                { "followage", new CommandConfiguration("Followage", settings.Commands.Followage.Enabled, settings.Commands.Followage.ModOnly) },
                 { "process", new CommandConfiguration("Process", settings.Commands.Process.Enabled, settings.Commands.Process.ModOnly) },
                 { "quote", new CommandConfiguration("Quote", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
                 { "quotecount", new CommandConfiguration("QuoteCount", settings.Commands.Quotes.Enabled, settings.Commands.Quotes.ModOnly) },
@@ -71,8 +75,6 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 { "topcheers", new CommandConfiguration("Top Bits", settings.Commands.TotalBits.Enabled, settings.Commands.Status.ModOnly) },
                 { "streak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.Status.ModOnly) },
                 { "watchstreak", new CommandConfiguration("Watch Streaks", settings.Commands.WatchStreak.Enabled, settings.Commands.WatchStreak.ModOnly) },
-                { "followage", new CommandConfiguration("Followage", settings.Commands.Followage.Enabled, settings.Commands.Followage.ModOnly) },
-                { "announcement", new CommandConfiguration("Announcement", settings.Commands.Announcement.Enabled, settings.Commands.Announcement.ModOnly) }
             };
         }
 
@@ -104,13 +106,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                         }
                         else
                         {
-                            Terminal.Output("Lakea: " + command + " Command -> Access Denied, " + displayName);
-                            Logs.Instance.NewLog(LogLevel.Warning, command + " Command -> Access Denied, " + displayName);
+                            Terminal.Output($"Lakea: {command} Command -> Access Denied, {displayName}");
+                            Logs.Instance.NewLog(LogLevel.Warning, $"{command} Command -> Access Denied, {displayName}");
                             Dictionary<string, string> args = new Dictionary<string, string>
                             {
-                                { "Message", "Sorry @" + displayName + ", only moderators can use that command!" }
+                                { "Message", $"Sorry {displayName}, only moderators can use that command!" }
                             };
-                            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, command + " Command", "Lakea_Command_Access_Denied", args: args);
+                            return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, $"{command} Command", "Lakea_Command_Access_Denied", args: args);
                         }
                     }
                     else
@@ -120,8 +122,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
                 else
                 {
-                    Terminal.Output("Lakea: Default Command " + commandIdentifier + command + " is Disabled");
-                    Logs.Instance.NewLog(LogLevel.Info, "Default Command " + commandIdentifier + command + " is Disabled");
+                    Terminal.Output($"Lakea: Default Command {commandIdentifier}{command} is Disabled");
+                    Logs.Instance.NewLog(LogLevel.Info, $"Default Command {commandIdentifier}{command} is Disabled");
                     return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Null, EventGoal.Null, commandIdentifier + command);
                 }
             }
@@ -154,13 +156,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 }
                 else
                 {
-                    args.Add("Message", "Twitch doesn't seem to have any categories of the name '" + argumentsAsString + "', are you sure that's the right one?");
+                    args.Add("Message", $"Twitch doesn't seem to have any categories of the name '{argumentsAsString}', are you sure that's the right one?");
                 }
             }
             else
             {
                 GetChannelInformationResponse response = Twitch.GetChannelInformation().Result;
-                args.Add("Message", "The current stream title is '" + response.Data[0].GameName + "', don't know why you didn't just look at it though!");
+                args.Add("Message", $"The current stream title is '{response.Data[0].GameName}', don't know why you didn't just look at it though!");
             }
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Category Command", "Lakea_Update_Stream_Category", args: args);
         }
@@ -172,8 +174,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             string displayName = eve.Args["DisplayName"];
             string channel = eve.Args["Channel"];
             bool isBroadcaster = bool.Parse(eve.Args["IsBroadcaster"]);
-            Terminal.Output("Lakea: Exit Command -> " + command);
-            Logs.Instance.NewLog(LogLevel.Info, "Exit Command -> " + command);
+            Terminal.Output($"Lakea: Exit Command -> {command}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Exit Command -> {command}");
             if (isBroadcaster)
             {
                 keepAliveToken.Kill();
@@ -181,11 +183,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             }
             else
             {
-                Terminal.Output("Lakea: Exit Command -> Access Denied, " + displayName);
-                Logs.Instance.NewLog(LogLevel.Warning, "Exit Command -> Access Denied, " + displayName);
+                Terminal.Output($"Lakea: Exit Command -> Access Denied, {displayName}");
+                Logs.Instance.NewLog(LogLevel.Warning, $"Exit Command -> Access Denied, {displayName}");
                 Dictionary<string, string> args = new Dictionary<string, string>
                 {
-                    { "Message", "Sorry @" + displayName + ", only @" + channel + " can use that command!" }
+                    { "Message", $"Sorry {displayName}, only {channel} can use that command!" }
                 };
                 return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Exit Command", "Lakea_Exit_Command", args: args);
             }
@@ -195,8 +197,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem processCommand(IncomingEvent eve)
         {
             string argumentsAsString = eve.Args["ArgumentsAsString"];
-            Terminal.Output("Lakea: Process Command -> " + argumentsAsString);
-            Logs.Instance.NewLog(LogLevel.Info, "Process Command -> " + argumentsAsString);
+            Terminal.Output($"Lakea: Process Command -> {argumentsAsString}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Process Command -> {argumentsAsString}");
             Dictionary<string, string> args = process.NewProcessCommand(eve);
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Process Command", "Lakea_Process_Command", args: args);
         }
@@ -205,8 +207,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem quoteCommand(IncomingEvent eve)
         {
             string command = eve.Args["CommandText"];
-            Terminal.Output("Lakea: Quote Command -> " + command);
-            Logs.Instance.NewLog(LogLevel.Info, "Quote Command -> " + command);
+            Terminal.Output($"Lakea: Quote Command -> {command}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Quote Command -> {command}");
             Dictionary<string, string> args = quotes.NewQuoteCommand(eve);
             if ("quotefest".Equals(command))
             {
@@ -237,11 +239,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             string argumentsAsString = eve.Args["ArgumentsAsString"];
 
             Dictionary<string, string> args = new Dictionary<string, string>();
-            Terminal.Output("Lakea: Shout Out Command -> " + argumentsAsString);
+            Terminal.Output($"Lakea: Shout Out Command -> {argumentsAsString}");
             if(eve.Args.ContainsKey("CommandArg1"))
             {
                 string commandArg1 = eve.Args["CommandArg1"];
-                args.Add("Message", "Hey guys, go give @" + commandArg1 + " some love and support! You can find them at https://www.twitch.tv/" + commandArg1);
+                args.Add("Message", $"Hey guys, go give {commandArg1} some love and support! You can find them at https://www.twitch.tv/{commandArg1}");
             }
             else
             {
@@ -282,7 +284,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             else
             {
                 GetChannelInformationResponse response = Twitch.GetChannelInformation().Result;
-                args.Add("Message", "The current stream title is '" + response.Data[0].Title + "', don't know why you didn't just look at it though!");
+                args.Add("Message", $"The current stream title is '{response.Data[0].Title}', don't know why you didn't just look at it though!");
             }
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Update Stream Title Command", "Lakea_Update_Stream_Title", args: args);
         }
@@ -291,15 +293,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem totalBitsCommand(IncomingEvent eve)
         {
             string displayName = eve.Args["DisplayName"];
-            Terminal.Output("Lakea: Total Bits Command -> " + displayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Total Bits Command -> " + displayName);
+            Terminal.Output($"Lakea: Total Bits Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Total Bits Command -> {displayName}");
             Dictionary<string, string> args = new Dictionary<string, string>();
             GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(1, eve.Args["AccountID"]).Result;
             if (response != null && response.Listings.Length > 0)
             {
                 int userBits = response.Listings[0].Score;
                 int userRank = response.Listings[0].Rank;
-                args.Add("Message", displayName + " has cheered a total of " + userBits + " bits and is rank " + userRank + " on the leaderboard! Thank you for supporting Materies materi33Lakeaheart");
+                args.Add("Message", $"{displayName} has cheered a total of {userBits} bits and is rank {userRank} on the leaderboard! Thank you for supporting Materies materi33Lakeaheart");
             }
             else
             {
@@ -311,8 +313,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem topBitsCommand(IncomingEvent eve)
         {
             string displayName = eve.Args["DisplayName"];
-            Terminal.Output("Lakea: Top Bits Command -> " + displayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Top Bits Command -> " + displayName);
+            Terminal.Output($"Lakea: Top Bits Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Top Bits Command -> {displayName}");
             Dictionary<string, string> args = new Dictionary<string, string>();
             GetBitsLeaderboardResponse response = Twitch.GetBitsLeaderBoard(10).Result;
             if (response != null && response.Listings.Length > 0)
@@ -320,7 +322,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 string message = "Top Cheerers! ";
                 for(int index = 0; index < response.Listings.Length; index++)
                 {
-                    message += (index + 1) + ". " + response.Listings[index].UserName + " -> " + response.Listings[index].Score + " bits, ";
+                    message += $"{(index + 1)}. {response.Listings[index].UserName} -> {response.Listings[index].Score} bits, ";
                 }
                 args.Add("Message", message);
             }
@@ -334,12 +336,12 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
         private EventItem watchStreakCommand(IncomingEvent eve)
         {
             string displayName = eve.Args["DisplayName"];
-            Terminal.Output("Lakea: Watch Streak Command -> " + displayName);
-            Logs.Instance.NewLog(LogLevel.Info, "Watch Streak Command -> " + displayName);
+            Terminal.Output($"Lakea: Watch Streak Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Watch Streak Command -> {displayName}");
             WatchStreakDataStreak userStreaks = Twitch.GetUserWatchStreak(eve.Args["AccountID"]);
             Dictionary<string, string> args = new Dictionary<string, string>()
             {
-                { "Message", displayName + " has a watch streak of " + userStreaks.CurrentStreak + "! Thank you for regularly tuning in!" }
+                { "Message", $"{displayName} has a watch streak of {userStreaks.CurrentStreak}! Thank you for regularly tuning in!" }
             };
             return new EventItem(eve.Source, EventType.Lakea_Command, EventTarget.Twitch, EventGoal.Twitch_Send_Chat_Message, "Watch Streak Command", "Lakea_Watch_Streak_Command", args: args);
         }
@@ -381,6 +383,18 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
             Logs.Instance.NewLog(LogLevel.Info, $"Announcement Command -> {displayName}");
             Twitch.SendChatAnnouncement(eve.Args["ArgumentsAsString"]).RunSynchronously();
             return new EventItem(eve.Source, EventType.Twitch_Command, EventTarget.Null, EventGoal.Null, "Announcement Command", "Twitch_Announcement_Command", args:null);
+        }
+
+        private EventItem clip(IncomingEvent eve)
+        {
+            string displayName = eve.Args["DisplayName"];
+            Terminal.Output($"Lakea: Clip Command -> {displayName}");
+            Logs.Instance.NewLog(LogLevel.Info, $"Clip Command -> {displayName}");
+            Twitch.CreateStreamClip();
+
+
+
+            return new EventItem();
         }
     }
 }
