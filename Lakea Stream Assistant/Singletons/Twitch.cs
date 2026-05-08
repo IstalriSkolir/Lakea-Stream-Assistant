@@ -41,9 +41,9 @@ namespace Lakea_Stream_Assistant.Singletons
         private static HashChecker hashChecker;
         private static DefaultCommands lakeaCommands;
         private static WatchStreakManager watchStreakManager;
-        private static ScamMessageDetector scamMessageDetector;
         private static TwitchClient client;
         private static TwitchAPI api;
+        private static TwitchUserManager userManager;
         private static string channelUsername;
         private static string channelID;
         private static string channelAuthKey;
@@ -57,6 +57,7 @@ namespace Lakea_Stream_Assistant.Singletons
 
         #region Get Data
 
+        public static TwitchUserManager UserManager { get { return  userManager; } }
         public static bool IsEventSubConnected { get { return eventSubConnected; } set { eventSubConnected = value; } }
         public static string ChannelID { get { return channelID; } }
         public static string ClientID { get { return clientID; } }
@@ -79,7 +80,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 standardiseInput = new StandardiseInput();
                 hashChecker = new HashChecker();
                 watchStreakManager = new WatchStreakManager(config.Settings.ResourcePath, config.Settings.WatchStreakEventTriggerMultiple);
-                scamMessageDetector = new ScamMessageDetector(config.Settings.ScamMessageDetection);
+                userManager = new TwitchUserManager(config.Settings.ResourcePath);
                 lakeaCommands = commands;
                 channelUsername = config.Twitch.StreamingChannel.UserName;
                 channelID = config.Twitch.StreamingChannel.ID.ToString();
@@ -211,21 +212,17 @@ namespace Lakea_Stream_Assistant.Singletons
             initiliaseClient();
         }
 
-        // Called on a message event, calls on the ScamMessageDetector to check for a scam message
+        // Called on a message event
         private static void onChatMessage(object sender, OnMessageReceivedArgs e)
         {
             Terminal.Output("Twitch: Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
             Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
-            bool validMessage = scamMessageDetector.CheckChatMessage(e);
-            if (validMessage)
+            watchStreakManager.checkForWatchStreak(e.ChatMessage.UserId, e.ChatMessage.DisplayName);
+            if (e.ChatMessage.IsFirstMessage)
             {
-                watchStreakManager.checkForWatchStreak(e.ChatMessage.UserId, e.ChatMessage.DisplayName);
-                if (e.ChatMessage.IsFirstMessage)
-                {
-                    Dictionary<string, string> data = standardiseInput.ConvertTwitchFirstTimeChatter(e);
-                    IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_First_Time_Chatter, data);
-                    StreamAssistant.EventHandler.NewEvent(eve);
-                }
+                Dictionary<string, string> data = standardiseInput.ConvertTwitchFirstTimeChatter(e);
+                IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_First_Time_Chatter, data);
+                StreamAssistant.EventHandler.NewEvent(eve);
             }
         }
 
@@ -650,6 +647,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private TwitchAPI api;
         private HashChecker hashChecker;
         private StandardiseInput standardiseInput;
+        private TwitchUserManager userManager;
 
         #region Initialise Service
 
@@ -668,6 +666,7 @@ namespace Lakea_Stream_Assistant.Singletons
             api = new TwitchAPI();
             api.Settings.ClientId = Twitch.ClientID;
             api.Settings.AccessToken = Twitch.ChannelAuthKey;
+            userManager = Twitch.UserManager;
             hashChecker = new HashChecker();
             standardiseInput = new StandardiseInput();
         }
@@ -793,6 +792,7 @@ namespace Lakea_Stream_Assistant.Singletons
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchRedeemData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Redeem, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
+                userManager.UserRedeemedPoints(data);
             }
         }
 

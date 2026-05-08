@@ -119,8 +119,6 @@ public partial class ConfigSettings
 
     private SettingsWebSocket webSocketField;
 
-    private SettingsScamMessageDetection scamMessageDetectionField;
-
     /// <remarks/>
     public string LogLevel
     {
@@ -211,19 +209,6 @@ public partial class ConfigSettings
             this.webSocketField = value;
         }
     }
-
-    /// <remarks/>
-    public SettingsScamMessageDetection ScamMessageDetection
-    {
-        get
-        {
-            return this.scamMessageDetectionField;
-        }
-        set
-        {
-            this.scamMessageDetectionField = value;
-        }
-    }
 }
 
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
@@ -260,6 +245,8 @@ public partial class SettingsCommands
     private CommandsAnnouncement announcementField;
 
     private CommandsClip clipField;
+
+    private CommandsTotalPoints totalPointsField;
 
     public CommandsCategory Category
     {
@@ -426,6 +413,19 @@ public partial class SettingsCommands
         set
         {
             this.clipField = value;
+        }
+    }
+
+    /// <remarks/>
+    public CommandsTotalPoints TotalPoints
+    {
+        get
+        {
+            return this.totalPointsField;
+        }
+        set
+        {
+            this.totalPointsField = value;
         }
     }
 }
@@ -1003,6 +1003,44 @@ public partial class CommandsClip
     }
 }
 
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class CommandsTotalPoints
+{
+
+    private bool enabledField;
+
+    private bool modOnlyField;
+
+    /// <remarks/>
+    public bool Enabled
+    {
+        get
+        {
+            return this.enabledField;
+        }
+        set
+        {
+            this.enabledField = value;
+        }
+    }
+
+    /// <remarks/>
+    public bool ModOnly
+    {
+        get
+        {
+            return this.modOnlyField;
+        }
+        set
+        {
+            this.modOnlyField = value;
+        }
+    }
+}
+
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
@@ -1053,107 +1091,6 @@ public partial class SettingsWebSocket
         set
         {
             this.portField = value;
-        }
-    }
-}
-
-
-// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
-/// <remarks/>
-[System.SerializableAttribute()]
-[System.ComponentModel.DesignerCategoryAttribute("code")]
-[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public partial class SettingsScamMessageDetection
-{
-
-    private string actionModeField;
-
-    private decimal actionThresholdField;
-
-    private SettingsScamMessageDetectionKeyWord[] keyWordsField;
-
-    private SettingsScamMessageDetectionMultipliers multipliersField;
-
-    private SettingsScamDetectionBannedPhrases bannedPhrasesField;
-
-    private SettingsScamDetectionWebExtensions webExtensionField;
-
-    /// <remarks/>
-    public string ActionMode
-    {
-        get
-        {
-            return this.actionModeField;
-        }
-        set
-        {
-            this.actionModeField = value;
-        }
-    }
-
-    /// <remarks/>
-    public decimal ActionThreshold
-    {
-        get
-        {
-            return this.actionThresholdField;
-        }
-        set
-        {
-            this.actionThresholdField = value;
-        }
-    }
-
-    /// <remarks/>
-    [System.Xml.Serialization.XmlArrayItemAttribute("KeyWord", IsNullable = false)]
-    public SettingsScamMessageDetectionKeyWord[] KeyWords
-    {
-        get
-        {
-            return this.keyWordsField;
-        }
-        set
-        {
-            this.keyWordsField = value;
-        }
-    }
-
-    /// <remarks/>
-    public SettingsScamMessageDetectionMultipliers Multipliers
-    {
-        get
-        {
-            return this.multipliersField;
-        }
-        set
-        {
-            this.multipliersField = value;
-        }
-    }
-
-    /// <remarks/>
-    public SettingsScamDetectionBannedPhrases BannedPhrases
-    {
-        get
-        {
-            return this.bannedPhrasesField;
-        }
-        set
-        {
-            this.bannedPhrasesField = value;
-        }
-    }
-
-    public SettingsScamDetectionWebExtensions WebExtension
-    {
-        get
-        {
-            return this.webExtensionField;
-        }
-        set
-        {
-            this.webExtensionField = value;
         }
     }
 }
