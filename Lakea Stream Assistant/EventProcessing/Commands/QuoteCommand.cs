@@ -140,9 +140,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Commands
                 
                
                 messages.Add("Message0", "Are we ready for a quotefest? Lets go!");
-                for(int i = 1; i <= quotesToSend.Count; i++)
+                for(int x = 0; x < quotesToSend.Count; x++)
                 {
-                    messages.Add("Message" + i, quotesToSend[i - 1]);
+                    messages.Add("Message" + (x + 1), $"[{indexes[x] + 1}] {quotesToSend[x]}");
                 }
             }
             else
