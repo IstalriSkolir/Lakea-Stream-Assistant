@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 namespace Lakea_Stream_Assistant.Models.Configuration
 {
     //Class for loading and deserialising Config.xml, config file location is currently hardcoded
-    public class LoadConfig
+    public class  LoadConfig
     {
         public Config LoadConfigFromFile(string filePath)
         {
