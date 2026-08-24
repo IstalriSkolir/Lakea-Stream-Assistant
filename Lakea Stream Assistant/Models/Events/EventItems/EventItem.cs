@@ -30,7 +30,7 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
             this.duration = duration;
             this.usePreviousArguments = usePreviousArguments;
             this.callback = callback;
-            this.args = args;
+            this.args = args != null ? args : new Dictionary<string, string>();
         }
 
         public EventItem(ConfigEvent eve)

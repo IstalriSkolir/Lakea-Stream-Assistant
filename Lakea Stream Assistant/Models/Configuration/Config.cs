@@ -444,6 +444,8 @@ public partial class SettingsCaptured
 
     private string[] eventRetortsField;
 
+    private Redeems redeemsField;
+
     /// <remarks/>
     [System.Xml.Serialization.XmlArrayItemAttribute("EventType", IsNullable = false)]
     public string[] BypassEvents
@@ -469,6 +471,113 @@ public partial class SettingsCaptured
         set
         {
             this.eventRetortsField = value;
+        }
+    }
+
+    public Redeems Redeems
+    {
+        get
+        {
+            return this.redeemsField;
+        }
+        set
+        {
+            this.redeemsField = value;
+        }
+    }
+}
+
+
+// NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+public partial class Redeems
+{
+
+    private string[] disableField;
+
+    private RedeemsRetortRedeem retortRedeemField;
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("Redeem", IsNullable = false)]
+    public string[] Disable
+    {
+        get
+        {
+            return this.disableField;
+        }
+        set
+        {
+            this.disableField = value;
+        }
+    }
+
+    /// <remarks/>
+    public RedeemsRetortRedeem RetortRedeem
+    {
+        get
+        {
+            return this.retortRedeemField;
+        }
+        set
+        {
+            this.retortRedeemField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.SerializableAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+public partial class RedeemsRetortRedeem
+{
+
+    private string titleField;
+
+    private string descriptionField;
+
+    private byte costField;
+
+    /// <remarks/>
+    public string Title
+    {
+        get
+        {
+            return this.titleField;
+        }
+        set
+        {
+            this.titleField = value;
+        }
+    }
+
+    /// <remarks/>
+    public string Description
+    {
+        get
+        {
+            return this.descriptionField;
+        }
+        set
+        {
+            this.descriptionField = value;
+        }
+    }
+
+    /// <remarks/>
+    public byte Cost
+    {
+        get
+        {
+            return this.costField;
+        }
+        set
+        {
+            this.costField = value;
         }
     }
 }

@@ -58,6 +58,7 @@
         Battle_Simulator_Nonencounter,
         Battle_Simulator_Encounter,
         Lakea_Caught,
+        Lakea_Retort,
         Lakea_Released,
         OBS_Enable_Source,
         OBS_Disable_Source,
