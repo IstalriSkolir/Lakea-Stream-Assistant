@@ -5,6 +5,8 @@ using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Misc
 {
@@ -13,9 +15,11 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private LakeaFunctions lakea;
         private BattleFileParser battleFileParser;
         private Random random;
-        //private string[] retortEvents;
+        private RedeemsRetortRedeem retortRedeem;
         private EventType[] retortEvents;
         private EventType[] bypassEvents;
+        private string[] redeemIDs;
+        private string retortRedeemID;
         private bool isCaught;
 
         private const int tick = 60000;
@@ -34,6 +38,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         {
             lakea = lakeaFunctions;
             EnumConverter converter = new EnumConverter();
+            retortRedeem = settings.Captured.Redeems.RetortRedeem;
+            redeemIDs = settings.Captured.Redeems.Disable;
             retortEvents = new EventType[settings.Captured.EventRetorts.Length];
             for (int index = 0; index <  retortEvents.Length; index++)
                 retortEvents[index] = converter.ConvertEventTypeString(settings.Captured.EventRetorts[index]);
@@ -59,6 +65,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> True");
             isCaught = true;
             Task.Delay(tick).ContinueWith(t => timedEscapeAttempt());
+            Task.Run(() => { updateRedeems(false); });
+            Task.Run(() => { createRetortRedeem(); });
         }
 
         public EventItem CheckIfCaptured(EventItem item)
@@ -112,6 +120,38 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             }
         }
 
+        private async void updateRedeems(bool enabled)
+        {
+            foreach(string id in redeemIDs)
+            {
+                UpdateCustomRewardRequest request = new UpdateCustomRewardRequest();
+                request.IsEnabled = enabled;
+                await Twitch.UpdateChannelRedeem(id, request);
+            }
+        }
+
+        private async void createRetortRedeem()
+        {
+            CreateCustomRewardsRequest request = new CreateCustomRewardsRequest();
+            request.Title = retortRedeem.Title;
+            request.Prompt = retortRedeem.Description;
+            request.Cost = retortRedeem.Cost;
+            request.IsEnabled = true;
+            request.IsUserInputRequired = false;
+            request.ShouldRedemptionsSkipRequestQueue = true;
+            CreateCustomRewardsResponse response = await Twitch.CreateChannelRedeem(request);
+            retortRedeemID = response.Data[0].Id;
+            EventItem item = new EventItem(EventSource.Twitch, EventType.Twitch_Redeem, EventTarget.Lakea, EventGoal.Lakea_Retort, "Lakea Retort", retortRedeemID);
+            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, item, false);
+        }
+
+        private async void removeRetortRedeem()
+        {
+            Twitch.DeleteChannelRedeem(retortRedeemID);
+            EventItem item = new EventItem(EventSource.Twitch, EventType.Twitch_Redeem, EventTarget.Null, EventGoal.Null, "", retortRedeemID);
+            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, item, true);
+        }
+
         private void release()
         {
             progress = 0;
@@ -123,6 +163,8 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 { "EventID", "Lakea_Released" }
             };
             IncomingEvent eve = new IncomingEvent(EventSource.Lakea, EventType.Lakea_Released, data);
+            Task.Run(() => { updateRedeems(true); });
+            Task.Run(() => { removeRetortRedeem(); });
             Task.Run(() => {
                 StreamAssistant.EventHandler.NewEvent(eve);
             });
