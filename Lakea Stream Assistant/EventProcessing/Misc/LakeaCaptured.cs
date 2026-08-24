@@ -13,7 +13,9 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         private LakeaFunctions lakea;
         private BattleFileParser battleFileParser;
         private Random random;
-        private string[] retortEvents;
+        //private string[] retortEvents;
+        private EventType[] retortEvents;
+        private EventType[] bypassEvents;
         private bool isCaught;
 
         private const int tick = 60000;
@@ -31,7 +33,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         public LakeaCaptured(LakeaFunctions lakeaFunctions, ConfigSettings settings)
         {
             lakea = lakeaFunctions;
-            retortEvents = settings.CapturedEventRetorts.EventType;
+            EnumConverter converter = new EnumConverter();
+            retortEvents = new EventType[settings.Captured.EventRetorts.Length];
+            for (int index = 0; index <  retortEvents.Length; index++)
+                retortEvents[index] = converter.ConvertEventTypeString(settings.Captured.EventRetorts[index]);
+            EventType[] defaultEventBypasses = { EventType.Lakea_Callback, EventType.Lakea_Struggle };
+            EventType[] configBypassEvents = new EventType[settings.Captured.BypassEvents.Length];
+            for (int index = 0; index < settings.Captured.BypassEvents.Length; index++)
+                configBypassEvents[index] = converter.ConvertEventTypeString(settings.Captured.BypassEvents[index]);
+            bypassEvents = defaultEventBypasses.Concat(configBypassEvents).ToArray();
             battleFileParser = new BattleFileParser(settings.ResourcePath);
             random = new Random();
             isCaught = false;
@@ -49,18 +59,17 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> True");
             isCaught = true;
             Task.Delay(tick).ContinueWith(t => timedEscapeAttempt());
-            //Task.Delay(captureDuration * 1000).ContinueWith(t => timerRelease());
         }
 
         public EventItem CheckIfCaptured(EventItem item)
         {
-            if (!isCaught || (item.EventGoal == EventGoal.Null || item.EventGoal == EventGoal.Lakea_Released) || item.Type == EventType.Lakea_Callback || item.Type == EventType.Lakea_Struggle)
+            if (!isCaught || (item.EventGoal == EventGoal.Null || item.EventGoal == EventGoal.Lakea_Released) || bypassEvents.Contains(item.Type) )//item.Type == EventType.Lakea_Callback || item.Type == EventType.Lakea_Struggle)
             {
                 return item;
             }
             else
             {
-                if (retortEvents.Contains(item.Type.ToString()))
+                if (retortEvents.Contains(item.Type))
                 {
                     Terminal.Output("Lakea: Captured -> Sending Retort");
                     Logs.Instance.NewLog(LogLevel.Info, "Lakea Captured -> Sending Retort");

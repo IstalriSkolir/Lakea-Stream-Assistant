@@ -34,7 +34,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             if (index != int.MinValue)
             {
                 user.ChannelPoints.Redeems[index].RedemptionCount++;
-                user.ChannelPoints.Redeems[index].RedemptionTotalSpent += Convert.ToInt32(data["RedeemCost"]);
+                user.ChannelPoints.Redeems[index].RedemptionTotalSpent += Convert.ToInt64(data["RedeemCost"]);
             }
             else
             {
@@ -42,10 +42,10 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 redeem.RedeemID = redeemID;
                 redeem.RedeemName = data["RedeemTitle"];
                 redeem.RedemptionCount = 1;
-                redeem.RedemptionTotalSpent = Convert.ToInt32(data["RedeemCost"]);
+                redeem.RedemptionTotalSpent = Convert.ToInt64(data["RedeemCost"]);
                 user.ChannelPoints.Redeems = user.ChannelPoints.Redeems.Concat([redeem]).ToArray();
             }
-            user.ChannelPoints.TotalSpent += Convert.ToInt32(data["RedeemCost"]);
+            user.ChannelPoints.TotalSpent += Convert.ToInt64(data["RedeemCost"]);
             json.WriteJSONFile(userFile, user);
         }
 
@@ -56,7 +56,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             user.TwitchUsername = data["DisplayName"];
             user.ChannelPoints = new Channelpoints();
             user.WatchStreak = new Watchstreak();
-            user.ChannelPoints.TotalSpent = data.ContainsKey("RedeemCost") ? Convert.ToInt32(data["RedeemCost"]) : 0;
+            user.ChannelPoints.TotalSpent = data.ContainsKey("RedeemCost") ? Convert.ToInt64(data["RedeemCost"]) : 0;
             user.ChannelPoints.Redeems = data.ContainsKey("RedeemID") ? new Redeem[1] : new Redeem[0];
             if (data.ContainsKey("RedeemID"))
             {
@@ -64,7 +64,7 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
                 user.ChannelPoints.Redeems[0].RedeemID = data["RedeemID"];
                 user.ChannelPoints.Redeems[0].RedeemName = data["RedeemTitle"];
                 user.ChannelPoints.Redeems[0].RedemptionCount = 1;
-                user.ChannelPoints.Redeems[0].RedemptionTotalSpent = Convert.ToInt32(data["RedeemCost"]);
+                user.ChannelPoints.Redeems[0].RedemptionTotalSpent = Convert.ToInt64(data["RedeemCost"]);
             }
             json.WriteJSONFile(userFile, user);
         }
