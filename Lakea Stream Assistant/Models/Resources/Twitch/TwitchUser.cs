@@ -9,7 +9,7 @@ public class TwitchUser
 
 public class Channelpoints
 {
-    public int TotalSpent { get; set; }
+    public long TotalSpent { get; set; }
     public Redeem[] Redeems { get; set; }
 }
 
@@ -18,7 +18,7 @@ public class Redeem
     public string RedeemID { get; set; }
     public string RedeemName { get; set; }
     public int RedemptionCount { get; set; }
-    public int RedemptionTotalSpent { get; set; }
+    public long RedemptionTotalSpent { get; set; }
 }
 
 public class Watchstreak

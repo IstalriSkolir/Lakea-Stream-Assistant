@@ -115,7 +115,7 @@ public partial class ConfigSettings
 
     private SettingsCommands commandsField;
 
-    private SettingsCapturedEventRetort capturedEventRetortsField;
+    private SettingsCaptured capturedField;
 
     private SettingsWebSocket webSocketField;
 
@@ -185,15 +185,15 @@ public partial class ConfigSettings
     }
 
     /// <remarks/>
-    public SettingsCapturedEventRetort CapturedEventRetorts
+    public SettingsCaptured Captured
     {
         get
         {
-            return this.capturedEventRetortsField;
+            return this.capturedField;
         }
         set
         {
-            this.capturedEventRetortsField = value;
+            this.capturedField = value;
         }
     }
 
@@ -430,31 +430,50 @@ public partial class SettingsCommands
     }
 }
 
+
 // NOTE: Generated code may require at least .NET Framework 4.5 or .NET Core/Standard 2.0.
 /// <remarks/>
 [System.SerializableAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
 [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-public partial class SettingsCapturedEventRetort
+public partial class SettingsCaptured
 {
 
-    private string[] eventTypeField;
+    private string[] bypassEventsField;
+
+    private string[] eventRetortsField;
 
     /// <remarks/>
-    [System.Xml.Serialization.XmlElementAttribute("EventType")]
-    public string[] EventType
+    [System.Xml.Serialization.XmlArrayItemAttribute("EventType", IsNullable = false)]
+    public string[] BypassEvents
     {
         get
         {
-            return this.eventTypeField;
+            return this.bypassEventsField;
         }
         set
         {
-            this.eventTypeField = value;
+            this.bypassEventsField = value;
+        }
+    }
+
+    /// <remarks/>
+    [System.Xml.Serialization.XmlArrayItemAttribute("EventType", IsNullable = false)]
+    public string[] EventRetorts
+    {
+        get
+        {
+            return this.eventRetortsField;
+        }
+        set
+        {
+            this.eventRetortsField = value;
         }
     }
 }
+
+
 
 /// <remarks/>
 [System.SerializableAttribute()]

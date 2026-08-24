@@ -2,7 +2,6 @@
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Models.Misc;
-using TwitchLib.Api.Helix.Models.Users.GetUserFollows;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Commands
 {
