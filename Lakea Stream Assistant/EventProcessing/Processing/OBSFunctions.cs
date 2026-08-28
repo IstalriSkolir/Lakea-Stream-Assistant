@@ -56,34 +56,44 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             }
         }
 
-        // Update the OBS events during runtime
-        public void UpdateDictionary(string id, EventItem item, bool remove)
+        // Add to OBS events during runtime
+        public void UpdateDictionary(string id, EventItem item)
         {
             try
             {
                 Dictionary<string, EventItem> toUpdate = events[item.Type];
-                if (remove)
+                Terminal.Output("Lakea: Adding OBS Event -> " + toUpdate[id].Name);
+                Logs.Instance.NewLog(LogLevel.Info, "Adding OBS Event -> " + toUpdate[id].Name);
+                toUpdate.Add(id, item);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Adding OBS Event -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
+            }
+        }
+
+        // Remove from OBS events during runtime
+        public void UpdateDictionary(string id, EventType type)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[type];
+                if (toUpdate.ContainsKey(id))
                 {
-                    if (toUpdate.ContainsKey(id))
-                    {
-                        Terminal.Output("Lakea: Removing OBS Event -> " + toUpdate[id].Name);
-                        Logs.Instance.NewLog(LogLevel.Info, "Removing OBS Event -> " + toUpdate[id].Name);
-                        toUpdate.Remove(id);
-                    }
-                    else
-                    {
-                        Terminal.Output("Lakea: No OBS Event Found -> " + id);
-                        Logs.Instance.NewLog(LogLevel.Warning, "No OBS Event Found -> " + id);
-                    }
+                    Terminal.Output("Lakea: Removing OBS Event -> " + toUpdate[id].Name);
+                    Logs.Instance.NewLog(LogLevel.Info, "Removing OBS Event -> " + toUpdate[id].Name);
+                    toUpdate.Remove(id);
                 }
                 else
                 {
-                    toUpdate.Add(id, item);
+                    Terminal.Output("Lakea: No OBS Event Found -> " + id);
+                    Logs.Instance.NewLog(LogLevel.Warning, "No OBS Event Found -> " + id);
                 }
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Error Updating OBS Events -> " + ex.Message);
+                Terminal.Output("Lakea: ErrorRemoving OBS Event -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }

@@ -141,14 +141,13 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
             CreateCustomRewardsResponse response = await Twitch.CreateChannelRedeem(request);
             retortRedeemID = response.Data[0].Id;
             EventItem item = new EventItem(EventSource.Twitch, EventType.Twitch_Redeem, EventTarget.Lakea, EventGoal.Lakea_Retort, "Lakea Retort", retortRedeemID);
-            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, item, false);
+            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, item);
         }
 
         private async void removeRetortRedeem()
         {
             Twitch.DeleteChannelRedeem(retortRedeemID);
-            EventItem item = new EventItem(EventSource.Twitch, EventType.Twitch_Redeem, EventTarget.Null, EventGoal.Null, "", retortRedeemID);
-            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, item, true);
+            StreamAssistant.EventHandler.UpdateEventDictionaries(retortRedeemID, EventSource.Twitch, EventType.Twitch_Redeem);
         }
 
         private void release()

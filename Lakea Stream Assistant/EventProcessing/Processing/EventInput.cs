@@ -1,5 +1,4 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.EventProcessing.Commands;
+﻿using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.EventProcessing.Misc;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
@@ -31,23 +30,44 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
 
         #region Update Events
 
-        // Update event dictionaries in the different platform objects
-        public void UpdateEventDictionaries(string key, EventItem item, bool remove)
+        // Add event to dictionaries in the different platform objects
+        public void UpdateEventDictionaries(string key, EventItem item)
         {
             switch (item.Source)
             {
                 case EventSource.Lakea:
-                    lakea.UpdateDictionary(key, item, remove);
+                    lakea.UpdateDictionary(key, item);
                     break;
                 case EventSource.OBS:
-                    obs.UpdateDictionary(key, item, remove);
+                    obs.UpdateDictionary(key, item);
                     break;
                 case EventSource.Twitch:
-                    twitch.UpdateDictionary(key, item, remove);
+                    twitch.UpdateDictionary(key, item);
                     break;
                 default:
                     Terminal.Output("Lakea: Unsupported Source Dictionary Update -> " + item.Source);
                     Logs.Instance.NewLog(LogLevel.Warning, "Unsupported Source Dictionary Update -> " + item.Source);
+                    break;
+            }
+        }
+
+        // Remove event from dictionaries in the different platform objects
+        public void UpdateEventDictionaries(string key, EventSource source, EventType type)
+        {
+            switch (source)
+            {
+                case EventSource.Lakea:
+                    lakea.UpdateDictionary(key, type);
+                    break;
+                case EventSource.OBS:
+                    obs.UpdateDictionary(key, type);
+                    break;
+                case EventSource.Twitch:
+                    twitch.UpdateDictionary(key, type);
+                    break;
+                default:
+                    Terminal.Output($"Lakea: Unsupported Source Dictionary Update -> {key}");
+                    Logs.Instance.NewLog(LogLevel.Warning, $"Unsupported Source Dictionary Update -> {key}");
                     break;
             }
         }
