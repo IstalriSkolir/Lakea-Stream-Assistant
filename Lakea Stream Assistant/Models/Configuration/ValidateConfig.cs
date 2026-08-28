@@ -1,7 +1,6 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Exceptions;
-using Lakea_Stream_Assistant.Models.Events.EventItems;
+﻿using Lakea_Stream_Assistant.Exceptions;
 using Lakea_Stream_Assistant.Singletons;
+using Lakea_Stream_Assistant.Utilities;
 using System.IO;
 using System.Reflection;
 
@@ -10,7 +9,6 @@ namespace Lakea_Stream_Assistant.Models.Configuration
     //Class for checking if a loaded configuration is valid
     public class ValidateConfig
     {
-        private EnumConverter enums;
         private List<string> ids;
         private List<string> enumStrings;
         private List<string> nullableOrZero;
@@ -20,7 +18,6 @@ namespace Lakea_Stream_Assistant.Models.Configuration
         //Class constructor
         public ValidateConfig()
         {
-            enums = new EnumConverter();
             ids = new List<string>();
             enumStrings = new List<string>
             {
@@ -151,16 +148,16 @@ namespace Lakea_Stream_Assistant.Models.Configuration
                 switch (property.Name)
                 {
                     case "Source":
-                        EventSource testSource = enums.ConvertEventSourceString((string)property.GetValue(obj));
+                        EventSource testSource = ((string)property.GetValue(obj)).ToEnum<EventSource>();
                         break;
                     case "Type":
-                        EventType testType = enums.ConvertEventTypeString((string)property.GetValue(obj));
+                        EventType testType = ((string)property.GetValue(obj)).ToEnum<EventType>();
                         break;
                     case "Target":
-                        EventTarget testTarget = enums.ConvertEventTargetString((string)property.GetValue(obj));
+                        EventTarget testTarget = ((string)property.GetValue(obj)).ToEnum<EventTarget>();
                         break;
                     case "Goal":
-                        EventGoal testGoal = enums.ConvertEventGoalString((string)property.GetValue(obj));
+                        EventGoal testGoal = ((string)property.GetValue(obj)).ToEnum<EventGoal>();
                         break;
                 }
             }

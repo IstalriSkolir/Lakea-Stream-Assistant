@@ -4,6 +4,7 @@ using Lakea_Stream_Assistant.Models.Events.EventItems;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -24,15 +25,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             events = new Dictionary<EventType, Dictionary<string, EventItem>>();
             events.Add(EventType.OBS_Scene_Changed, sceneChanges);
             events.Add(EventType.OBS_Source_Active_Status, sourceActiveStatus);
-            EnumConverter enums = new EnumConverter();
             foreach(ConfigEvent eve in newEvents)
             {
                 try
                 {
-                    EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
-                    if(source == EventSource.OBS)
+                    EventSource source = eve.EventDetails.Source.ToEnum<EventSource>();
+                    if (source == EventSource.OBS)
                     {
-                        EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
+                        EventType type = eve.EventDetails.Type.ToEnum<EventType>();
                         switch(type)
                         {
                             case EventType.OBS_Scene_Changed:

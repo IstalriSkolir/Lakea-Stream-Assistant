@@ -1,5 +1,4 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Models.Events;
+﻿using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.EventProcessing.Misc;
@@ -99,7 +98,7 @@ namespace Lakea_Stream_Assistant.Singletons
             {
                 Terminal.Output("Fatal Error: Failed to Connect to Twitch -> " + ex.Message);
                 Terminal.Output("Terminating Lakea...");
-                Logs.Instance.NewLog(Enums.LogLevel.Fatal, ex);
+                Logs.Instance.NewLog(LogLevel.Fatal, ex);
                 Thread.Sleep(5000);
                 Environment.Exit(1);
             }
@@ -111,7 +110,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Client Connecting...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Connecting to Twitch Client...");
+                Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch Client...");
                 ConnectionCredentials credentials = new ConnectionCredentials(botUsername, botAuthKey);
                 var clientOptions = new ClientOptions
                 {
@@ -137,7 +136,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Client Failed to Connect -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -165,7 +164,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void initialiseAPI()
         {
             Terminal.Output("Twitch: API Connecting...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Connecting to Twitch API...");
+            Logs.Instance.NewLog(LogLevel.Info, "Connecting to Twitch API...");
             api = new TwitchAPI();
             api.Settings.ClientId = clientID;
             api.Settings.AccessToken = channelAuthKey;
@@ -201,14 +200,14 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onClientConnected(object sender, OnConnectedArgs e)
         {
             Terminal.Output("Twitch: Client Connected");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Connected to Twitch Client...");
+            Logs.Instance.NewLog(LogLevel.Info, "Connected to Twitch Client...");
         }
 
         // Called when the client disconnects from Twitch
         private static void onClientDisconnected(object sender, OnDisconnectedEventArgs e)
         {
             Terminal.Output("Twitch: Client Disconnected, Attempting to Reconnect...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Disconnected from Twitch Client: " + e);
+            Logs.Instance.NewLog(LogLevel.Info, "Disconnected from Twitch Client: " + e);
             initiliaseClient();
         }
 
@@ -216,7 +215,7 @@ namespace Lakea_Stream_Assistant.Singletons
         private static void onChatMessage(object sender, OnMessageReceivedArgs e)
         {
             Terminal.Output("Twitch: Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Message -> " + e.ChatMessage.DisplayName + ", " + e.ChatMessage.Message);
             watchStreakManager.checkForWatchStreak(e.ChatMessage.UserId, e.ChatMessage.DisplayName);
             if (e.ChatMessage.IsFirstMessage)
             {
@@ -237,13 +236,13 @@ namespace Lakea_Stream_Assistant.Singletons
                 if (lakeaCommands.CheckIfCommandIsLakeaCommand(e.Command.CommandText))
                 {
                     Terminal.Output("Twitch: Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                    Logs.Instance.NewLog(Enums.LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    Logs.Instance.NewLog(LogLevel.Info, "Default Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                     eve = new IncomingEvent(EventSource.Twitch, EventType.Lakea_Command, data);
                 }
                 else
                 {
                     Terminal.Output("Twitch: Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
-                    Logs.Instance.NewLog(Enums.LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
+                    Logs.Instance.NewLog(LogLevel.Info, "Custom Command -> " + e.Command.CommandIdentifier + e.Command.CommandText);
                     eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Command, data);
                 }
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -257,7 +256,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Raid", propToHash))
             {
                 Terminal.Output("Twitch: Raid -> " + e.RaidNotification.DisplayName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Raid -> " + e.RaidNotification.DisplayName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchRaidData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Raid, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -271,7 +270,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Subscriber", propToHash))
             {
                 Terminal.Output("Twitch: Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Subscription -> " + e.Subscriber.DisplayName + ", " + e.Subscriber.SubscriptionPlanName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchSubscriptionData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Subscription, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -285,7 +284,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Resubscriber", propToHash))
             {
                 Terminal.Output("Twitch: Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Resubscription -> " + e.ReSubscriber.DisplayName + ", " + e.ReSubscriber.SubscriptionPlanName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchResubscriptionData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Resubscription, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -299,7 +298,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Prime Paid Subscription", propToHash))
             {
                 Terminal.Output("Twitch: Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Prime Paid Subscription -> " + e.PrimePaidSubscriber.DisplayName + ", " + e.PrimePaidSubscriber.SubscriptionPlanName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchPrimePaidSubscriptionData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Prime_Paid_Subscription, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -313,7 +312,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Gifted Subscription", propToHash))
             {
                 Terminal.Output("Twitch: Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Gifted Subscription -> " + e.GiftedSubscription.DisplayName + ", " + e.GiftedSubscription.MsgParamSubPlanName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchGiftedSubscriptionData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Gifted_Subscription, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -327,7 +326,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Continued Gifted Subscription", propToHash))
             {
                 Terminal.Output("Twitch: Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Continued Gifted Subscription -> " + e.ContinuedGiftedSubscription.DisplayName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchContinuedGiftedSubscriptionData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Continued_Gifted_Subscription, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -340,13 +339,13 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Sending Message -> '" + message + "'");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Send Chat Message -> " + message);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message -> " + message);
                 client.SendMessage(client.JoinedChannels[0], $"" + message);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Sending Chat Message -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -356,13 +355,13 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Replying To Message -> '" + reply + "'");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Send Chat Message Reply -> " + reply);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Chat Message Reply -> " + reply);
                 client.SendReply(client.JoinedChannels[0], messageID, $"" + reply);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Replying to Chat Message -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -371,7 +370,7 @@ namespace Lakea_Stream_Assistant.Singletons
         public static void WriteWhisperToUser(string message, string user)
         {
             Terminal.Output("Twitch: Sending Whisper -> '" + user + "' - '" + message + "'");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Send Whisper Message -> '" + user + "' - '" + message + "'");
+            Logs.Instance.NewLog(LogLevel.Info, "Twitch Send Whisper Message -> '" + user + "' - '" + message + "'");
             //client.SendWhisper(user, message, true);//https://wiki.streamer.bot/en/Sub-Actions/Code/CSharp/Available-Methods/Twitch#whisper
         }
 
@@ -389,7 +388,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Creating Channel Redeem -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
         }
@@ -404,7 +403,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Updating Channel Redeem -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
         }
@@ -419,7 +418,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Deleting Channel Redeem -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -434,7 +433,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Getting Stream Information -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
         }
@@ -449,7 +448,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Updating Stream Title -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -464,7 +463,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Error Getting Category Information -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
         }
@@ -512,7 +511,7 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Fetching User Subscription...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Fetch User Subscription...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Fetch User Subscription...");
                 var allSubscriptions = await api.Helix.Subscriptions.GetBroadcasterSubscriptionsAsync(channelID, 100, null, channelAuthKey);
                 string tierString = "NONE";
                 foreach (Subscription sub in allSubscriptions.Data)
@@ -538,7 +537,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Fetch User Subscription -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return TwitchSubTier.None;
         }
@@ -549,13 +548,13 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Deleting Chat Message...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Deleting Chat Message...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Deleting Chat Message...");
                 await api.Helix.Moderation.DeleteChatMessagesAsync(channelID, channelID, messageID);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Delete Chat Message -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -568,13 +567,13 @@ namespace Lakea_Stream_Assistant.Singletons
                 request.UserId = accountID;
                 request.Reason = reason;
                 Terminal.Output("Twitch: Banning User from Chat...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Banning User from Chat...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Banning User from Chat...");
                 await api.Helix.Moderation.BanUserAsync(channelID, channelID, request, channelAuthKey);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Ban User from Chat -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -590,7 +589,7 @@ namespace Lakea_Stream_Assistant.Singletons
             catch(Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Get Bits Leaderboard -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
             return null;
         }
@@ -610,13 +609,13 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Sending Chat Announcement...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Sending Chat Announcement...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Sending Chat Announcement...");
                 await api.Helix.Chat.SendChatAnnouncementAsync(channelID, channelID, message, accessToken: channelAuthKey);
             }
             catch(Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Send Chat Announcement -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -625,13 +624,13 @@ namespace Lakea_Stream_Assistant.Singletons
             try
             {
                 Terminal.Output("Twitch: Creating Clip...");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Creating Clip...");
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Creating Clip...");
                 CreatedClipResponse response = await api.Helix.Clips.CreateClipAsync(channelID, accessToken: channelAuthKey);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Twitch: Failed to Create Twitch Clip -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex);
+                Logs.Instance.NewLog(LogLevel.Error, ex);
             }
         }
 
@@ -675,7 +674,7 @@ namespace Lakea_Stream_Assistant.Singletons
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             Terminal.Output("Twitch: EventSub Connecting...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Connecting...");
+            Logs.Instance.NewLog(LogLevel.Info, "EventSub Connecting...");
             await client.ConnectAsync();
         }
 
@@ -683,7 +682,7 @@ namespace Lakea_Stream_Assistant.Singletons
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             Terminal.Output("Twitch: EventSub Disconnecting...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Disconnecting...");
+            Logs.Instance.NewLog(LogLevel.Info, "EventSub Disconnecting...");
             await client.DisconnectAsync();
         }
 
@@ -692,7 +691,7 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Twitch.IsEventSubConnected = true;
             Terminal.Output("Twitch: EventSub Connected, Session ID: " + client.SessionId + ", Sending Subscriptions...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Connected, Session ID: " + client.SessionId + ", Sending Subscriptions...");
+            Logs.Instance.NewLog(LogLevel.Info, "EventSub Connected, Session ID: " + client.SessionId + ", Sending Subscriptions...");
             if (!e.IsRequestedReconnect)
             {
                 try
@@ -724,12 +723,12 @@ namespace Lakea_Stream_Assistant.Singletons
                         client.SessionId
                     );
                     Terminal.Output("Twitch: EventSub Subscriptions Sent");
-                    Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Subscriptions Sent");
+                    Logs.Instance.NewLog(LogLevel.Info, "EventSub Subscriptions Sent");
                 }
                 catch (Exception ex)
                 {
                     Terminal.Output("Twitch: Error Sending EventSub Subscriptions");
-                    Logs.Instance.NewLog(Enums.LogLevel.Info, ex.Message);
+                    Logs.Instance.NewLog(LogLevel.Info, ex.Message);
                 }
             }
         }
@@ -739,13 +738,13 @@ namespace Lakea_Stream_Assistant.Singletons
         {
             Twitch.IsEventSubConnected = false;
             Terminal.Output("Twitch: EventSub Disconnected, Session ID: " + client.SessionId + ", Attempting to Reconnect...");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Disconnected, Session ID: " + client.SessionId + ",Attempting to Reconnect...");
+            Logs.Instance.NewLog(LogLevel.Info, "EventSub Disconnected, Session ID: " + client.SessionId + ",Attempting to Reconnect...");
 
             // Don't do this in production. You should implement a better reconnect strategy with exponential backoff
             while (!await client.ReconnectAsync())
             {
                 Terminal.Output("Twitch: EventSub Failed to Reconnect");
-                Logs.Instance.NewLog(Enums.LogLevel.Error, "EventSub Failed to Reconnect");
+                Logs.Instance.NewLog(LogLevel.Error, "EventSub Failed to Reconnect");
 
                 await Task.Delay(1000);
             }
@@ -755,14 +754,14 @@ namespace Lakea_Stream_Assistant.Singletons
         private async Task OnWebsocketReconnected(object sender, EventArgs e)
         {
             Terminal.Output("Twitch: EventSub Reconnected, Session ID: " + client.SessionId);
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "EventSub Reconnected, Session ID: " + client.SessionId);
+            Logs.Instance.NewLog(LogLevel.Info, "EventSub Reconnected, Session ID: " + client.SessionId);
         }
 
         // On error occuring with the websocket
         private async Task OnErrorOccurred(object sender, ErrorOccuredArgs e)
         {
             Terminal.Output("Twitch: EventSub Error, Session ID: " + client.SessionId + ", " + e.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Error, "EventSub Session ID: " + client.SessionId + ", " + e.Message);
+            Logs.Instance.NewLog(LogLevel.Error, "EventSub Session ID: " + client.SessionId + ", " + e.Message);
         }
 
         #endregion
@@ -774,7 +773,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Follow", propToHash))
             {
                 Terminal.Output("Twitch: Follow -> " + e.Notification.Payload.Event.UserName);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Follow -> " + e.Notification.Payload.Event.UserName);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Follow -> " + e.Notification.Payload.Event.UserName);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchFollowData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Follow, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -788,7 +787,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Channel Redeem", propToHash))
             {
                 Terminal.Output("Twitch: Redeem -> " + e.Notification.Payload.Event.Reward.Title);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Twitch Channel Redeem -> " + e.Notification.Payload.Event.Reward.Title);
+                Logs.Instance.NewLog(LogLevel.Info, "Twitch Channel Redeem -> " + e.Notification.Payload.Event.Reward.Title);
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchRedeemData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Redeem, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -803,7 +802,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Bits", propToHash))
             {
                 Terminal.Output($"Twitch: Bits -> User: {e.Notification.Payload.Event.UserName}, Bits: {+ e.Notification.Payload.Event.Bits}");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, $"Twitch Bits -> User: {e.Notification.Payload.Event.UserName}, Bits: {e.Notification.Payload.Event.Bits}");
+                Logs.Instance.NewLog(LogLevel.Info, $"Twitch Bits -> User: {e.Notification.Payload.Event.UserName}, Bits: {e.Notification.Payload.Event.Bits}");
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchBitsData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Bits, data);
                 StreamAssistant.EventHandler.NewEvent(eve);
@@ -817,7 +816,7 @@ namespace Lakea_Stream_Assistant.Singletons
             if (hashChecker.CheckPayloadIsntDuplicate("Twitch Raid", propToHash))
             {
                 Terminal.Output($"Twitch: Raid -> {e.Notification.Payload.Event.FromBroadcasterUserName}");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, $"Twitch Raid -> {e.Notification.Payload.Event.FromBroadcasterUserName}");
+                Logs.Instance.NewLog(LogLevel.Info, $"Twitch Raid -> {e.Notification.Payload.Event.FromBroadcasterUserName}");
                 Dictionary<string, string> data = standardiseInput.ConvertTwitchRaidData(e);
                 IncomingEvent eve = new IncomingEvent(EventSource.Twitch, EventType.Twitch_Raid, data);
                 StreamAssistant.EventHandler.NewEvent(eve);

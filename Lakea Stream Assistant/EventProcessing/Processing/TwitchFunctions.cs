@@ -1,9 +1,9 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.EventProcessing.Commands;
+﻿using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
 {
@@ -60,15 +60,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
                 { EventType.Twitch_Continued_Gifted_Subscription, continuedGiftedSubscriptions },
                 { EventType.Twitch_First_Time_Chatter, firstTimeChatters }
             };
-            EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in newEvents)
             {
                 try
                 {
-                    EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
+                    EventSource source = eve.EventDetails.Source.ToEnum<EventSource>();
                     if (source == EventSource.Twitch)
                     {
-                        EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
+                        EventType type = eve.EventDetails.Type.ToEnum<EventType>();
                         switch (type)
                         {
                             case EventType.Twitch_Follow:

@@ -1,6 +1,6 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
+﻿using Lakea_Stream_Assistant.Models.Events.EventAbstracts;
 using Lakea_Stream_Assistant.Models.Events.EventItems;
+using Lakea_Stream_Assistant.Utilities;
 
 namespace Lakea_Stream_Assistant.Models.Events.EventLists
 {
@@ -35,11 +35,10 @@ namespace Lakea_Stream_Assistant.Models.Events.EventLists
 
         public EventItem(ConfigEvent eve)
         {
-            EnumConverter enums = new EnumConverter();
-            this.source = enums.ConvertEventSourceString(eve.EventDetails.Source);
-            this.type = enums.ConvertEventTypeString(eve.EventDetails.Type);
-            this.target = enums.ConvertEventTargetString(eve.EventTarget.Target);
-            this.goal = enums.ConvertEventGoalString(eve.EventTarget.Goal);       
+            this.source = eve.EventDetails.Source.ToEnum<EventSource>();
+            this.type = eve.EventDetails.Type.ToEnum<EventType>();
+            this.target = eve.EventTarget.Target.ToEnum<EventTarget>();
+            this.goal = eve.EventTarget.Goal.ToEnum<EventGoal>();
             this.name = eve.EventDetails.Name;
             this.id = eve.EventDetails.ID;
             this.duration = eve.EventTarget.Duration;

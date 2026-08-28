@@ -1,10 +1,10 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.EventProcessing.Battle_Simulator;
+﻿using Lakea_Stream_Assistant.EventProcessing.Battle_Simulator;
 using Lakea_Stream_Assistant.EventProcessing.Processing;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 
@@ -37,16 +37,15 @@ namespace Lakea_Stream_Assistant.EventProcessing.Misc
         public LakeaCaptured(LakeaFunctions lakeaFunctions, ConfigSettings settings)
         {
             lakea = lakeaFunctions;
-            EnumConverter converter = new EnumConverter();
             retortRedeem = settings.Captured.Redeems.RetortRedeem;
             redeemIDs = settings.Captured.Redeems.Disable;
             retortEvents = new EventType[settings.Captured.EventRetorts.Length];
-            for (int index = 0; index <  retortEvents.Length; index++)
-                retortEvents[index] = converter.ConvertEventTypeString(settings.Captured.EventRetorts[index]);
+            for (int index = 0; index < retortEvents.Length; index++)
+                retortEvents[index] = settings.Captured.EventRetorts[index].ToEnum<EventType>(); 
             EventType[] defaultEventBypasses = { EventType.Lakea_Callback, EventType.Lakea_Struggle };
             EventType[] configBypassEvents = new EventType[settings.Captured.BypassEvents.Length];
             for (int index = 0; index < settings.Captured.BypassEvents.Length; index++)
-                configBypassEvents[index] = converter.ConvertEventTypeString(settings.Captured.BypassEvents[index]);
+                configBypassEvents[index] = settings.Captured.BypassEvents[index].ToEnum<EventType>();
             bypassEvents = defaultEventBypasses.Concat(configBypassEvents).ToArray();
             battleFileParser = new BattleFileParser(settings.ResourcePath);
             random = new Random();

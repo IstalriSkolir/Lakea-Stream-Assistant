@@ -1,4 +1,5 @@
 ﻿using Lakea_Stream_Assistant.Enums;
+using Lakea_Stream_Assistant.Utilities;
 using System.Diagnostics;
 
 namespace Lakea_Stream_Assistant.Models.Resources.Lakea
@@ -17,11 +18,10 @@ namespace Lakea_Stream_Assistant.Models.Resources.Lakea
         //Constructor sets the information needed to start the external application
         public ExternalProcess(ConfigApplication application)
         {
-            EnumConverter enums = new EnumConverter();
             name = application.Name;
             active = false;
             startInfo = new ProcessStartInfo(application.Path);
-            startInfo.WindowStyle = enums.ConvertWindowStyleString(application.WindowStyle);
+            startInfo.WindowStyle = application.WindowStyle.ToEnum<ProcessWindowStyle>();
             process = new Process();
         }
 
