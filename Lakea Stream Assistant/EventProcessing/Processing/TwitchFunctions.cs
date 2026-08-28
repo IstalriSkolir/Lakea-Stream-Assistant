@@ -123,34 +123,44 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             watchStreakOrder = sortWatchStreakOrder();
         }
 
-        // Update the Twitch events during runtime
-        public void UpdateDictionary(string id, EventItem item, bool remove)
+        // Add to Twitch events during runtime
+        public void UpdateDictionary(string id, EventItem item)
         {
             try
             {
                 Dictionary<string, EventItem> toUpdate = events[item.Type];
-                if (remove)
+                Terminal.Output("Lakea: Adding Twitch Event -> " + toUpdate[id].Name);
+                Logs.Instance.NewLog(LogLevel.Info, "Adding Twitch Event -> " + toUpdate[id].Name);
+                toUpdate.Add(id, item);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Adding Twitch Event -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
+            }
+        }
+
+        // Remove from Twitch events during runtime
+        public void UpdateDictionary(string id, EventType type)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[type];
+                if (toUpdate.ContainsKey(id))
                 {
-                    if (toUpdate.ContainsKey(id))
-                    {
-                        Terminal.Output("Lakea: Removing Twitch Event -> " + toUpdate[id].Name);
-                        Logs.Instance.NewLog(LogLevel.Info, "Removing Twitch Event -> " + toUpdate[id].Name);
-                        toUpdate.Remove(id);
-                    }
-                    else
-                    {
-                        Terminal.Output("Lakea: No Twitch Event Found -> " + id);
-                        Logs.Instance.NewLog(LogLevel.Warning, "No Twitch Event Found -> " + id);
-                    }
+                    Terminal.Output("Lakea: Removing Twitch Event -> " + toUpdate[id].Name);
+                    Logs.Instance.NewLog(LogLevel.Info, "Removing Twitch Event -> " + toUpdate[id].Name);
+                    toUpdate.Remove(id);
                 }
                 else
                 {
-                    toUpdate.Add(id, item);
+                    Terminal.Output("Lakea: No Twitch Event Found -> " + id);
+                    Logs.Instance.NewLog(LogLevel.Warning, "No Twitch Event Found -> " + id);
                 }
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Error Updating Twitch Events -> " + ex.Message);
+                Terminal.Output("Lakea: Error Removing Twitch Event -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }

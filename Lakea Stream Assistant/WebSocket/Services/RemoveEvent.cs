@@ -1,6 +1,7 @@
 ﻿using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 using Lakea_Stream_Assistant.WebSocket.Utilities;
 using Newtonsoft.Json.Linq;
 using WebSocketSharp;
@@ -33,10 +34,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
                 Send("LakeaWebsocket: RemoveEvent -> Message Received");
                 JObject json = JObject.Parse(e.Data);
                 string key = (string)json["Key"];
+                EventSource source = ((string)json["Source"]).ToEnum<EventSource>();
+                EventType type = ((string)json["Type"]).ToEnum<EventType>();
                 EventItem item = convertor.CreateEventItem(json);
                 Terminal.Output("Socket: Message Service -> RemoveEvent, " + e.Data);
                 Logs.Instance.NewLog(LogLevel.Info, "Socket Service Message -> RemoveEvent, " + e.Data);
-                StreamAssistant.EventHandler.UpdateEventDictionaries(key, item, remove: true);
+                StreamAssistant.EventHandler.UpdateEventDictionaries(key, source, type);
             }
             catch (Exception ex)
             {

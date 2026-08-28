@@ -100,34 +100,44 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             this.input = input;
         }
 
-        // Update Lakea's events during runtime
-        public void UpdateDictionary(string id, EventItem item, bool remove)
+        // Add to Lakea's events during runtime
+        public void UpdateDictionary(string id, EventItem item)
         {
             try
             {
                 Dictionary<string, EventItem> toUpdate = events[item.Type];
-                if (remove)
+                Terminal.Output("Lakea: Adding Lakea Event -> " + toUpdate[id].Name);
+                Logs.Instance.NewLog(LogLevel.Info, "Adding Lakea Event -> " + toUpdate[id].Name);
+                toUpdate.Add(id, item);
+            }
+            catch (Exception ex)
+            {
+                Terminal.Output("Lakea: Error Adding to Lakea Events -> " + ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
+            }
+        }
+
+        // Remove from Lakea's events during runtime
+        public void UpdateDictionary(string id, EventType type)
+        {
+            try
+            {
+                Dictionary<string, EventItem> toUpdate = events[type];
+                if (toUpdate.ContainsKey(id))
                 {
-                    if (toUpdate.ContainsKey(id))
-                    {
-                        Terminal.Output("Lakea: Removing Lakea Event -> " + toUpdate[id].Name);
-                        Logs.Instance.NewLog(LogLevel.Info, "Removing Lakea Event -> " + toUpdate[id].Name);
-                        toUpdate.Remove(id);
-                    }
-                    else
-                    {
-                        Terminal.Output("Lakea: No Lakea Event Found -> " + id);
-                        Logs.Instance.NewLog(LogLevel.Warning, "No Lakea Event Found -> " + id);
-                    }
+                    Terminal.Output("Lakea: Removing Lakea Event -> " + toUpdate[id].Name);
+                    Logs.Instance.NewLog(LogLevel.Info, "Removing Lakea Event -> " + toUpdate[id].Name);
+                    toUpdate.Remove(id);
                 }
                 else
                 {
-                    toUpdate.Add(id, item);
+                    Terminal.Output("Lakea: No Lakea Event Found -> " + id);
+                    Logs.Instance.NewLog(LogLevel.Warning, "No Lakea Event Found -> " + id);
                 }
             }
             catch (Exception ex)
             {
-                Terminal.Output("Lakea: Error Updating Lakea Events -> " + ex.Message);
+                Terminal.Output("Lakea: Error Removing from Lakea Events -> " + ex.Message);
                 Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }
