@@ -1,5 +1,4 @@
-﻿using Lakea_Stream_Assistant.EventProcessing.Processing;
-using Lakea_Stream_Assistant.Models.Events.EventLists;
+﻿using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using Lakea_Stream_Assistant.WebSocket.Utilities;
@@ -23,7 +22,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnOpen();
             Send("Lakea Websocket: Connection Confirmed");
             Terminal.Output("Socket: Open Service -> RemoveEvent");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> RemoveEvent");
+            Logs.Instance.NewLog(LogLevel.Info, "Socket Service Opened -> RemoveEvent");
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -36,13 +35,13 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
                 string key = (string)json["Key"];
                 EventItem item = convertor.CreateEventItem(json);
                 Terminal.Output("Socket: Message Service -> RemoveEvent, " + e.Data);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> RemoveEvent, " + e.Data);
+                Logs.Instance.NewLog(LogLevel.Info, "Socket Service Message -> RemoveEvent, " + e.Data);
                 StreamAssistant.EventHandler.UpdateEventDictionaries(key, item, remove: true);
             }
             catch (Exception ex)
             {
                 Terminal.Output("Socket: Error Getting Event Key -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }
 
@@ -52,12 +51,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             if (e.Reason == "")
             {
                 Terminal.Output("Socket: Close Service -> RemoveEvent");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Close -> RemoveEvent");
+                Logs.Instance.NewLog(LogLevel.Info, "Socket Service Close -> RemoveEvent");
             }
             else
             {
                 Terminal.Output("Socket: Close Service -> RemoveEvent, " + e.Reason);
-                Logs.Instance.NewLog(Enums.LogLevel.Warning, "Socket Service Close -> RemoveEvent, " + e.Reason);
+                Logs.Instance.NewLog(LogLevel.Warning, "Socket Service Close -> RemoveEvent, " + e.Reason);
             }
         }
 
@@ -65,7 +64,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         {
             base.OnError(e);
             Terminal.Output("Socket: Errored Service -> RemoveEvent, " + e.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Error, e.Message);
+            Logs.Instance.NewLog(LogLevel.Error, e.Message);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using Lakea_Stream_Assistant.Enums;
-using Lakea_Stream_Assistant.EventProcessing.Commands;
+﻿using Lakea_Stream_Assistant.EventProcessing.Commands;
 using Lakea_Stream_Assistant.Models.Events;
 using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 using System;
 
 namespace Lakea_Stream_Assistant.EventProcessing.Processing
@@ -46,15 +46,14 @@ namespace Lakea_Stream_Assistant.EventProcessing.Processing
             events.Add(EventType.Lakea_Web_Socket, webSocketEvents);
             startupEvents = new List<EventItem>();
             shutdownEvents = new List<EventItem>();
-            EnumConverter enums = new EnumConverter();
             foreach (ConfigEvent eve in newEvents)
             {
                 try
                 {
-                    EventSource source = enums.ConvertEventSourceString(eve.EventDetails.Source);
+                    EventSource source = eve.EventDetails.Source.ToEnum<EventSource>();
                     if (source == EventSource.Lakea || source == EventSource.Battle_Simulator)
                     {
-                        EventType type = enums.ConvertEventTypeString(eve.EventDetails.Type);
+                        EventType type = eve.EventDetails.Type.ToEnum<EventType>();
                         switch (type)
                         {
                             case EventType.Lakea_Callback:

@@ -1,5 +1,4 @@
-﻿using Lakea_Stream_Assistant.EventProcessing.Processing;
-using Lakea_Stream_Assistant.Models.Events.EventLists;
+﻿using Lakea_Stream_Assistant.Models.Events.EventLists;
 using Lakea_Stream_Assistant.Singletons;
 using Lakea_Stream_Assistant.Static;
 using Lakea_Stream_Assistant.WebSocket.Utilities;
@@ -23,7 +22,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnOpen();
             Send("LakeaWebsocket: AddEvent -> Connection Confirmed");
             Terminal.Output("Socket: Open Service -> AddEvent");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> AddEvent");
+            Logs.Instance.NewLog(LogLevel.Info, "Socket Service Opened -> AddEvent");
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -31,7 +30,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnMessage(e);
             Send("LakeaWebsocket: AddEvent -> Message Received");
             Terminal.Output("Socket: Message Service -> AddEvent, " + e.Data);
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> AddEvent, " +  e.Data);
+            Logs.Instance.NewLog(LogLevel.Info, "Socket Service Message -> AddEvent, " +  e.Data);
             createNewEvent(e);
         }
 
@@ -41,12 +40,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             if(e.Reason == "")
             {
                 Terminal.Output("Socket: Close Service -> AddEvent");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Close -> AddEvent");
+                Logs.Instance.NewLog(LogLevel.Info, "Socket Service Close -> AddEvent");
             }
             else
             {
                 Terminal.Output("Socket: Close Service -> AddEvent, " + e.Reason);
-                Logs.Instance.NewLog(Enums.LogLevel.Warning, "Socket Service Close -> AddEvent, " + e.Reason);
+                Logs.Instance.NewLog(LogLevel.Warning, "Socket Service Close -> AddEvent, " + e.Reason);
             }
         }
 
@@ -54,7 +53,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         {
             base.OnError(e);
             Terminal.Output("Socket: Errored Service -> AddEvent, " + e.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Error, e.Message);
+            Logs.Instance.NewLog(LogLevel.Error, e.Message);
         }
 
         private void createNewEvent(MessageEventArgs args)
@@ -69,7 +68,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             catch (Exception ex)
             {
                 Terminal.Output("Socket: Error Getting Event Data -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
         }
     }

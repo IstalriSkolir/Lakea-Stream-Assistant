@@ -1,5 +1,6 @@
 ﻿using Lakea_Stream_Assistant.Enums;
 using Lakea_Stream_Assistant.Static;
+using Lakea_Stream_Assistant.Utilities;
 
 namespace Lakea_Stream_Assistant.Singletons
 {
@@ -60,8 +61,7 @@ namespace Lakea_Stream_Assistant.Singletons
         //Sets the logging level for the session instance
         public void SetErrorLogLevel(string level)
         {
-            EnumConverter enums = new EnumConverter();
-            logLevel = enums.ConvertLogLevelString(level);
+            logLevel = level.ToEnum<LogLevel>();
         }
 
         #endregion

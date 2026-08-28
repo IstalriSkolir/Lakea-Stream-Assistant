@@ -15,7 +15,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnOpen();
             Send("LakeaWebsocket: UpdateChannelRedeem -> Connection Confirmed");
             Terminal.Output("Socket: Open Service -> UpdateChannelRedeem");
-            Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Opened -> UpdateChannelRedeem");
+            Logs.Instance.NewLog(LogLevel.Info, "Socket Service Opened -> UpdateChannelRedeem");
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -23,7 +23,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             base.OnMessage(e);
             Task.Run(() => {
                 Terminal.Output("Socket: Message Service -> UpdateChannelRedeem, " + e.Data);
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Message -> UpdateChannelRedeem, " + e.Data);
+                Logs.Instance.NewLog(LogLevel.Info, "Socket Service Message -> UpdateChannelRedeem, " + e.Data);
             });
             string response = processMessage(e);
             Send("LakeaWebsocket: UpdateChannelRedeem -> Message Received:" + response);
@@ -35,12 +35,12 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             if (e.Reason == "")
             {
                 Terminal.Output("Socket: Close Service -> UpdateChannelRedeem");
-                Logs.Instance.NewLog(Enums.LogLevel.Info, "Socket Service Close -> UpdateChannelRedeem");
+                Logs.Instance.NewLog(LogLevel.Info, "Socket Service Close -> UpdateChannelRedeem");
             }
             else
             {
                 Terminal.Output("Socket: Close Service -> UpdateChannelRedeem, " + e.Reason);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, "Socket Service Close -> UpdateChannelRedeem, " + e.Reason);
+                Logs.Instance.NewLog(LogLevel.Error, "Socket Service Close -> UpdateChannelRedeem, " + e.Reason);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
         {
             base.OnError(e);
             Terminal.Output("Socket: Errored Service -> UpdateChannelRedeem, " + e.Message);
-            Logs.Instance.NewLog(Enums.LogLevel.Error, e.Exception);
+            Logs.Instance.NewLog(LogLevel.Error, e.Exception);
         }
 
         private string processMessage(MessageEventArgs args)
@@ -66,7 +66,7 @@ namespace Lakea_Stream_Assistant.WebSocket.Services
             catch (Exception ex)
             {
                 Terminal.Output("Socket: Error Getting Channel Redeem Data -> " + ex.Message);
-                Logs.Instance.NewLog(Enums.LogLevel.Error, ex.Message);
+                Logs.Instance.NewLog(LogLevel.Error, ex.Message);
             }
             return "Failed to Update Channel Redeem";
         }
