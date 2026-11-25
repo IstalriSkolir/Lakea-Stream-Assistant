@@ -274,8 +274,10 @@ namespace Battle_Similator.Models.Resources
         {
             try
             {
-                string filePath = path + "..\\RESULT.txt";
-                File.WriteAllText(filePath, result);
+                File.WriteAllText($"{path}..\\RESULT.txt", result);
+                string reportsFolder = $"{path}..\\BattleReports\\";
+                int fileCount = Directory.GetFiles(reportsFolder, "*.txt", SearchOption.TopDirectoryOnly).Length;
+                File.WriteAllText($"{reportsFolder}BATTLE_REPORT_{fileCount + 1}.txt", result);
             }
             catch (Exception ex)
             {
